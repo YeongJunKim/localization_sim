@@ -1,7 +1,14 @@
-% system eq
-% x_{i,k+1} = A * x_{i,k} + B * w_{i,k} 
-% y_{i,k} = C * x_{i,k} + v_{i,k}
-% z_{i,j,k} = D(x_{i,k} - x_{j,k})
+
+
+system eq
+x_{k+1} = A * x{k} + B * u{k
+
+
+
+
+
+
+
 
 %%
 clear all
