@@ -5,6 +5,9 @@
 
 %%
 clear all
+close all
+clc
+clf
 %% add path
 addpath('/../matlab/filters');
 %% global variables
@@ -81,7 +84,7 @@ for ct = 2:app.iteration
 end
 
 % run filtering
-for ct = 1:app.iteration
+for ct = 2:app.iteration
     for ag = 1:app.agent_num
         
         
