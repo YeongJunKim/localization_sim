@@ -17,7 +17,7 @@ clear all
 clc
 clf
 %% add path
-addpath('/../matlab/filters');
+addpath('./../../matlab/filters/DKFCL');
 %% global variables
 global app
 %% robot init
@@ -34,7 +34,7 @@ app.adjacency(8,[6 7]) = [0.3 0.7];
 
 %% simulation init
 app.dt = 1;
-app.iteration = 100;
+app.iteration = 140;
 for ct = 1:app.agent_num
     app.agent(ct).data.nx = 4;
     app.agent(ct).data.ny = 4;
@@ -46,7 +46,7 @@ for ct = 1:app.agent_num
     app.agent(ct).trajectory.measurement = zeros(app.agent(ct).data.ny, app.iteration);
     app.agent(ct).trajectory.time = zeros(1, app.iteration);
     app.agent(ct).trajectory.input = zeros(app.agent(ct).data.nu, app.iteration);
-    app.agent(ct).trajectory.real(:,1) = normrnd([0 0 0 0]', [5 5 0 0]');
+    app.agent(ct).trajectory.real(:,1) = normrnd([10 0 0 0]', [5 0 0 0]');
     app.agent(ct).trajectory.filtered.al1(:,1) = app.agent(ct).trajectory.real(:,1);
     app.agent(ct).trajectory.filtered.al2(:,1) = app.agent(ct).trajectory.real(:,1);
 end
@@ -125,14 +125,27 @@ for ag = 1:app.agent_num
 end
 %% run simulation
 % make real data
+angle = 0;
+d = zeros(app.agent_num, 1);
 for ct = 2:app.iteration
+    
     for ag = 1:app.agent_num
-        app.agent(ag).trajectory.input(:,ct) = normrnd([1 1], 0.01)';
+        if ct > 30
+            d(ag) = norm(app.agent(ag).trajectory.real(:,ct-1));
+        else
+            d(ag) = norm(app.agent(ag).trajectory.real(:,ct-1));
+        end
+    end
+    for ag = 1:app.agent_num
+        app.agent(ag).trajectory.input(1,ct) = d(ag) * cos(angle) - app.agent(ag).trajectory.real(1,ct-1);
+        app.agent(ag).trajectory.input(2,ct) = d(ag) * sin(angle) - app.agent(ag).trajectory.real(2,ct-1);
+        %  app.agent(ag).trajectory.input(:,ct) = normrnd([normrnd(0,3) normrnd(0,3)], 0.1)';
         
         app.agent(ag).trajectory.real(:,ct) = dynamics([app.agent(ag).trajectory.real(1:2,ct-1)' app.agent(ag).trajectory.input(:,ct)']',1);
     end
     %     update_plot(ct);
     %     pause(0.05);
+    angle = angle + 0.05;
 end
 
 % run filtering
@@ -176,7 +189,6 @@ figure(2);
 clf;
 x = zeros(1, app.iteration);
 y = zeros(1, app.iteration);
-subplot(3,1,1);
 for ag = 1:app.agent_num
    x(:) = app.agent(ag).trajectory.real(1,:); y(:) = app.agent(ag).trajectory.real(2,:);
    lege1 = ['real_ ' num2str(ag)];
@@ -189,9 +201,11 @@ for ag = 1:app.agent_num
    plot(x,y, '-*', 'DisplayName', lege3); hold on;
 end
 hold off;
-legend;
-subplot(3,1,2);
+lg = legend;
+lg.NumColumns = 8;
 
+figure(3);
+subplot(2,1,1);
 diff_sum.al1 = zeros(2, app.iteration);
 diff_sum.al2 = zeros(2, app.iteration);
 for ag = 1:app.agent_num
@@ -208,7 +222,7 @@ for ag = 1:app.agent_num
 end
 hold off;
 legend;
-subplot(3,1,3);
+subplot(2,1,2);
 x(:) = diff_sum.al1(1,:);
 y(:) = diff_sum.al1(2,:);
 rmse = sqrt(x(:).^2 + y(:).^2);
