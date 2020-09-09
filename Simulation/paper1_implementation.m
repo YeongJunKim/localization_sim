@@ -20,6 +20,9 @@ clf
 addpath('./../../matlab/filters/DKFCL');
 %% global variables
 global app
+
+make_video = 1;
+
 %% robot init
 app.agent_num = 8;
 app.adjacency = zeros(app.agent_num, app.agent_num);
@@ -74,8 +77,54 @@ for i = 1:app.agent_num-1
         end
     end
 end
-xlim([-20 20])
-ylim([-20 20])
+xlim([-25 25])
+ylim([-25 25])
+figure(2);
+clf;
+ax2 = axes;
+app.plot_trajectory_real = cell(1,app.agent_num);
+app.plot_trajectory_al1 = cell(1,app.agent_num);
+app.plot_trajectory_al2 = cell(1,app.agent_num);
+for ag = 1:app.agent_num
+%     app.plot_trajectory_real{ag} = plot(ax2, 0, 0, '-d'); hold on; grid on;
+    lege1 = ['real_ ' num2str(ag)];
+    app.plot_trajectory_real{ag} = plot(ax2,0,0, '-d', 'DisplayName', lege1); hold on;
+%     app.plot_trajectory_al1{ag} = plot(ax2, 0, 0, '-*'); hold on; grid on;
+    lege2 = ['filtered_{al1} ' num2str(ag)];
+     app.plot_trajectory_al1{ag} = plot(ax2,0,0, '-*', 'DisplayName', lege2); hold on;
+%     app.plot_trajectory_al2{ag} = plot(ax2, 0, 0, '-o'); hold on; grid on;
+    lege3 = ['filtered_{al2} ' num2str(ag)];
+    app.plot_trajectory_al2{ag} = plot(ax2,0,0, '-*', 'DisplayName', lege3); hold on;
+end
+xlim([-25 25])
+ylim([-25 25])
+lg = legend;
+lg.NumColumns = 8;
+hold off;
+
+
+
+figure(3);
+clf;
+ax3 = axes;
+app.plot_absolute_error_al1 = cell(1,app.agent_num);
+app.plot_absoulte_error_al2 = cell(1,app.agent_num);
+app.plot_rmse_al1 = cell(1,1);
+app.plot_rmse_al2 = cell(1,1);
+for ag = 1:app.agent_num
+    lege1 = ['al1 error' num2str(ag)];
+    app.plot_absolute_error_al1{ag} = plot(ax3,0,0, '-d', 'DisplayName', lege1); hold on;
+    lege2 = ['al2 error' num2str(ag)];
+    app.plot_absolute_error_al2{ag} = plot(ax3,0,0, '-o', 'DisplayName', lege2); hold on;
+end
+
+app.plot_rmse_al1 = plot(ax3, 0,0, '-*', 'DisplayName', "algorithm1"); hold on; grid on;
+app.plot_rmse_al2 = plot(ax3, 0,0, '-d', 'DisplayName', "algorithm2"); hold on; grid on;
+hold off;
+lg2 = legend;
+lg2.NumColumns = 9;
+lg2.Location = "Northwest";
+
 %% filtering class init
 % examples
 % global filters
@@ -182,58 +231,97 @@ for ct = 2:app.iteration
         app.agent(ag).trajectory.filtered.al2(:,ct) = DKFCL_run(DKFCL_FILTER(ag+app.agent_num), u_, y_, z_, x_neighbor_, p_neighbor_);
     end
     update_plot(ct);
+    drawnow;
     
+    if make_video == 1
+       F1(ct-1) = getframe(1); 
+       F2(ct-1) = getframe(2);
+       F3(ct-1) = getframe(3);
+    end
+    
+    pause(0.1);
 end
 %% plot
-figure(2);
-clf;
-x = zeros(1, app.iteration);
-y = zeros(1, app.iteration);
-for ag = 1:app.agent_num
-   x(:) = app.agent(ag).trajectory.real(1,:); y(:) = app.agent(ag).trajectory.real(2,:);
-   lege1 = ['real_ ' num2str(ag)];
-   plot(x,y, '-d', 'DisplayName', lege1); hold on;
-   x(:) = app.agent(ag).trajectory.filtered.al1(1,:); y(:) = app.agent(ag).trajectory.filtered.al1(2,:);
-   lege2 = ['filtered_{al1} ' num2str(ag)];
-   plot(x,y, '-*', 'DisplayName', lege2); hold on;
-   x(:) = app.agent(ag).trajectory.filtered.al2(1,:); y(:) = app.agent(ag).trajectory.filtered.al2(2,:);
-   lege3 = ['filtered_{al2} ' num2str(ag)];
-   plot(x,y, '-*', 'DisplayName', lege3); hold on;
-end
-hold off;
-lg = legend;
-lg.NumColumns = 8;
+% figure(2);
+% clf;
+% x = zeros(1, app.iteration);
+% y = zeros(1, app.iteration);
+% for ag = 1:app.agent_num
+%     x(:) = app.agent(ag).trajectory.real(1,:); y(:) = app.agent(ag).trajectory.real(2,:);
+%     lege1 = ['real_ ' num2str(ag)];
+%     plot(x,y, '-d', 'DisplayName', lege1); hold on;
+%     x(:) = app.agent(ag).trajectory.filtered.al1(1,:); y(:) = app.agent(ag).trajectory.filtered.al1(2,:);
+%     lege2 = ['filtered_{al1} ' num2str(ag)];
+%     plot(x,y, '-*', 'DisplayName', lege2); hold on;
+%     x(:) = app.agent(ag).trajectory.filtered.al2(1,:); y(:) = app.agent(ag).trajectory.filtered.al2(2,:);
+%     lege3 = ['filtered_{al2} ' num2str(ag)];
+%     plot(x,y, '-*', 'DisplayName', lege3); hold on;
+% end
+% hold off;
+% lg = legend;
+% lg.NumColumns = 8;
 
-figure(3);
-subplot(2,1,1);
-diff_sum.al1 = zeros(2, app.iteration);
-diff_sum.al2 = zeros(2, app.iteration);
-for ag = 1:app.agent_num
-   diff = abs(app.agent(ag).trajectory.real(1:2,:) - app.agent(ag).trajectory.filtered.al1(1:2,:));
-   x(:) = diff(1,:);   y(:) = diff(2,:);
-   lege1 = ['al1 error' num2str(ag)];
-   plot(1:app.iteration, x(:)+y(:), '-d', 'DisplayName', lege1); hold on;
-   diff_sum.al1 = diff_sum.al1 + diff;
-   diff = abs(app.agent(ag).trajectory.real(1:2,:) - app.agent(ag).trajectory.filtered.al2(1:2,:));
-   x(:) = diff(1,:);   y(:) = diff(2,:);
-   lege2 = ['al2 error' num2str(ag)];
-   plot(1:app.iteration, x(:)+y(:), '-o', 'DisplayName', lege2); hold on;
-   diff_sum.al2 = diff_sum.al2 + diff;
-end
-hold off;
-legend;
-subplot(2,1,2);
-x(:) = diff_sum.al1(1,:);
-y(:) = diff_sum.al1(2,:);
-rmse = sqrt(x(:).^2 + y(:).^2);
-plot(1:app.iteration, rmse(:), '-*', 'DisplayName', "algorithm1"); hold on;
+% figure(3);
+% subplot(2,1,1);
+% diff_sum.al1 = zeros(2, app.iteration);
+% diff_sum.al2 = zeros(2, app.iteration);
+% for ag = 1:app.agent_num
+%     diff = abs(app.agent(ag).trajectory.real(1:2,:) - app.agent(ag).trajectory.filtered.al1(1:2,:));
+%     x(:) = diff(1,:);   y(:) = diff(2,:);
+%     lege1 = ['al1 error' num2str(ag)];
+%     plot(1:app.iteration, x(:)+y(:), '-d', 'DisplayName', lege1); hold on;
+%     diff_sum.al1 = diff_sum.al1 + diff;
+%     diff = abs(app.agent(ag).trajectory.real(1:2,:) - app.agent(ag).trajectory.filtered.al2(1:2,:));
+%     x(:) = diff(1,:);   y(:) = diff(2,:);
+%     lege2 = ['al2 error' num2str(ag)];
+%     plot(1:app.iteration, x(:)+y(:), '-o', 'DisplayName', lege2); hold on;
+%     diff_sum.al2 = diff_sum.al2 + diff;
+% end
+% hold off;
+% legend;
+% subplot(2,1,2);
+% x(:) = diff_sum.al1(1,:);
+% y(:) = diff_sum.al1(2,:);
+% rmse = sqrt(x(:).^2 + y(:).^2);
+% plot(1:app.iteration, rmse(:), '-*', 'DisplayName', "algorithm1"); hold on;
+% 
+% x(:) = diff_sum.al2(1,:);
+% y(:) = diff_sum.al2(2,:);
+% rmse = sqrt(x(:).^2 + y(:).^2);
+% plot(1:app.iteration, rmse(:), '-d', 'DisplayName', "algorithm2");
+% hold off;
+% legend;
 
-x(:) = diff_sum.al2(1,:);
-y(:) = diff_sum.al2(2,:);
-rmse = sqrt(x(:).^2 + y(:).^2);
-plot(1:app.iteration, rmse(:), '-d', 'DisplayName', "algorithm2"); 
-hold off;
-legend;
+%% video
+
+if make_video == 1
+    video_name = sprintf('robot_%s_%s',datestr(now,'yymmdd'),datestr(now,'HHMMSS'));
+    video = VideoWriter(video_name,'MPEG-4');
+    video.Quality = 100;
+    video.FrameRate = 1/0.05;   % 영상의 FPS, 값이 클수록 영상이 빨라짐
+    open(video);
+    writeVideo(video,F1);
+    close(video);
+    video_name = sprintf('robot_%s_%s',datestr(now,'yymmdd'),datestr(now,'HHMMSS'));
+    video = VideoWriter(video_name,'MPEG-4');
+    video.Quality = 100;
+    video.FrameRate = 1/0.05;   % 영상의 FPS, 값이 클수록 영상이 빨라짐
+    open(video);
+    writeVideo(video,F2);
+    close(video);
+    video_name = sprintf('robot_%s_%s',datestr(now,'yymmdd'),datestr(now,'HHMMSS'));
+    video = VideoWriter(video_name,'MPEG-4');
+    video.Quality = 100;
+    video.FrameRate = 1/0.05;   % 영상의 FPS, 값이 클수록 영상이 빨라짐
+    open(video);
+    writeVideo(video,F3);
+    close(video);
+end
+
+
+
+
+
 %% local functions
 function update_plot(index)
 global app
@@ -256,4 +344,40 @@ for i = 1:app.agent_num-1
         end
     end
 end
+
+for ag = 1:app.agent_num
+   app.plot_trajectory_real{ag}.XData = app.agent(ag).trajectory.real(1,1:index);
+   app.plot_trajectory_real{ag}.YData = app.agent(ag).trajectory.real(2,1:index);
+   app.plot_trajectory_al1{ag}.XData = app.agent(ag).trajectory.filtered.al1(1,1:index);
+   app.plot_trajectory_al1{ag}.YData = app.agent(ag).trajectory.filtered.al1(2,1:index);
+   app.plot_trajectory_al2{ag}.XData = app.agent(ag).trajectory.filtered.al2(1,1:index);
+   app.plot_trajectory_al2{ag}.YData = app.agent(ag).trajectory.filtered.al2(2,1:index);
+end
+
+interval = 1:index;
+diff_sum.al1 = zeros(2, index);
+diff_sum.al2 = zeros(2, index);
+for ag = 1:app.agent_num
+    diff = abs(app.agent(ag).trajectory.real(1:2,interval) - app.agent(ag).trajectory.filtered.al1(1:2,interval));
+    diff_sum.al1 = diff_sum.al1 + diff;
+    x(interval) = diff(1,interval);   y(interval) = diff(2,interval);
+    app.plot_absolute_error_al1{ag}.YData = x(interval) + y(interval);
+    app.plot_absolute_error_al1{ag}.XData = interval;
+    diff = abs(app.agent(ag).trajectory.real(1:2,interval) - app.agent(ag).trajectory.filtered.al2(1:2,interval));
+    diff_sum.al2 = diff_sum.al2 + diff;
+    x(interval) = diff(1,interval);   y(interval) = diff(2,interval);
+    app.plot_absolute_error_al2{ag}.YData = x(interval) + y(interval);
+    app.plot_absolute_error_al2{ag}.XData = interval;
+end
+
+x(interval) = diff_sum.al1(1,interval);
+y(interval) = diff_sum.al1(2,interval);
+rmse = sqrt(x(interval).^2 + y(interval).^2);
+app.plot_rmse_al1.XData = interval;
+app.plot_rmse_al1.YData = rmse(interval);
+x(interval) = diff_sum.al2(1,interval);
+y(interval) = diff_sum.al2(2,interval);
+rmse = sqrt(x(interval).^2 + y(interval).^2);
+app.plot_rmse_al2.XData = interval;
+app.plot_rmse_al2.YData = rmse(interval);
 end
