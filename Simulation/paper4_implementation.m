@@ -8,15 +8,20 @@
 clear all;
 
 addpath('./../../matlab/filters/');
+addpath('./../../matlab/filters/DFIR');
 
 global app;
 
 make_video = 1;
 absolute_on = 1;
 
+%% invironment setup
 app.agent_num = 3;
 app.nx = 3;
 app.nu = 2;
+app.nh = 6;
+app.nz = app.agent_num * 2;
+
 
 
 app.initial_state = zeros(app.nx * app.agent_num, 1);
@@ -47,6 +52,12 @@ app.iteration = 140;
 
 input = zeros(app.nu, app.agent_num, app.iteration);
 
+app.cp_targets = 1;
+estimator = cell(app.cp_targets,app.agent_num);
+
+for ct = 1:app.agent_num
+   estimator{1,ct} = DFIR(app.nh,app.nx,app.nz,app.nu,app.F,app.J_F,app.H,app.J_H,app.R,app.J_R,0);  
+end
 
 
 
