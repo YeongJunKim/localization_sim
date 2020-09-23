@@ -22,14 +22,15 @@ app.nu = 2;
 app.nh = 6;
 app.nz = app.agent_num * 2;
 
-
-
 app.initial_state = zeros(app.nx * app.agent_num, 1);
 app.adjacency = zeros(app.agent_num, app.agent_num);
 
-app.initial_state(1:3,1) = [0 0 1]';
-app.initial_state(4:6,1) = [0 1 1]';
-app.initial_state(7:9,1) = [1 0 1.1]';
+% ramdom state initialization
+for ct = 1:app.agent_num
+   app.initial_state((ct-1)*app.nx+1:(ct-1)*app.nx+app.nx, 1) = rand(3,1);
+   app.initial_state((ct-1)*app.nx+1,1) = app.initial_state((ct-1)*app.nx+1,1) * 5;
+   app.initial_state((ct-1)*app.nx+2,1) = app.initial_state((ct-1)*app.nx+1,1) * 5;
+end
 
 app.adjacency(1,2) = 1;
 app.adjacency(2,3) = 1;
