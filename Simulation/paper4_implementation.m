@@ -20,7 +20,7 @@ absolute_on = 1;
 app.agent_num = 5;
 app.nx = 3;
 app.nu = 2;
-app.nh = 3;
+app.nh = 7;
 app.nz = 7;
 
 app.initial_state = zeros(app.nx * app.agent_num, 1);
@@ -56,6 +56,7 @@ for ct = 1:app.agent_num
     app.data.agent(ct).measurement = zeros(app.nz, []);
     app.data.agent(ct).trajectory.real = zeros(app.nx, []);
     app.data.agent(ct).trajectory.estimated = zeros(app.nx, []);
+    app.data.agent(ct).trajectroy
     app.data.agent(ct).initial_state(:,1) = app.initial_state((ct-1)*app.nx+1:(ct-1)*app.nx+app.nx, 1);
     app.data.agent(ct).trajectory.real(:, 1) = app.initial_state((ct-1)*app.nx+1:(ct-1)*app.nx+app.nx, 1);
     app.data.agent(ct).trajectory.estimated(:, 1) = app.initial_state((ct-1)*app.nx+1:(ct-1)*app.nx+app.nx, 1);
@@ -85,17 +86,18 @@ ax2_plots = cell(app.agent_num, 1);
 for ct = 1:app.agent_num
     agent_plot_name = strcat(agent_names, num2str(ct));
     if ct == 3 || ct == 4
-    agent_plot_name = strcat(agent_plot_name, "(known)");
-    else
     agent_plot_name = strcat(agent_plot_name, "(unknown)");
+    else
+    agent_plot_name = strcat(agent_plot_name, "(known)");
     end
     ax2_plots{ct} = plot(ax2, app.initial_state((ct-1)*app.nx+1),app.initial_state((ct-1)*app.nx+1)+1, '*', 'DisplayName', agent_plot_name); hold on;
 end
 legend;
 % xlim([-10 10]);
 % ylim([-10 10]);
-xlabel("x(m)");
-ylabel("y(m)");
+xlabel("x(m)", 'FontSize', 12);
+ylabel("y(m)", 'FontSize', 12);
+title("trajectory", 'FontSize', 12);
 hold on;
 
 
@@ -202,31 +204,71 @@ x = zeros(1,app.iteration);
 y = zeros(1,app.iteration);
 x(:) = estimator{app.INDEX_DFIR, 3}.x_appended(1,:);
 y(:) = estimator{app.INDEX_DFIR, 3}.x_appended(2,:);
-plot(x,y,'-d'); hold on;
+plot(x,y,'-d', 'DisplayName', 'agent3(proposed)'); hold on;
 x(:) = estimator{app.INDEX_DFIR, 4}.x_appended(1,:);
 y(:) = estimator{app.INDEX_DFIR, 4}.x_appended(2,:);
-plot(x,y,'-d'); hold on;
+plot(x,y,'-d', 'DisplayName', 'agent4(proposed)'); hold on;
 x(:) = estimator{app.INDEX_EKF, 3}.x_appended(1,:);
 y(:) = estimator{app.INDEX_EKF, 3}.x_appended(2,:);
-plot(x,y,'-o'); hold on;
+plot(x,y,'-o', 'DisplayName', 'agent3(EKF)'); hold on;
 x(:) = estimator{app.INDEX_EKF, 4}.x_appended(1,:);
 y(:) = estimator{app.INDEX_EKF, 4}.x_appended(2,:);
-plot(x,y,'-o');
+plot(x,y,'-o', 'DisplayName', 'agent4(EKF)');
+legend('FontSize', 12);
+
+%%
+figure(3);
+clf;
+subplot(2,1,1);
+x = zeros(1, app.iteration);
+y = zeros(1, app.iteration);
+interval = 1:app.iteration;
+x(interval) = app.data.agent(3).trajectory.real(1,interval) - estimator{app.INDEX_DFIR, 3}.x_appended(1,interval);
+y(interval) = app.data.agent(3).trajectory.real(2,interval) - estimator{app.INDEX_DFIR, 3}.x_appended(2,interval);
+y = x.^2 + y.^2;
+y = y/2;
+plot(interval,y,'-o','DisplayName', 'proposed'); hold on;
+
+
+x = zeros(1, app.iteration);
+y = zeros(1, app.iteration);
+interval = 1:app.iteration;
+x(interval) = app.data.agent(3).trajectory.real(1,interval) - estimator{app.INDEX_EKF, 3}.x_appended(1,interval);
+y(interval) = app.data.agent(3).trajectory.real(2,interval) - estimator{app.INDEX_EKF, 3}.x_appended(2,interval);
+y = x.^2 + y.^2;
+plot(interval,y, '-x','DisplayName', 'EKF'); hold on;
+legend('Fontsize', 12);
+title('robot3 estimation error');
+ylabel('error','Fontsize', 12);
+xlabel('time(s)','Fontsize', 12);
+
+
+subplot(2,1,2);
+x = zeros(1, app.iteration);
+y = zeros(1, app.iteration);
+interval = 1:app.iteration;
+x(interval) = app.data.agent(4).trajectory.real(1,interval) - estimator{app.INDEX_DFIR, 4}.x_appended(1,interval);
+y(interval) = app.data.agent(4).trajectory.real(2,interval) - estimator{app.INDEX_DFIR, 4}.x_appended(2,interval);
+y = x.^2 + y.^2;
+y = y/2;
+plot(interval,y,'-o','DisplayName', 'proposed'); hold on;
+
+
+x = zeros(1, app.iteration);
+y = zeros(1, app.iteration);
+interval = 1:app.iteration;
+x(interval) = app.data.agent(4).trajectory.real(1,interval) - estimator{app.INDEX_EKF, 4}.x_appended(1,interval);
+y(interval) = app.data.agent(4).trajectory.real(2,interval) - estimator{app.INDEX_EKF, 4}.x_appended(2,interval);
+y = x.^2 + y.^2;
+plot(interval,y, '-x','DisplayName', 'EKF'); hold on;
+legend('Fontsize', 12);
+title('robot4 estimation error');
+ylabel('error','Fontsize', 12);
+xlabel('time(s)','Fontsize', 12);
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
+%% RMSE
 
 
 
