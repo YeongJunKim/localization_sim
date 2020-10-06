@@ -56,7 +56,8 @@ for ct = 1:app.agent_num
     app.data.agent(ct).measurement = zeros(app.nz, []);
     app.data.agent(ct).trajectory.real = zeros(app.nx, []);
     app.data.agent(ct).trajectory.estimated = zeros(app.nx, []);
-    app.data.agent(ct).trajectroy
+    app.data.agent(ct).trajectory.se =  zeros(app.nx, []);
+    app.data.agent(ct).trajectory.rmse = 0;
     app.data.agent(ct).initial_state(:,1) = app.initial_state((ct-1)*app.nx+1:(ct-1)*app.nx+app.nx, 1);
     app.data.agent(ct).trajectory.real(:, 1) = app.initial_state((ct-1)*app.nx+1:(ct-1)*app.nx+app.nx, 1);
     app.data.agent(ct).trajectory.estimated(:, 1) = app.initial_state((ct-1)*app.nx+1:(ct-1)*app.nx+app.nx, 1);
@@ -97,7 +98,7 @@ legend;
 % ylim([-10 10]);
 xlabel("x(m)", 'FontSize', 12);
 ylabel("y(m)", 'FontSize', 12);
-title("trajectory", 'FontSize', 12);
+title("trajectory", 'FontSize', 13);
 hold on;
 
 
@@ -181,8 +182,9 @@ for ct = 1:app.iteration
         e3 = app.data.agent(3).trajectory.real(3,ct+1);
         
         
-        measurement = [d1 d2 d3 e1 e2 e3 app.data.agent(3).trajectory.real(3,ct+1)]+ normrnd([0,0,0,0,0,0,0], [0.1 0.1 0.1 0.01 0.1 0.01 0.001]);
+        measurement = [d1 d2 d3 e1 e2 e3 app.data.agent(3).trajectory.real(3,ct+1)] + normrnd([0,0,0,0,0,0,0], [0.001 0.001 0.001 0.001 0.001 0.001 0.0001]);
         estimator{app.INDEX_DFIR, 3}.estimate2(app.data.agent(3).input(:,ct), pj', measurement');
+        measurement = [d1 d2 d3 e1 e2 e3 app.data.agent(3).trajectory.real(3,ct+1)] + normrnd([0,0,0,0,0,0,0], [0.1 0.01 0.01 0.01 0.1 0.01 0.001]);
         estimator{app.INDEX_EKF, 3}.estimate(app.data.agent(3).input(:,ct), pj', measurement');
         pj = [x1 y1 x2 y2 x3 y3];
         d1 = norm(app.data.agent(4).trajectory.real(1:2,ct+1) - app.data.agent(1).trajectory.real(1:2,ct+1));
@@ -192,8 +194,9 @@ for ct = 1:app.iteration
         e1 = app.data.agent(4).trajectory.real(3,ct+1);
         e2 = app.data.agent(4).trajectory.real(3,ct+1);
         e3 = app.data.agent(4).trajectory.real(3,ct+1);
-        measurement = [d1 d2 d3 e1 e2 e3 app.data.agent(4).trajectory.real(3,ct+1)]+ normrnd([0,0,0,0,0,0,0], [0.1 0.01 0.01 0.01 0.1 0.01 0.001]);
+        measurement = [d1 d2 d3 e1 e2 e3 app.data.agent(4).trajectory.real(3,ct+1)] + normrnd([0,0,0,0,0,0,0], [0.001 0.001 0.001 0.001 0.001 0.001 0.0001]);
         estimator{app.INDEX_DFIR, 4}.estimate2(app.data.agent(4).input(:,ct), pj', measurement');
+        measurement = [d1 d2 d3 e1 e2 e3 app.data.agent(4).trajectory.real(3,ct+1)]+ normrnd([0,0,0,0,0,0,0], [0.01 0.1 0.01 0.1 0.01 0.01 0.01]);
         estimator{app.INDEX_EKF, 4}.estimate(app.data.agent(4).input(:,ct), pj', measurement');
 end
 
@@ -222,54 +225,72 @@ clf;
 subplot(2,1,1);
 x = zeros(1, app.iteration);
 y = zeros(1, app.iteration);
+z = zeros(1, app.iteration);
 interval = 1:app.iteration;
+
 x(interval) = app.data.agent(3).trajectory.real(1,interval) - estimator{app.INDEX_DFIR, 3}.x_appended(1,interval);
 y(interval) = app.data.agent(3).trajectory.real(2,interval) - estimator{app.INDEX_DFIR, 3}.x_appended(2,interval);
+z(interval) = app.data.agent(3).trajectory.real(3,interval) - estimator{app.INDEX_DFIR, 3}.x_appended(3,interval);
+estimator{app.INDEX_DFIR, 3}.x_se(1,interval) = x(interval).^2;
+estimator{app.INDEX_DFIR, 3}.x_se(2,interval) = y(interval).^2;
+estimator{app.INDEX_DFIR, 3}.x_se(3,interval) = z(interval).^2;
+
 y = x.^2 + y.^2;
 y = y/2;
 plot(interval,y,'-o','DisplayName', 'proposed'); hold on;
 
 
-x = zeros(1, app.iteration);
-y = zeros(1, app.iteration);
-interval = 1:app.iteration;
 x(interval) = app.data.agent(3).trajectory.real(1,interval) - estimator{app.INDEX_EKF, 3}.x_appended(1,interval);
 y(interval) = app.data.agent(3).trajectory.real(2,interval) - estimator{app.INDEX_EKF, 3}.x_appended(2,interval);
+z(interval) = app.data.agent(3).trajectory.real(3,interval) - estimator{app.INDEX_EKF, 3}.x_appended(3,interval);
+estimator{app.INDEX_EKF, 3}.x_se(1,interval) = x(interval).^2;
+estimator{app.INDEX_EKF, 3}.x_se(2,interval) = y(interval).^2;
+estimator{app.INDEX_EKF, 3}.x_se(3,interval) = z(interval).^2;
 y = x.^2 + y.^2;
 plot(interval,y, '-x','DisplayName', 'EKF'); hold on;
 legend('Fontsize', 12);
-title('robot3 estimation error');
-ylabel('error','Fontsize', 12);
+title('robot3 estimation error','Fontsize', 13);
+ylabel('error(m^2)','Fontsize', 12);
 xlabel('time(s)','Fontsize', 12);
 
 
 subplot(2,1,2);
-x = zeros(1, app.iteration);
-y = zeros(1, app.iteration);
-interval = 1:app.iteration;
 x(interval) = app.data.agent(4).trajectory.real(1,interval) - estimator{app.INDEX_DFIR, 4}.x_appended(1,interval);
 y(interval) = app.data.agent(4).trajectory.real(2,interval) - estimator{app.INDEX_DFIR, 4}.x_appended(2,interval);
+z(interval) = app.data.agent(4).trajectory.real(3,interval) - estimator{app.INDEX_DFIR, 4}.x_appended(3,interval);
+estimator{app.INDEX_DFIR, 4}.x_se(1,interval) = x(interval).^2;
+estimator{app.INDEX_DFIR, 4}.x_se(2,interval) = y(interval).^2;
+estimator{app.INDEX_DFIR, 4}.x_se(3,interval) = z(interval).^2;
 y = x.^2 + y.^2;
 y = y/2;
 plot(interval,y,'-o','DisplayName', 'proposed'); hold on;
 
 
-x = zeros(1, app.iteration);
-y = zeros(1, app.iteration);
-interval = 1:app.iteration;
 x(interval) = app.data.agent(4).trajectory.real(1,interval) - estimator{app.INDEX_EKF, 4}.x_appended(1,interval);
 y(interval) = app.data.agent(4).trajectory.real(2,interval) - estimator{app.INDEX_EKF, 4}.x_appended(2,interval);
+z(interval) = app.data.agent(4).trajectory.real(3,interval) - estimator{app.INDEX_EKF, 4}.x_appended(3,interval);
+estimator{app.INDEX_EKF, 4}.x_se(1,interval) = x(interval).^2;
+estimator{app.INDEX_EKF, 4}.x_se(2,interval) = y(interval).^2;
+estimator{app.INDEX_EKF, 4}.x_se(3,interval) = z(interval).^2;
 y = x.^2 + y.^2;
 plot(interval,y, '-x','DisplayName', 'EKF'); hold on;
 legend('Fontsize', 12);
-title('robot4 estimation error');
-ylabel('error','Fontsize', 12);
+title('robot4 estimation error','Fontsize', 13);
+ylabel('error(m^2)','Fontsize', 12);
 xlabel('time(s)','Fontsize', 12);
 
 
 
 %% RMSE
-
+for ct = 3:4
+   estimator{app.INDEX_DFIR, ct}.x_rmse = sum(estimator{app.INDEX_DFIR, ct}.x_se(1:2,interval))/2;
+   estimator{app.INDEX_EKF, ct}.x_rmse = sum(estimator{app.INDEX_EKF, ct}.x_se(1:2,interval));
+   estimator{app.INDEX_DFIR, ct}.x_rmse = sum(estimator{app.INDEX_DFIR, ct}.x_rmse);
+   estimator{app.INDEX_EKF, ct}.x_rmse = sum(estimator{app.INDEX_EKF, ct}.x_rmse);
+   
+   fprintf("ROBOT %d DFIR RMSE %f \r\n",ct, estimator{app.INDEX_DFIR, ct}.x_rmse);
+   fprintf("ROBOT %d EKF RMSE %f \r\n",ct, estimator{app.INDEX_EKF, ct}.x_rmse);
+end
 
 
 
