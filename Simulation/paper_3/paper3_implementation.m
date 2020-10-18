@@ -7,8 +7,8 @@
 
 clear all;
 
-addpath('./../../matlab/filters/EKFDCL');
-
+addpath('./../../../matlab/filters/EKFDCL');
+addpath('./..');
 global app;
 
 make_video = 1;

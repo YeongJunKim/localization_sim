@@ -7,10 +7,10 @@
 
 clear all;
 
-addpath('./../../matlab/filters/');
-addpath('./../../matlab/filters/DFIR');
-addpath('./../../matlab/filters/EKF');
-
+addpath('./../../../matlab/filters/');
+addpath('./../../../matlab/filters/DFIR');
+addpath('./../../../matlab/filters/EKF');
+addpath('./..');
 global app;
 
 make_video = 1;

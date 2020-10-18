@@ -17,7 +17,8 @@ clear all
 clc
 clf
 %% add path
-addpath('./../../matlab/filters/DKFCL');
+addpath('./../../../matlab/filters/DKFCL');
+addpath('./..');
 %% global variables
 global app
 

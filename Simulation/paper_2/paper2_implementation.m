@@ -1,7 +1,7 @@
 clear all;
 
-addpath('./../../matlab/filters/NCLA');
-
+addpath('./../../../matlab/filters/NCLA');
+addpath('./..');
 global app;
 
 app.agent_num = 5;
