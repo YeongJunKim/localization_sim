@@ -6,7 +6,7 @@ global estimator
 app.initial_state = zeros(app.nx, app.agent_num);
 
 app.initial_state(:,findnode(app.digraph, "tb3a")) = [0 0 0]';
-app.initial_state(:,findnode(app.digraph, "tb3b")) = [1 3 0]';
+app.initial_state(:,findnode(app.digraph, "tb3b")) = [6 3 0]';
 app.initial_state(:,findnode(app.digraph, "tb3c")) = [2 0 0]';
 app.initial_state(:,findnode(app.digraph, "tb3d")) = [3 2 0]';
 app.initial_state(:,findnode(app.digraph, "tb3e")) = [4 0 0]';

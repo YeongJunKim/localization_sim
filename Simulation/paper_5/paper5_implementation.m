@@ -63,7 +63,7 @@ for ct = 1:app.iteration
         ul = app.result.agent(i).input(1,ct);
         ua = app.result.agent(i).input(2,ct);
         app.result.agent(i).trajectory.real(:,ct+1) = app.F(x, y, theta, ul, ua);
-        app.result.agent(i).trajectory.real(3,ct+1) = wrapTo2Pi(app.result.agent(i).trajectory.real(3,ct+1));
+%         app.result.agent(i).trajectory.real(3,ct+1) = wrapTo2Pi(app.result.agent(i).trajectory.real(3,ct+1));
                
     end
 end
@@ -96,15 +96,15 @@ for ct = 1:app.iteration
                 x1 = pj_(:,i);
                 x2 = pj_(:,find_neighbors(j));
                 z(j) = norm(x1 - x2);
-                z(nn+j) = atan2(x2(2)-x1(2), x2(1)-x1(1))-app.result.agent(i).trajectory.real(3,ct);
-                z(nn+j) = wrapTo2Pi(z(nn+j));
+                z(nn+j) = (atan2(x2(2)-x1(2), x2(1)-x1(1)))- wrapTo2Pi(app.result.agent(i).trajectory.real(3,ct));
+%                 z(nn+j) = wrapTo2Pi(z(nn+j));
             end
             z(nn*2+1) = app.result.agent(i).trajectory.real(1,ct);
-            z(nn*2+1) = wrapTo2Pi(z(nn*2+1));
+%             z(nn*2+1) = wrapTo2Pi(z(nn*2+1));
             
-            if(i == 3)
-               disp(z) 
-            end
+%             if(i == 3)
+%                disp(z) 
+%             end
             
             estimator{app.index_RDFIR, i}.estimate2(i,app.result.agent(i).input(:,ct), z, app.adj_full, pj_);
            

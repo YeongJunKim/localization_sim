@@ -26,9 +26,9 @@ app.index_PF  = 3;
 
 % tb3a, tb3b are known robot,
 % start(give position) -> end(receive position)
-st     = [1 1 1 2 2 2 3  5 5 6 6 ];
-ed     = [3 4 5 3 5 6 6  6 4 4 3 ];
-weight = [1 1 1 1 1 1 1  1 1 1 1 ]';
+st     = [1 1 1 2 2 2 3 4 5 5 6 6 4];
+ed     = [3 4 5 3 5 6 6 3 6 4 4 3 6];
+weight = [1 1 1 1 1 1 1 1 1 1 1 1 1]';
 
 
 EdgeTable = table([st' ed'], weight, ...
