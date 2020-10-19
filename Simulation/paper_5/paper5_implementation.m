@@ -17,6 +17,7 @@ addpath('./../../../matlab/filters/');
 addpath('./../../../matlab/filters/FIR');
 addpath('./../../../matlab/filters/RDFIR');
 addpath('./../../../matlab/filters/EKF');
+addpath('./..');
 
 global app;
 global estimator;
@@ -32,29 +33,41 @@ r = app_initialization();disp(r);
 %% make real
 for ct = 1:app.iteration
     
-    if ct < 1
+    if ct < 30
         app.result.agent(1).input(:,ct) = normrnd([0.2 -0.2]', 0.1);
         app.result.agent(2).input(:,ct) = normrnd([0.1 0.15]', 0.1);
         app.result.agent(3).input(:,ct) = normrnd([0.1 0.2]', 0.1);
         app.result.agent(4).input(:,ct) = normrnd([0.1 0.16]', 0.1);
         app.result.agent(5).input(:,ct) = normrnd([0.1 -0.21]', 0.1);
         app.result.agent(6).input(:,ct) = normrnd([0.1 -0.21]', 0.1);
-    elseif ct < 1
+        app.result.agent(7).input(:,ct) = normrnd([0.1 -0.21]', 0.1);
+        app.result.agent(8).input(:,ct) = normrnd([0.1 -0.21]', 0.1);
+        app.result.agent(9).input(:,ct) = normrnd([0.1 -0.21]', 0.1);
+        app.result.agent(10).input(:,ct) = normrnd([0.1 -0.21]', 0.1);
+    elseif ct < 80
         app.result.agent(1).input(:,ct) = normrnd([0.1 0.1]', 0.1);
         app.result.agent(2).input(:,ct) = normrnd([0.15 -0.3]', 0.1);
         app.result.agent(3).input(:,ct) = normrnd([0.2 -0.3]', 0.1);
         app.result.agent(4).input(:,ct) = normrnd([0.4 -0.36]', 0.1);
         app.result.agent(5).input(:,ct) = normrnd([0.3 0.13]', 0.1);
         app.result.agent(6).input(:,ct) = normrnd([0.3 0.13]', 0.1);
+        app.result.agent(7).input(:,ct) = normrnd([0.1 -0.21]', 0.1);
+        app.result.agent(8).input(:,ct) = normrnd([0.1 -0.21]', 0.1);
+        app.result.agent(9).input(:,ct) = normrnd([0.1 -0.21]', 0.1);
+        app.result.agent(10).input(:,ct) = normrnd([0.1 -0.21]', 0.1);
     else
-        app.result.agent(1).input(:,ct) = normrnd([0.1 0.1]', 0.000001);
-        app.result.agent(2).input(:,ct) = normrnd([0.25 0.3]', 0.000001);
-        app.result.agent(3).input(:,ct) = normrnd([0.2 -0.35]', 0.00001);
-        app.result.agent(4).input(:,ct) = normrnd([0.1 -0.3]', 0.0000001);
-        app.result.agent(5).input(:,ct) = normrnd([0.15 0.4]', 0.000001);
-        app.result.agent(6).input(:,ct) = normrnd([0.15 0.4]', 0.000001);
+        app.result.agent(1).input(:,ct) = normrnd([0.1 0.1]', 0.001);
+        app.result.agent(2).input(:,ct) = normrnd([0.25 0.3]', 0.001);
+        app.result.agent(3).input(:,ct) = normrnd([0.2 -0.35]', 0.001);
+        app.result.agent(4).input(:,ct) = normrnd([0.1 -0.3]', 0.001);
+        app.result.agent(5).input(:,ct) = normrnd([0.15 0.4]', 0.001);
+        app.result.agent(6).input(:,ct) = normrnd([0.15 0.4]', 0.001);
+        app.result.agent(7).input(:,ct) = normrnd([0.1 -0.21]', 0.001);
+        app.result.agent(8).input(:,ct) = normrnd([0.1 -0.21]', 0.001);
+        app.result.agent(9).input(:,ct) = normrnd([0.1 -0.21]', 0.001);
+        app.result.agent(10).input(:,ct) = normrnd([0.1 -0.21]', 0.001);
     end
-%     disp(ct)
+    disp(ct)
 %     app.result.agent(i)
     for i = 1:app.agent_num
         x = app.result.agent(i).trajectory.real(1,ct);
@@ -96,15 +109,9 @@ for ct = 1:app.iteration
                 x1 = pj_(:,i);
                 x2 = pj_(:,find_neighbors(j));
                 z(j) = norm(x1 - x2);
-                z(nn+j) = (atan2(x2(2)-x1(2), x2(1)-x1(1)))- wrapTo2Pi(app.result.agent(i).trajectory.real(3,ct));
-%                 z(nn+j) = wrapTo2Pi(z(nn+j));
+                z(nn+j) = (atan2(x2(2)-x1(2), x2(1)-x1(1)));
             end
             z(nn*2+1) = app.result.agent(i).trajectory.real(1,ct);
-%             z(nn*2+1) = wrapTo2Pi(z(nn*2+1));
-            
-%             if(i == 3)
-%                disp(z) 
-%             end
             
             estimator{app.index_RDFIR, i}.estimate2(i,app.result.agent(i).input(:,ct), z, app.adj_full, pj_);
            

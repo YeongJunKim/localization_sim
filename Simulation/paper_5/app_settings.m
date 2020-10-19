@@ -4,14 +4,14 @@ global app
 app.make_video = 1;
 
 
-app.agent_name = ["tb3a", "tb3b", "tb3c", "tb3d", "tb3e", "tb3f"];
-app.agent_type = ["","","","","",""];
+app.agent_name = ["tb3a", "tb3b", "tb3c", "tb3d", "tb3e", "tb3f", "tb3g", "tb3h", "tb3i", "tb3j"];
+app.agent_type = ["","","","","","","","","",""];
 
-app.agent_num = 6;
+app.agent_num = 10;
 app.nx = 3;
 app.nu = 2;
 app.nh = cell(app.agent_num, 1);
-app.horizon_size.RDFIR = 5;
+app.horizon_size.RDFIR = 8;
 app.horizon_size.FIR = 6;
 app.anchor_num = 4;
 
@@ -26,9 +26,10 @@ app.index_PF  = 3;
 
 % tb3a, tb3b are known robot,
 % start(give position) -> end(receive position)
-st     = [1 1 1 2 2 2 3 4 5 5 6 6 4];
-ed     = [3 4 5 3 5 6 6 3 6 4 4 3 6];
-weight = [1 1 1 1 1 1 1 1 1 1 1 1 1]';
+st     = [1 1 2 2 2 2 3 3 4 4 5 5 6 6 1 1 1 1 8 2 2 4 6 3 10];
+ed     = [3 5 3 5 6 4 6 4 3 6 6 4 4 3 7 8 9 10 9 9 10 7 10 8 7];
+weight = [1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]';
+
 
 
 EdgeTable = table([st' ed'], weight, ...
@@ -62,7 +63,7 @@ ax = axes;
 plot(ax, app.digraph, 'Layout', ...
     'force', 'EdgeLabel', app.digraph.Edges.Weight, 'LineWidth', 2, 'MarkerSize', 15, ...
     'ArrowSize', 10, 'NodeColor', [0.85 0.33 0.10], 'NodeFontSize', 10, ...
-    'EdgeAlpha', 0.6, 'EdgeColor', [0.5 0.25 0.8]);
+    'EdgeAlpha', 0.6, 'EdgeColor', [0.5 0.25 0.8], 'ArrowPosition', 0.9);
 title("Adjacency graph");
 
 % get(ax)

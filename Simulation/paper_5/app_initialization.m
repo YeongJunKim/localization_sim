@@ -1,16 +1,22 @@
 function r = app_initialization()
 
+persistent unknown_agent_init_flag known_agent_init_flag
+
 global app
 global estimator
 
 app.initial_state = zeros(app.nx, app.agent_num);
 
-app.initial_state(:,findnode(app.digraph, "tb3a")) = [0 0 0]';
-app.initial_state(:,findnode(app.digraph, "tb3b")) = [6 3 0]';
-app.initial_state(:,findnode(app.digraph, "tb3c")) = [2 0 0]';
-app.initial_state(:,findnode(app.digraph, "tb3d")) = [3 2 0]';
-app.initial_state(:,findnode(app.digraph, "tb3e")) = [4 0 0]';
-app.initial_state(:,findnode(app.digraph, "tb3f")) = [5 3 0]';
+app.initial_state(:,findnode(app.digraph, "tb3a")) = [3 3 2]';
+app.initial_state(:,findnode(app.digraph, "tb3b")) = [6 3 1]';
+app.initial_state(:,findnode(app.digraph, "tb3c")) = [2 0 2]';
+app.initial_state(:,findnode(app.digraph, "tb3d")) = [3 2 1]';
+app.initial_state(:,findnode(app.digraph, "tb3e")) = [4 0 1.5]';
+app.initial_state(:,findnode(app.digraph, "tb3f")) = [-3 3 3]';
+app.initial_state(:,findnode(app.digraph, "tb3g")) = [-1 3 3]';
+app.initial_state(:,findnode(app.digraph, "tb3h")) = [6 3 3]';
+app.initial_state(:,findnode(app.digraph, "tb3i")) = [7 -2 3]';
+app.initial_state(:,findnode(app.digraph, "tb3j")) = [1 10 3]';
 
 app.anchor_position = zeros(2, app.anchor_num);
 app.anchor_position(:,1) = [0 0]';
@@ -34,10 +40,13 @@ for i = 1:app.agent_num
         nu_ = app.nu;
         % measurement size
         nz_ = size(app.anchor_position, 2) + 1;
-        % nonholonomic dynamics
-        [f_, jf_] = dynamics_nonholonomic(app.dt);
-        % measurement with 4 anchor
-        [h_, jh_] = measurement_update(app.anchor_position);
+        if isempty(known_agent_init_flag)
+            % nonholonomic dynamics
+            [f_, jf_] = dynamics_nonholonomic(app.dt);
+            % measurement with 4 anchor
+            [h_, jh_] = measurement_update(app.anchor_position);
+            known_agent_init_flag = 1;
+        end
         estimator{app.index_RDFIR, i}   = FIR(nh_, nx_, nz_, nu_, f_, jf_, h_, jh_, app.initial_state(:,i));
         estimator{app.index_EKF, i}     = FIR(nh_, nx_, nz_, nu_, f_, jf_, h_, jh_, app.initial_state(:,i));
     else
@@ -50,13 +59,16 @@ for i = 1:app.agent_num
         % input size
         nu_ = app.nu;
         % measurement size
-        nz_ = size(app.nh{i},1)
+        nz_ = size(app.nh{i},1);
         % neighbor number
-        nn_ = size(find(app.adj_full(:,i)==1), 1)
-        % nonholonomic dynamics
-        [f_, jf_] = dynamics_nonholonomic(app.dt);
-        % relative measurement function
-        [h1_,h2_,h3_,jh1_,jh2_,jh3_] = h__();
+        nn_ = size(find(app.adj_full(:,i)==1), 1);
+        if isempty(unknown_agent_init_flag)
+            % nonholonomic dynamics
+            [f_, jf_] = dynamics_nonholonomic(app.dt);
+            % relative measurement function
+            [h1_,h2_,h3_,jh1_,jh2_,jh3_] = h__();
+            unknown_agent_init_flag = 1;
+        end
         estimator{app.index_RDFIR, i} = RDFIR(nh_, nx_, nu_, nz_, f_,jf_,h1_, h2_,h3_,jh1_,jh2_,jh3_,app.initial_state(:,i),nn_);
     end
     
@@ -89,8 +101,8 @@ app.ax1_plots = cell(app.agent_num, 1);
 for ct = 1:app.agent_num
     app.ax1_plots{ct} = plot(app.ax1, app.initial_state(1,ct),app.initial_state(2,ct), '*'); hold on;
 end
-xlim([-10 10]);
-ylim([-10 10]);
+xlim([-2 10]);
+ylim([-2 10]);
 xlabel("x(m)", 'FontSize', 12);
 ylabel("y(m)", 'FontSize', 12);
 title("trajectory", 'FontSize', 13);
@@ -102,17 +114,12 @@ app.ax2 = axes;
 app.ax2_plots = cell(app.agent_num, 1);
 
 for ct = 1:app.agent_num
-    agent_plot_name = strcat(agent_names, num2str(ct));
-    if(app.digraph.Nodes.Type{ct} == "unknown")
-    agent_plot_name = strcat(agent_plot_name, "(unknown)");
-    else
-    agent_plot_name = strcat(agent_plot_name, "(known)");
-    end
+    agent_plot_name = app.digraph.Nodes.Name{ct};
     app.ax2_plots{ct} = plot(app.ax2, app.initial_state(1,ct),app.initial_state(2,ct), '*', 'DisplayName', agent_plot_name); hold on;
 end
 legend;
-xlim([-10 10]);
-ylim([-10 10]);
+xlim([-2 10]);
+ylim([-2 10]);
 xlabel("x(m)", 'FontSize', 12);
 ylabel("y(m)", 'FontSize', 12);
 title("trajectory", 'FontSize', 13);
