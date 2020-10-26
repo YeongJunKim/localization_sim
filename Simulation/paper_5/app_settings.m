@@ -21,18 +21,22 @@ app.agent_type = ["","","","","","","","","","", ...
                   "","","","","","","","","","", ...
                   "","","","",""];
 
-app.agent_name = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", ...
-                  "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", ...
-                  "21", "22", "23", "24", "25"];
+% app.agent_name = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", ...
+%                   "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", ...
+%                   "21", "22", "23", "24", "25"];
 app.agent_num = 25;
 app.nx = 3;
 app.nu = 2;
 app.nh = cell(app.agent_num, 1);
-app.horizon_size.RDFIR = 10;
+app.horizon_size.RDFIR = 6;
 app.horizon_size.FIR = 6;
 app.anchor_num = 4;
 
+if app.initial_error_scenario == app.initial_error_scenario_normal
 app.iteration = 500;
+elseif app.initial_error_scenario == app.initial_error_scenario_error
+app.iteration = 50;
+end
 
 app.dt = 0.1;
 

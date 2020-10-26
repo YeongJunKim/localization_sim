@@ -28,6 +28,25 @@ app.anchor_position(:,2) = [0 6]';
 app.anchor_position(:,3) = [6 6]';
 app.anchor_position(:,4) = [6 0]';
 
+% result data init 
+for ct = 1:app.agent_num
+   app.result.agent(ct).input = zeros(app.nu, []);
+   if(app.digraph.Nodes.Type{ct} == "known")
+   app.result.agent(ct).measurement = zeros(size(app.anchor_position, 2) + 1, []);
+   else
+    app.result.agent(ct).measurement = zeros(size(app.nh{ct},1), []);
+   end
+   app.result.agent(ct).trajectory.real = zeros(app.nx, []);
+   app.result.agent(ct).trajectory.estimated = zeros(app.nx, []);
+   app.result.agent(ct).trajectory.se = zeros(app.nx, []);
+   app.result.agent(ct).trajectory.rmse = 0;
+   app.result.agent(ct).trajectory.real(:,1) = app.initial_state(:,ct);
+   app.result.agent(ct).trajectory.estimated(:,1) = app.initial_state(:,ct);
+%    disp(app.result.agent(ct))
+end
+
+
+
 % estimator init
 [app.F, app.jF] = dynamics_nonholonomic(app.dt);
 estimator = cell(app.estimator_num, app.agent_num);
@@ -77,6 +96,13 @@ for i = 1:app.agent_num
             end
             unknown_agent_init_flag = 1;
         end
+        if app.initial_error_scenario == app.initial_error_scenario_error
+%             if i == 5 || i == 8 || i == 12 || i == 19 || i == 24
+                app.initial_state(:,i) = app.initial_state(:,i) + normrnd([0 0 0]', [2 3 0.01]');
+%             end
+        elseif app.initial_error_scenario == app.initial_error_scenario_normal
+            
+        end
         estimator{app.index_RDFIR, i} = RDFIR(nh_, nx_, nu_, nz_, f_,jf_,h1_, h2_,h3_,jh1_,jh2_,jh3_,app.initial_state(:,i),nn_);
         %function obj = RDEKF(P_, Q_, R_, function_f_, function_jf_, function_h1_, function_h2_, function_h3_, function_jh1_, function_jh2_, function_jh3_, init_, nn_)
         R =  zeros(nn_, nn_);
@@ -98,22 +124,6 @@ for i = 1:app.agent_num
     
 end
 
-% result data init 
-for ct = 1:app.agent_num
-   app.result.agent(ct).input = zeros(app.nu, []);
-   if(app.digraph.Nodes.Type{ct} == "known")
-   app.result.agent(ct).measurement = zeros(size(app.anchor_position, 2) + 1, []);
-   else
-    app.result.agent(ct).measurement = zeros(size(app.nh{ct},1), []);
-   end
-   app.result.agent(ct).trajectory.real = zeros(app.nx, []);
-   app.result.agent(ct).trajectory.estimated = zeros(app.nx, []);
-   app.result.agent(ct).trajectory.se = zeros(app.nx, []);
-   app.result.agent(ct).trajectory.rmse = 0;
-   app.result.agent(ct).trajectory.real(:,1) = app.initial_state(:,ct);
-   app.result.agent(ct).trajectory.estimated(:,1) = app.initial_state(:,ct);
-%    disp(app.result.agent(ct))
-end
 
 % plot initialization
 agent_names = "agent";
