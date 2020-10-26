@@ -146,7 +146,7 @@ for ct = 1:app.iteration
                 for j = 1:nn
                     x1 = pj_(:,i);
                     x2 = pj_(:,find_neighbors(j));
-                    if(app.initial_error_scenario == app.initial_error_scenario_normal)
+%                     if(app.initial_error_scenario == app.initial_error_scenario_normal)
                         if (((ct > 200 && ct < 300) || (ct > 400 && ct < 450)) && (i == 8 || i == 15 || i == 20 || i == 5 || i == 18 ))
                             fprintf("eta noise occurred ct  [%d],i [%d]\r\n", ct, i);
                             z(j) = norm(x1 - x2) + normrnd(0,1);
@@ -155,7 +155,7 @@ for ct = 1:app.iteration
                             z(j) = norm(x1 - x2) + normrnd(0,0.01);
                             z(nn+j) = (atan2(x2(2)-x1(2), x2(1)-x1(1))) + normrnd(0,0.001);
                         end
-                    end
+%                     end
                 end
             elseif(app.relative_scenario == app.relative_scenario_poss_diff)
                 for j = 1:nn
