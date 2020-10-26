@@ -31,8 +31,22 @@ fprintf("with lidar information \n");
 fprintf("diff x : %f    diff y: %f \r\n", x, y);
 
 
-
-
+%%
+    for i = 1:app.agent_num
+        if(app.digraph.Nodes.Type{i} == "known")
+            
+        else
+            % make measurment
+            fprintf("%d th robot \r\n", i);
+            find_neighbors = find(app.adj_full(:,i)==1);
+            for j = 1:size(find_neighbors,1)
+               fprintf("%d,", find_neighbors(j)); 
+            end
+            fprintf("\n\n\n");
+            
+        end
+        
+    end
 
 
 

@@ -1,5 +1,4 @@
 function r = app_initialization()
-
 persistent unknown_agent_init_flag known_agent_init_flag
 
 global app
@@ -14,9 +13,14 @@ app.initial_state(:,findnode(app.digraph, "tb3d")) = [3 2 1]';
 app.initial_state(:,findnode(app.digraph, "tb3e")) = [4 0 1.5]';
 app.initial_state(:,findnode(app.digraph, "tb3f")) = [-3 3 3]';
 app.initial_state(:,findnode(app.digraph, "tb3g")) = [-1 3 3]';
-app.initial_state(:,findnode(app.digraph, "tb3h")) = [6 3 3]';
+app.initial_state(:,findnode(app.digraph, "tb3h")) = [6 5 3]';
 app.initial_state(:,findnode(app.digraph, "tb3i")) = [7 -2 3]';
-app.initial_state(:,findnode(app.digraph, "tb3j")) = [1 10 3]';
+app.initial_state(:,findnode(app.digraph, "tb3j")) = [1 3 3]';
+
+for i = 1:app.agent_num
+   app.initial_state(1:2,i) = normrnd([5 5]', [5 5]');
+%    app.initial_state(1:2,i) = app.initial_state(1:2,i);
+end
 
 app.anchor_position = zeros(2, app.anchor_num);
 app.anchor_position(:,1) = [0 0]';
@@ -48,7 +52,7 @@ for i = 1:app.agent_num
             known_agent_init_flag = 1;
         end
         estimator{app.index_RDFIR, i}   = FIR(nh_, nx_, nz_, nu_, f_, jf_, h_, jh_, app.initial_state(:,i));
-        estimator{app.index_EKF, i}     = FIR(nh_, nx_, nz_, nu_, f_, jf_, h_, jh_, app.initial_state(:,i));
+        estimator{app.index_RDEKF, i}     = FIR(nh_, nx_, nz_, nu_, f_, jf_, h_, jh_, app.initial_state(:,i));
     else
         % for unknwon robots
         % using relative measurement with neighbors (app.adj_full)
@@ -66,10 +70,30 @@ for i = 1:app.agent_num
             % nonholonomic dynamics
             [f_, jf_] = dynamics_nonholonomic(app.dt);
             % relative measurement function
-            [h1_,h2_,h3_,jh1_,jh2_,jh3_] = h__();
+            if(app.relative_scenario == app.relative_scenario_distance_eta)
+                [h1_,h2_,h3_,jh1_,jh2_,jh3_] = h__();
+            elseif(app.relative_scenario == app.relative_scenario_poss_diff)
+                [h1_,h2_,h3_,jh1_,jh2_,jh3_] = h___(); 
+            end
             unknown_agent_init_flag = 1;
         end
         estimator{app.index_RDFIR, i} = RDFIR(nh_, nx_, nu_, nz_, f_,jf_,h1_, h2_,h3_,jh1_,jh2_,jh3_,app.initial_state(:,i),nn_);
+        %function obj = RDEKF(P_, Q_, R_, function_f_, function_jf_, function_h1_, function_h2_, function_h3_, function_jh1_, function_jh2_, function_jh3_, init_, nn_)
+        R =  zeros(nn_, nn_);
+        for j = 1:nn_*2
+            R(j,j) = 0.01;
+        end
+        R(nn_*2+1,nn_*2+1) = 0.1;
+        if(app.relative_scenario == app.relative_scenario_distance_eta)
+            estimator{app.index_RDEKF, i} = RDEKF(diag([0.01, 0.01, 0.01]), diag([0.01, 0.01, 0.01]), R, f_, jf_, h1_, h2_, h3_, jh1_, jh2_, jh3_, app.initial_state(:,i),nn_);
+        elseif(app.relative_scenario == app.relative_scenario_poss_diff)
+            R =  zeros(nn_, nn_);
+            for j = 1:nn_*2
+                R(j,j) = 0.1;
+            end
+            R(nn_*2+1,nn_*2+1) = 0.1;
+            estimator{app.index_RDEKF, i} = RDEKF(diag([0.1, 0.1, 0.1]), diag([0.1, 0.1, 0.1]), R, f_, jf_, h1_, h2_, h3_, jh1_, jh2_, jh3_, app.initial_state(:,i),nn_);
+        end
     end
     
 end
@@ -85,7 +109,7 @@ for ct = 1:app.agent_num
    app.result.agent(ct).trajectory.real = zeros(app.nx, []);
    app.result.agent(ct).trajectory.estimated = zeros(app.nx, []);
    app.result.agent(ct).trajectory.se = zeros(app.nx, []);
-   app.result.agnet(ct).trajectory.rmse = 0;
+   app.result.agent(ct).trajectory.rmse = 0;
    app.result.agent(ct).trajectory.real(:,1) = app.initial_state(:,ct);
    app.result.agent(ct).trajectory.estimated(:,1) = app.initial_state(:,ct);
 %    disp(app.result.agent(ct))
@@ -93,7 +117,7 @@ end
 
 % plot initialization
 agent_names = "agent";
-figure('Name', 'real');
+figure(2);
 clf;
 app.ax1 = axes;
 app.ax1_plots = cell(app.agent_num, 1);
@@ -108,18 +132,22 @@ ylabel("y(m)", 'FontSize', 12);
 title("trajectory", 'FontSize', 13);
 hold off;
 
-figure('Name', 'estimate');
+figure(3);
 clf;
 app.ax2 = axes;
 app.ax2_plots = cell(app.agent_num, 1);
-
+app.ax2_plot_shape = ['*', '*', 'd', 'd', 'd', 'd', 'd','d','d','d'];
+app.ax2_plot_shape2 = ["-*", "-*", "-d", "-+", "-*", "-x", "-s","-d","-p","-h"];
 for ct = 1:app.agent_num
     agent_plot_name = app.digraph.Nodes.Name{ct};
-    app.ax2_plots{ct} = plot(app.ax2, app.initial_state(1,ct),app.initial_state(2,ct), '*', 'DisplayName', agent_plot_name); hold on;
+    if app.digraph.Nodes.Type{ct} == "known"
+    else
+        app.ax2_plots{ct} = plot(app.ax2, app.initial_state(1,ct),app.initial_state(2,ct), '*', 'DisplayName', agent_plot_name); hold on;
+    end
 end
-legend;
-xlim([-2 10]);
-ylim([-2 10]);
+legend('FontSize', 15, 'NumColumns', 2);
+% xlim([-8 10]);
+% ylim([-8 10]);
 xlabel("x(m)", 'FontSize', 12);
 ylabel("y(m)", 'FontSize', 12);
 title("trajectory", 'FontSize', 13);
