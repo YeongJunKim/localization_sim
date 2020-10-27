@@ -21,9 +21,9 @@ app.agent_type = ["","","","","","","","","","", ...
                   "","","","","","","","","","", ...
                   "","","","",""];
 
-% app.agent_name = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", ...
-%                   "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", ...
-%                   "21", "22", "23", "24", "25"];
+app.agent_name_by_number = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", ...
+                  "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", ...
+                  "21", "22", "23", "24", "25"];
 app.agent_num = 25;
 app.nx = 3;
 app.nu = 2;
@@ -83,12 +83,42 @@ end
 figure(1);
 clf;
 ax = axes;
-app.plot_diagraph = plot(ax, app.digraph, 'Layout', ...
+
+app.agent_name_disp_type_robot_name = 1;
+app.agent_name_disp_type_number = 2;
+
+app.agent_name_disp_type = app.agent_name_disp_type_number;
+
+if(app.agent_name_disp_type == app.agent_name_disp_type_robot_name)
+EdgeTable = table([st' ed'], weight, ...
+    'VariableNames', {'EndNodes' 'Weight'});
+NodeTable = table(app.agent_name', app.agent_type', ...
+    'VariableNames', {'Name' 'Type'});
+app.disp_digraph = digraph(EdgeTable, NodeTable);
+    
+app.plot_diagraph = plot(ax, app.disp_digraph, 'Layout', ...
     'force', 'LineWidth', 2, 'MarkerSize', 8, ...
     'ArrowSize', 10, 'NodeColor', [0.85 0.33 0.10], 'NodeFontSize', 10, ...
     'EdgeAlpha', 0.6, 'EdgeColor', [0.5 0.25 0.8], 'ArrowPosition', 0.9);
-% title("Adjacency graph");
 
+elseif(app.agent_name_disp_type == app.agent_name_disp_type_number)
+EdgeTable = table([st' ed'], weight, ...
+    'VariableNames', {'EndNodes' 'Weight'});
+NodeTable = table(app.agent_name_by_number', app.agent_type', ...
+    'VariableNames', {'Name' 'Type'});
+app.disp_digraph = digraph(EdgeTable, NodeTable);
+    
+    
+app.plot_diagraph = plot(ax, app.disp_digraph, 'Layout', ...
+    'force', 'LineWidth', 2, 'MarkerSize', 8, ...
+    'ArrowSize', 10, 'NodeColor', [0.85 0.33 0.10], 'NodeFontSize', 14, ...
+    'EdgeAlpha', 0.6, 'EdgeColor', [0.5 0.25 0.8], 'ArrowPosition', 0.9);
+end
+
+box off;
+ax = gca;
+ax.XColor = 'white';
+ax.YColor = 'white';
 for i = 1:app.agent_num
     if app.digraph.Nodes.Type{i} == "known"
         

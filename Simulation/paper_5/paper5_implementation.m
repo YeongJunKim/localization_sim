@@ -34,7 +34,7 @@ r = app_initialization();disp(r);
 %% make real
 for ct = 1:app.iteration
     
-    if ct < 30
+    if ct < 55
         app.result.agent(1).input(:,ct) = normrnd([0.2 -0.2]', 0.01);
         app.result.agent(2).input(:,ct) = normrnd([0.15 0.15]', 0.01);
         app.result.agent(3).input(:,ct) = normrnd([0.3 0.2]', 0.01);
@@ -101,7 +101,7 @@ for ct = 1:app.iteration
         app.result.agent(8).input(:,ct) = normrnd([0.4 -0.12]', 0.001);
         app.result.agent(9).input(:,ct) = normrnd([0.3 -0.111]', 0.001);
         app.result.agent(10).input(:,ct) = normrnd([0.254 0.1456]', 0.001);
-        for i = 11:app.agent_num
+        for i = 11:app.agent_num6
            app.result.agent(i).input(:,ct) = normrnd([0.3 0.15]', 0.01); 
         end
     end
@@ -119,8 +119,8 @@ for ct = 1:app.iteration
 end
 
 for i = 1:app.agent_num
-        app.ax2_plots{i}.XData = app.result.agent(i).trajectory.real(1,1:ct+1);
-        app.ax2_plots{i}.YData = app.result.agent(i).trajectory.real(2,1:ct+1); 
+        app.ax2_plots{i}.XData = app.result.agent(i).trajectory.real(1,1:2:ct+1);
+        app.ax2_plots{i}.YData = app.result.agent(i).trajectory.real(2,1:2:ct+1); 
 end
 
 %% estimate
@@ -185,21 +185,42 @@ for ct = 1:app.iteration
     
 end
 
-x = zeros(1,app.iteration);
-y = zeros(1,app.iteration);
-interval = 1:app.iteration;
+% x = zeros(1,app.iteration);
+% y = zeros(1,app.iteration);
+interval = 1:2:app.iteration;
+%%
 for i = 1:app.agent_num
         if(app.digraph.Nodes.Type{i} == "known")
         else
-           x(:) = estimator{app.index_RDFIR, i}.x_appended(1,interval);
-           y(:) = estimator{app.index_RDFIR, i}.x_appended(2,interval);
-           plot(app.ax2, x,y, '-d'); hold on;
+           x = estimator{app.index_RDFIR, i}.x_appended(1,interval);
+           y = estimator{app.index_RDFIR, i}.x_appended(2,interval);
+           index = num2str(i);
+           RDFIR_display_name = strcat("RDFIR", index);
+           plot(app.ax2, x,y, '-d', 'DisplayName', RDFIR_display_name); hold on;
+           drawnow;
         end
 end
-
+for i = 1:app.agent_num
+        if(app.digraph.Nodes.Type{i} == "known")
+        else
+           x = estimator{app.index_RDEKF, i}.x_appended(1,interval);
+           y = estimator{app.index_RDEKF, i}.x_appended(2,interval);
+           index = num2str(i);
+           RDFIR_display_name = strcat("RDEKF", index);
+           plot(app.ax2, x,y, '-+', 'DisplayName', RDFIR_display_name); hold on;
+           drawnow;
+        end
+end
+xlim([-10 30]);
+ylim([-12 23]);
+title("Trajectory", 'FontSize', 15)
+xlabel("x(m)", 'FontSize', 15)
+ylabel("y(m)", 'FontSize', 15)
 %% simulation result
 figure(4);
 clf;
+
+interval = 1:app.iteration;
 for i = 1:app.agent_num
     fprintf("[%d] index \r\n", i);
     if(app.digraph.Nodes.Type{i} == "known")
@@ -208,11 +229,17 @@ for i = 1:app.agent_num
         app.result.agent(i).RDFIR.error = app.result.agent(i).trajectory.real(:,2:app.iteration+1) - estimator{app.index_RDFIR, i}.x_appended(:,interval);
         subplot(3,1,1);
         plot(interval, app.result.agent(i).RDFIR.error(1,interval)); hold on;
+        xlabel("(a)", 'FontSize', 13);
+        ylabel("estimation error", 'FontSize', 13);
         subplot(3,1,2);
         plot(interval, app.result.agent(i).RDFIR.error(2,interval)); hold on;
+        xlabel("(b)", 'FontSize', 13);
+        ylabel("estimation error", 'FontSize', 13);
         subplot(3,1,3);
         plot(interval, app.result.agent(i).RDFIR.error(3,interval)); hold on;
-        drawnow
+        xlabel("(c)", 'FontSize', 13);
+        ylabel("estimation error", 'FontSize', 13);
+        drawnow;
     end
 end
 %% 
@@ -226,11 +253,17 @@ for i = 1:app.agent_num
         app.result.agent(i).RDEKF.error = app.result.agent(i).trajectory.real(:,interval) - estimator{app.index_RDEKF, i}.x_appended(:,interval);
         subplot(3,1,1);
         plot(interval, app.result.agent(i).RDEKF.error(1,interval)); hold on;
+        xlabel("(a)", 'FontSize', 13);
+        ylabel("estimation error", 'FontSize', 13);
         subplot(3,1,2);
         plot(interval, app.result.agent(i).RDEKF.error(2,interval)); hold on;
+        xlabel("(b)", 'FontSize', 13);
+        ylabel("estimation error", 'FontSize', 13);
         subplot(3,1,3);
         plot(interval, app.result.agent(i).RDEKF.error(3,interval)); hold on;
-        drawnow
+        xlabel("(c)", 'FontSize', 13);
+        ylabel("estimation error", 'FontSize', 13);
+        drawnow;
     end
 end
 %%
@@ -248,12 +281,12 @@ for i = 1:app.agent_num
     end
 end
 disp_name = ["(a)", "(b)", "(c)"];
+
+if app.initial_error_scenario == app.initial_error_scenario_normal
 lims = zeros(2,3);
 lims(:,1) = [0 12]';
 lims(:,2) = [0 10]';
 lims(:,3) = [0 1]';
-
-if app.initial_error_scenario == app.initial_error_scenario_normal
     for i = 1:3
         subplot(3,1,i);
         a = plot(interval, error_sum_RDFIR(i,interval), '-.','LineWidth',1.2, 'DisplayName', 'RDFIR'); hold on;
@@ -272,13 +305,28 @@ if app.initial_error_scenario == app.initial_error_scenario_normal
         legend([a,b], 'FontSize', 13);
     end
 elseif app.initial_error_scenario == app.initial_error_scenario_error
+lims(:,1) = [0 43]';
+lims(:,2) = [0 60]';
+lims(:,3) = [0 0.8]';
+x1 = zeros(2,3);
+x1(:,1) = [7 7]';
+x1(:,2) = [7 7]';
+x1(:,3) = [7 7]';
+x2 = zeros(2,3);
+x2(:,1) = [12 12]';
+x2(:,2) = [13 13]';
+x2(:,3) = [13 13]';
     for i = 1:3
         subplot(3,1,i);
         a = plot(interval, error_sum_RDFIR(i,interval), '-.','LineWidth',1.2, 'DisplayName', 'RDFIR'); hold on;
         b = plot(interval, error_sum_RDEKF(i,interval), '--','LineWidth',1.2, 'DisplayName', 'KF-based'); hold on;
+        x = [7 7]; y = [0 100];
+         plot(x1(:,i)',y,'--b','LineWidth', 1); hold on;
+%          x = [13 13]; y = [0 100];
+%          plot(x2(:,i)',y,'--b','LineWidth', 1); hold on;
         xlabel(disp_name(i), 'FontSize', 13);
         ylabel("sum of estimation error", 'FontSize', 13);
-%         ylim(lims(:,i)');
+         ylim(lims(:,i)');
         legend([a,b], 'FontSize', 13);
     end
 end
@@ -292,6 +340,29 @@ for i = 1:3
     fprintf("RMSE_RDEKF(%d) = %f \r\n",i, error_rmse_RDEKF(i));
     fprintf("RMSE_RDFIR(%d) = %f \r\n",i, error_rmse_RDFIR(i));
 end
+
+%% convergence rate
+% https://ieeexplore.ieee.org/abstract/document/7122298
+
+error_convergence_rate_DREKF = zeros(3,1);
+error_convergence_rate_DRFIR = zeros(3,1);
+
+for i = 1:3
+%     error_convergence_rate_RDEKF(i) =(error_sum_RDEKF(i,:))
+    rate = 1;
+    for j = 2:app.iteration
+        rate = rate * abs(error_sum_RDFIR(i,j)/error_sum_RDFIR(i,j-1));
+    end
+    error_convergence_rate_DRFIR(i,1) = rate;
+    
+    rate = 1;
+    for j = 2:app.iteration
+        rate = rate * abs(error_sum_RDEKF(i,j)/error_sum_RDEKF(i,j-1));
+    end
+    error_convergence_rate_DREKF(i,1) = rate;
+end
+fprintf("DREKF convergence rate (x y theta) %f, %f, %f \r\n", error_convergence_rate_DREKF(1,1),error_convergence_rate_DREKF(2,1),error_convergence_rate_DREKF(3,1));
+fprintf("DRFIR convergence rate (x y theta) %f, %f, %f \r\n", error_convergence_rate_DRFIR(1,1),error_convergence_rate_DRFIR(2,1),error_convergence_rate_DRFIR(3,1));
 
 
 

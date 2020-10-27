@@ -155,7 +155,7 @@ for ct = 1:app.agent_num
         app.ax2_plots{ct} = plot(app.ax2, app.initial_state(1,ct),app.initial_state(2,ct), '*', 'DisplayName', agent_plot_name); hold on;
     end
 end
-legend('FontSize', 15, 'NumColumns', 2);
+legend('FontSize', 15, 'NumColumns', 3);
 % xlim([-8 10]);
 % ylim([-8 10]);
 xlabel("x(m)", 'FontSize', 12);

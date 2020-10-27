@@ -37,12 +37,14 @@ fprintf("diff x : %f    diff y: %f \r\n", x, y);
             
         else
             % make measurment
-            fprintf("%d th robot \r\n", i);
+            find_neighbors = find(app.adj_full(:,i)==1);
+            j = size(find_neighbors,1);
+            fprintf("%d th robot's neighbors : %d \r\n", i, j);
             find_neighbors = find(app.adj_full(:,i)==1);
             for j = 1:size(find_neighbors,1)
-               fprintf("%d,", find_neighbors(j)); 
+%                fprintf("%d,", find_neighbors(j)); 
             end
-            fprintf("\n\n\n");
+%             fprintf("\n\n\n");
             
         end
         
