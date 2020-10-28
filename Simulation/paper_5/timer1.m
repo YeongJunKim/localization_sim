@@ -62,6 +62,7 @@ app.experiment_data(i).odom_data(:,step) = [ROBOTS{i}.sub_odom_data.Twist.Twist.
 
 
 app.experiment_data(i).ahrsv1(1,step) = ROBOTS{i}.sub_ahrsv1_data.Orientation.Z;
+app.experiment_data(i).user_input(:,step) = ROBOTS{i}.cmd_vel(:);
 app.experiment_data(i).tocs(1,step) = toc;
 
 %%  IMPORTANT  %%
