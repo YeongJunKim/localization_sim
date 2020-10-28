@@ -45,7 +45,7 @@ for i = 1:app.agent_num
 end
 
 %%
-tm = cell(app.agent_num, 1);
+tm = cell(app.agent_num+1, 1);
 % for i = 1:app.agent_num
 % disp("timer i");
 % disp(i);
@@ -61,6 +61,7 @@ tm{3} = timer('BusyMode', 'drop', 'ExecutionMode', 'fixedRate', 'Period', 1, 'Ti
 tm{4} = timer('BusyMode', 'drop', 'ExecutionMode', 'fixedRate', 'Period', 1, 'TimerFcn', {@timer4, 4});
 tm{5} = timer('BusyMode', 'drop', 'ExecutionMode', 'fixedRate', 'Period', 1, 'TimerFcn', {@timer5, 5});
 tm{6} = timer('BusyMode', 'drop', 'ExecutionMode', 'fixedRate', 'Period', 1, 'TimerFcn', {@timer6, 6});
-start([tm{1} tm{2} tm{3} tm{4} tm{5} tm{6}]); 
+tm{7} = timer('BusyMode', 'drop', 'ExecutionMode', 'fixedRate', 'Period', 5, 'TimerFcn', @timer_input_generation);
+start([tm{1} tm{2} tm{3} tm{4} tm{5} tm{6} tm{7}]); 
 
 % start(tm);

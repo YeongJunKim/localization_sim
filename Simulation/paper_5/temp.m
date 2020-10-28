@@ -51,4 +51,11 @@ fprintf("diff x : %f    diff y: %f \r\n", x, y);
     end
 
 
-
+%%
+global ROBOTS
+for i = 1:6
+            %publish
+            ROBOTS{i}.pub_control_msg.Linear.X = 0;
+            ROBOTS{i}.pub_control_msg.Angular.Z = 0.000;
+            ROBOTS{i}.pub_control.send(ROBOTS{i}.pub_control_msg);
+end
