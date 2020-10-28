@@ -28,8 +28,8 @@ global estimator;
 % robot num, input, state, measurement setting,
 % adjacency matrix are defined
 % matlab functions
-r = app_settings();disp(r);
-r = app_initialization();disp(r);
+r = sim_settings();disp(r);
+r = sim_initialization();disp(r);
 
 %% make real
 for ct = 1:app.iteration

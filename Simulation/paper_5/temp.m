@@ -12,7 +12,8 @@ disp(l);
 
 plot(xi1(1), xi1(2), '*'); hold on;
 plot(xj1(1), xj1(2), 'd');
-
+% TEST CODE, TEMP CODE
+%% 
 xlim([0 6]);
 ylim([0 6]);
 
@@ -51,7 +52,7 @@ fprintf("diff x : %f    diff y: %f \r\n", x, y);
     end
 
 
-%%
+%% ALL ROBOT STOP
 global ROBOTS
 for i = 1:6
             %publish
@@ -59,3 +60,18 @@ for i = 1:6
             ROBOTS{i}.pub_control_msg.Angular.Z = 0.000;
             ROBOTS{i}.pub_control.send(ROBOTS{i}.pub_control_msg);
 end
+
+
+%% test measurement data
+figure(100);
+addpath('./experiment_data/');
+load('ex3_exp_data.mat');
+clf;
+interval = 1:100;
+for i = 1:4
+    subplot(1,2,1);
+    plot(interval, experiment_data(1).measurement(i,interval), 'DisplayName', num2str(i)); hold on;
+    subplot(1,2,2);
+    plot(interval, experiment_data(2).measurement(i,interval), 'DisplayName', num2str(i)); hold on;
+end
+legend();
