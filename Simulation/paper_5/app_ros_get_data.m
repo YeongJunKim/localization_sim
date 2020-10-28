@@ -55,12 +55,12 @@ tm = cell(app.agent_num+1, 1);
 % end
 %%
 disp("why");
-tm{1} = timer('BusyMode', 'drop', 'ExecutionMode', 'fixedRate', 'Period', 1, 'TimerFcn', {@timer1, 1});
-tm{2} = timer('BusyMode', 'drop', 'ExecutionMode', 'fixedRate', 'Period', 1, 'TimerFcn', {@timer2, 2});
-tm{3} = timer('BusyMode', 'drop', 'ExecutionMode', 'fixedRate', 'Period', 1, 'TimerFcn', {@timer3, 3});
-tm{4} = timer('BusyMode', 'drop', 'ExecutionMode', 'fixedRate', 'Period', 1, 'TimerFcn', {@timer4, 4});
-tm{5} = timer('BusyMode', 'drop', 'ExecutionMode', 'fixedRate', 'Period', 1, 'TimerFcn', {@timer5, 5});
-tm{6} = timer('BusyMode', 'drop', 'ExecutionMode', 'fixedRate', 'Period', 1, 'TimerFcn', {@timer6, 6});
+tm{1} = timer('BusyMode', 'drop', 'ExecutionMode', 'fixedRate', 'Period', 1.5, 'TimerFcn', {@timer1, 1});
+tm{2} = timer('BusyMode', 'drop', 'ExecutionMode', 'fixedRate', 'Period', 1.5, 'TimerFcn', {@timer2, 2});
+tm{3} = timer('BusyMode', 'drop', 'ExecutionMode', 'fixedRate', 'Period', 1.5, 'TimerFcn', {@timer3, 3});
+tm{4} = timer('BusyMode', 'drop', 'ExecutionMode', 'fixedRate', 'Period', 1.5, 'TimerFcn', {@timer4, 4});
+tm{5} = timer('BusyMode', 'drop', 'ExecutionMode', 'fixedRate', 'Period', 1.5, 'TimerFcn', {@timer5, 5});
+tm{6} = timer('BusyMode', 'drop', 'ExecutionMode', 'fixedRate', 'Period', 1.5, 'TimerFcn', {@timer6, 6});
 tm{7} = timer('BusyMode', 'drop', 'ExecutionMode', 'fixedRate', 'Period', 5, 'TimerFcn', @timer_input_generation);
 start([tm{1} tm{2} tm{3} tm{4} tm{5} tm{6} tm{7}]); 
 
