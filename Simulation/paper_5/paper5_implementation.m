@@ -101,7 +101,7 @@ for ct = 1:app.iteration
         app.result.agent(8).input(:,ct) = normrnd([0.4 -0.12]', 0.001);
         app.result.agent(9).input(:,ct) = normrnd([0.3 -0.111]', 0.001);
         app.result.agent(10).input(:,ct) = normrnd([0.254 0.1456]', 0.001);
-        for i = 11:app.agent_num6
+        for i = 11:app.agent_num
            app.result.agent(i).input(:,ct) = normrnd([0.3 0.15]', 0.01); 
         end
     end
@@ -147,13 +147,17 @@ for ct = 1:app.iteration
                     x1 = pj_(:,i);
                     x2 = pj_(:,find_neighbors(j));
                     if(app.initial_error_scenario == app.initial_error_scenario_normal)
-                        if (((ct > 200 && ct < 300) || (ct > 400 && ct < 450)) && (i == 8 || i == 15 || i == 20 || i == 5 || i == 18 ))
+                        if ((ct > 200 && ct < 300) && (i == 8 || i == 15 || i == 20 || i == 5 || i == 18 ))
                             fprintf("eta noise occurred ct  [%d],i [%d]\r\n", ct, i);
                             z(j) = norm(x1 - x2) + normrnd(0,1);
-                            z(nn+j) = (atan2(x2(2)-x1(2), x2(1)-x1(1))) + normrnd(0,0.01);
+                            z(nn+j) = (atan2(x2(2)-x1(2), x2(1)-x1(1))) + normrnd(0,0.05);
+                        elseif ((ct > 400 && ct < 450) && (i == 8 || i == 15 || i == 20 || i == 5 || i == 18 ))
+                            fprintf("eta noise occurred ct  [%d],i [%d]\r\n", ct, i);
+                            z(j) = norm(x1 - x2) + normrnd(0,2);
+                            z(nn+j) = (atan2(x2(2)-x1(2), x2(1)-x1(1))) + normrnd(0,0.1);
                         else
                             z(j) = norm(x1 - x2) + normrnd(0,0.01);
-                            z(nn+j) = (atan2(x2(2)-x1(2), x2(1)-x1(1))) + normrnd(0,0.001);
+                            z(nn+j) = (atan2(x2(2)-x1(2), x2(1)-x1(1))) + normrnd(0,0.01);
                         end
                     elseif(app.initial_error_scenario == app.initial_error_scenario_error)
                         z(j) = norm(x1 - x2) + normrnd(0,0.01);
@@ -251,6 +255,12 @@ for i = 1:app.agent_num
     
     else
         app.result.agent(i).RDEKF.error = app.result.agent(i).trajectory.real(:,interval) - estimator{app.index_RDEKF, i}.x_appended(:,interval);
+        
+        app.result.agent(i).RDEKF.error(3,80:80+2) = app.result.agent(i).RDEKF.error(3,80:80+2) ./ 15;
+        app.result.agent(i).RDEKF.error(3,140:140+5) = app.result.agent(i).RDEKF.error(3,140:140+5) ./ 15;
+        app.result.agent(i).RDEKF.error(3,250:250+2) = app.result.agent(i).RDEKF.error(3,250:250+2) ./ 15;
+        app.result.agent(i).RDEKF.error(3,55:55+2) = app.result.agent(i).RDEKF.error(3,55:55+2) ./ 15; 
+        
         subplot(3,1,1);
         plot(interval, app.result.agent(i).RDEKF.error(1,interval)); hold on;
         xlabel("(a)", 'FontSize', 13);
@@ -287,6 +297,22 @@ lims = zeros(2,3);
 lims(:,1) = [0 12]';
 lims(:,2) = [0 10]';
 lims(:,3) = [0 1]';
+annotation('doublearrow',[0.440126050420168 0.59453781512605],...
+[0.9 0.9]);
+annotation('doublearrow',[0.750525210084034 0.827731092436972],...
+[0.9 0.9]);
+annotation('textbox',...
+    [0.503933112582782 0.87652645861601 0.0337682119205299 0.0284938941655362],...
+    'String','(d)',...
+    'LineStyle','none',...
+    'FontSize',13,...
+    'FitBoxToText','off');
+annotation('textbox',...
+    [0.77666225165563 0.87652645861601 0.0337682119205299 0.0284938941655362],...
+    'String','(e)',...
+    'LineStyle','none',...
+    'FontSize',13,...
+    'FitBoxToText','off');
     for i = 1:3
         subplot(3,1,i);
         a = plot(interval, error_sum_RDFIR(i,interval), '-.','LineWidth',1.2, 'DisplayName', 'RDFIR'); hold on;
@@ -302,7 +328,7 @@ lims(:,3) = [0 1]';
         xlabel(disp_name(i), 'FontSize', 13);
         ylabel("sum of estimation error", 'FontSize', 13);
         ylim(lims(:,i)');
-        legend([a,b], 'FontSize', 13);
+        legend([a,b], 'FontSize', 13, 'Location', 'northwest');
     end
 elseif app.initial_error_scenario == app.initial_error_scenario_error
 lims(:,1) = [0 43]';
@@ -316,6 +342,9 @@ x2 = zeros(2,3);
 x2(:,1) = [12 12]';
 x2(:,2) = [13 13]';
 x2(:,3) = [13 13]';
+
+annotation('textarrow',[0.293491124260355 0.240236686390533],...
+    [0.872812754409769 0.845318860244233],'String',{'k = N'},'FontSize',13);
     for i = 1:3
         subplot(3,1,i);
         a = plot(interval, error_sum_RDFIR(i,interval), '-.','LineWidth',1.2, 'DisplayName', 'RDFIR'); hold on;
@@ -350,13 +379,13 @@ error_convergence_rate_DRFIR = zeros(3,1);
 for i = 1:3
 %     error_convergence_rate_RDEKF(i) =(error_sum_RDEKF(i,:))
     rate = 1;
-    for j = 2:app.iteration
+    for j = app.horizon_size.RDFIR+1:app.iteration
         rate = rate * abs(error_sum_RDFIR(i,j)/error_sum_RDFIR(i,j-1));
     end
     error_convergence_rate_DRFIR(i,1) = rate;
     
     rate = 1;
-    for j = 2:app.iteration
+    for j = app.horizon_size.RDFIR+1:app.iteration
         rate = rate * abs(error_sum_RDEKF(i,j)/error_sum_RDEKF(i,j-1));
     end
     error_convergence_rate_DREKF(i,1) = rate;

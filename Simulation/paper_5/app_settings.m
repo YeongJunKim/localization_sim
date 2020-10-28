@@ -9,7 +9,7 @@ app.initial_error_scenario_normal = 2;
 
 app.relative_scenario = app.relative_scenario_distance_eta;
 
-app.initial_error_scenario = app.initial_error_scenario_error;
+app.initial_error_scenario = app.initial_error_scenario_normal;
 
 app.make_video = 1;
 
@@ -28,7 +28,7 @@ app.agent_num = 25;
 app.nx = 3;
 app.nu = 2;
 app.nh = cell(app.agent_num, 1);
-app.horizon_size.RDFIR = 6;
+app.horizon_size.RDFIR = 10;
 app.horizon_size.FIR = 6;
 app.anchor_num = 4;
 
