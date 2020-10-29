@@ -10,8 +10,8 @@ app.initial_state(:,findnode(app.digraph, "tb3a")) = [0.6 1.8 0]';
 app.initial_state(:,findnode(app.digraph, "tb3b")) = [1.8 1.2 0]';
 app.initial_state(:,findnode(app.digraph, "tb3c")) = [1.2 1.8 0]';
 app.initial_state(:,findnode(app.digraph, "tb3d")) = [1.8 1.8 0]';
-app.initial_state(:,findnode(app.digraph, "tb3e")) = [0.6 1.2 0]';
-app.initial_state(:,findnode(app.digraph, "tb3f")) = [1.2 1.2 0]';
+app.initial_state(:,findnode(app.digraph, "tb3e")) = [0.6 1.35 0]';
+app.initial_state(:,findnode(app.digraph, "tb3f")) = [1.2 1.23 0]';
 
 
 app.anchor_position = zeros(2, app.anchor_num);
@@ -23,11 +23,14 @@ app.anchor_position(:,4) = [6 0]';
 % result data init 
 for ct = 1:app.agent_num
    app.result.agent(ct).input = zeros(app.nu, []);
+   app.result.agent(ct).odom_input = zeros(app.nu, []);
+   app.result.agent(ct).user_input = zeros(app.nu, []);
    if(app.digraph.Nodes.Type{ct} == "known")
    app.result.agent(ct).measurement = zeros(size(app.anchor_position, 2) + 1, []);
    else
     app.result.agent(ct).measurement = zeros(size(app.nh{ct},1), []);
    end
+   app.result.agent(ct).ahrsv1 = zeros(1,[]);
    app.result.agent(ct).trajectory.real = zeros(app.nx, []);
    app.result.agent(ct).trajectory.only_input = zeros(app.nx, []);
    app.result.agent(ct).trajectory.estimated = zeros(app.nx, []);
@@ -36,6 +39,7 @@ for ct = 1:app.agent_num
    app.result.agent(ct).trajectory.real(:,1) = app.initial_state(:,ct);
    app.result.agent(ct).trajectory.only_odom_input(:,1) = app.initial_state(:,ct);
    app.result.agent(ct).trajectory.only_user_input(:,1) = app.initial_state(:,ct);
+   app.result.agent(ct).trajectory.only_constant_input(:,1) = app.initial_state(:,ct);
    app.result.agent(ct).trajectory.estimated(:,1) = app.initial_state(:,ct);
 %    disp(app.result.agent(ct))
 end
@@ -121,42 +125,45 @@ end
 
 
 % plot initialization
-agent_names = "agent";
-figure(2);
-clf;
-app.ax1 = axes;
-app.ax1_plots = cell(app.agent_num, 1);
+% agent_names = "agent";
+% figure(2);
+% clf;
+% app.ax1 = axes;
+% app.ax1_plots = cell(app.agent_num, 1);
+% 
+% for ct = 1:app.agent_num
+%     agent_plot_name = app.digraph.Nodes.Name{ct};
+%     app.ax1_plots{ct} = plot(app.ax1, app.initial_state(1,ct),app.initial_state(2,ct), '*', 'DisplayName', agent_plot_name); hold on;
+% end
+% legend('FontSize', 15, 'NumColumns', 3);
+% xlim([0 6]);
+% ylim([0 6]);
+% xlabel("x(m)", 'FontSize', 12);
+% ylabel("y(m)", 'FontSize', 12);
+% title("trajectory", 'FontSize', 13);
+% hold off;
+% grid on;
 
-for ct = 1:app.agent_num
-    app.ax1_plots{ct} = plot(app.ax1, app.initial_state(1,ct),app.initial_state(2,ct), '*'); hold on;
-end
-xlim([-2 10]);
-ylim([-2 10]);
-xlabel("x(m)", 'FontSize', 12);
-ylabel("y(m)", 'FontSize', 12);
-title("trajectory", 'FontSize', 13);
-hold off;
-
-figure(3);
-clf;
-app.ax2 = axes;
-app.ax2_plots = cell(app.agent_num, 1);
-app.ax2_plot_shape = ['*', '*', 'd', 'd', 'd', 'd', 'd','d','d','d'];
-app.ax2_plot_shape2 = ["-*", "-*", "-d", "-+", "-*", "-x", "-s","-d","-p","-h"];
-for ct = 1:app.agent_num
-    agent_plot_name = app.digraph.Nodes.Name{ct};
-    if app.digraph.Nodes.Type{ct} == "known"
-    else
-        app.ax2_plots{ct} = plot(app.ax2, app.initial_state(1,ct),app.initial_state(2,ct), '*', 'DisplayName', agent_plot_name); hold on;
-    end
-end
-legend('FontSize', 15, 'NumColumns', 3);
-% xlim([-8 10]);
-% ylim([-8 10]);
-xlabel("x(m)", 'FontSize', 12);
-ylabel("y(m)", 'FontSize', 12);
-title("trajectory", 'FontSize', 13);
-hold on;
+% figure(3);
+% clf;
+% app.ax2 = axes;
+% app.ax2_plots = cell(app.agent_num, 1);
+% app.ax2_plot_shape = ['*', '*', 'd', 'd', 'd', 'd', 'd','d','d','d'];
+% app.ax2_plot_shape2 = ["-*", "-*", "-d", "-+", "-*", "-x", "-s","-d","-p","-h"];
+% for ct = 1:app.agent_num
+%     agent_plot_name = app.digraph.Nodes.Name{ct};
+%     if app.digraph.Nodes.Type{ct} == "known"
+%     else
+%         app.ax2_plots{ct} = plot(app.ax2, app.initial_state(1,ct),app.initial_state(2,ct), '*', 'DisplayName', agent_plot_name); hold on;
+%     end
+% end
+% legend('FontSize', 15, 'NumColumns', 3);
+% % xlim([-8 10]);
+% % ylim([-8 10]);
+% xlabel("x(m)", 'FontSize', 12);
+% ylabel("y(m)", 'FontSize', 12);
+% title("trajectory", 'FontSize', 13);
+% hold on;
 
 
 
