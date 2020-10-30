@@ -418,8 +418,8 @@ y2(2, 4) = rmse_cell{2,5};
 
 plot(x,y1(1,:),'-o','MarkerSize',10, 'DisplayName', "KF-based(p^x, p^y)"); hold on;
 plot(x,y1(2,:),'-d','MarkerSize',10, 'DisplayName', "RDFIR(p^x, p^y)"); hold on;
-plot(x,y2(1,:),'-+','MarkerSize',10, 'DisplayName', "KF-based \theta"); hold on;
-plot(x,y2(2,:),'-x','MarkerSize',10, 'DisplayName', "RDFIR \theta"); hold on;
+plot(x,y2(1,:),'-+','MarkerSize',10, 'DisplayName', "KF-based p^\theta"); hold on;
+plot(x,y2(2,:),'-x','MarkerSize',10, 'DisplayName', "RDFIR p^\theta"); hold on;
 xlim([0 5]);
 ylim([0 0.03]);
 
