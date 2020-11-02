@@ -38,6 +38,7 @@ end
 
 if app.start_flag == 1
 fprintf("[%d] step = %d\n",i ,step);
+try
 %%  IMPORTANT  %%
 %   GET  DATA   %
 ROBOTS{i}.sub_imu_data    = receive(ROBOTS{i}.sub_imu, 1);
@@ -80,6 +81,10 @@ app.experiment_data(i).tocs(1,step) = toc;
 %         app.experiment_data(i).tocs(1,step)  = ROBOTS{i}.lidar_data(end);
 %     end
 % end
+catch ME
+    disp('[5] Error Message:');
+    disp(ME.message);
+end
 if(1 == app.stop_flag)
     app.tocs = [app.experiment_data(1).tocs(:)'; app.experiment_data(2).tocs(:)'; app.experiment_data(3).tocs(:)'; app.experiment_data(4).tocs(:)'; app.experiment_data(5).tocs(:)'; app.experiment_data(6).tocs(:)' ];
     rosshutdown();

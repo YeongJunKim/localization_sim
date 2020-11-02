@@ -25,7 +25,7 @@ data5 = [];
 data6 = [];
 
 
-app_settings();pause(1);
+exp1_settings();pause(1);
 
 app.agent_name = ["tb3a", "tb3b", "tb3c", "tb3d", "tb3e", "tb3f"];
 app.agent_num = 6;
@@ -61,7 +61,7 @@ tm{3} = timer('BusyMode', 'drop', 'ExecutionMode', 'fixedRate', 'Period', 1.5, '
 tm{4} = timer('BusyMode', 'drop', 'ExecutionMode', 'fixedRate', 'Period', 1.5, 'TimerFcn', {@timer4, 4});
 tm{5} = timer('BusyMode', 'drop', 'ExecutionMode', 'fixedRate', 'Period', 1.5, 'TimerFcn', {@timer5, 5});
 tm{6} = timer('BusyMode', 'drop', 'ExecutionMode', 'fixedRate', 'Period', 1.5, 'TimerFcn', {@timer6, 6});
-tm{7} = timer('BusyMode', 'drop', 'ExecutionMode', 'fixedRate', 'Period', 5, 'TimerFcn', @timer_input_generation);
+% tm{7} = timer('BusyMode', 'drop', 'ExecutionMode', 'fixedRate', 'Period', 5, 'TimerFcn', @timer_input_generation);
 start([tm{1} tm{2} tm{3} tm{4} tm{5} tm{6} tm{7}]); 
 
 % start(tm);

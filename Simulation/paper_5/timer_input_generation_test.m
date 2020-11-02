@@ -4,6 +4,8 @@ global ROBOTS;
 initial_state = zeros(3,6);
 
 
+exp1_settings()
+
 initial_state(:,1) = [0.6 1.8 0]';
 initial_state(:,2) = [1.8 1.2 0]';
 initial_state(:,3) = [1.2 1.8 0]';

@@ -35,8 +35,9 @@ if os.name == 'nt':
 else:
   import tty, termios
 
-BURGER_MAX_LIN_VEL = 0.22
-BURGER_MAX_ANG_VEL = 2.84
+
+BURGER_MAX_LIN_VEL = 0.05
+BURGER_MAX_ANG_VEL = 0.15
 
 WAFFLE_MAX_LIN_VEL = 0.26
 WAFFLE_MAX_ANG_VEL = 1.82
@@ -131,7 +132,7 @@ if __name__=="__main__":
     if os.name != 'nt':
         settings = termios.tcgetattr(sys.stdin)
 
-    rospy.init_node('turtlebot3_teleop')
+    rospy.init_node('turtlebot3_teleop3')
     pub1 = rospy.Publisher('/tb3e/cmd_vel', Twist, queue_size=1)
     pub2 = rospy.Publisher('/tb3f/cmd_vel', Twist, queue_size =1)
     turtlebot3_model = rospy.get_param("model", "burger")
@@ -148,6 +149,8 @@ if __name__=="__main__":
     control_linear_vel2  = 0.0
     control_angular_vel2 = 0.0
 
+    nowtick = 0
+    pasttick  = 0
     try:
         print(msg)
         while(1):
@@ -205,6 +208,7 @@ if __name__=="__main__":
                 status = 0
 
             twist = Twist()
+            twist2 = Twist()
 
             control_linear_vel = makeSimpleProfile(control_linear_vel, target_linear_vel, (LIN_VEL_STEP_SIZE/2.0))
             twist.linear.x = control_linear_vel; twist.linear.y = 0.0; twist.linear.z = 0.0
@@ -213,15 +217,19 @@ if __name__=="__main__":
             twist.angular.x = 0.0; twist.angular.y = 0.0; twist.angular.z = control_angular_vel
 
 
-            pub1.publish(twist)
-
             control_linear_vel2 = makeSimpleProfile(control_linear_vel2, target_linear_vel2, (LIN_VEL_STEP_SIZE/2.0))
-            twist.linear.x = control_linear_vel2; twist.linear.y = 0.0; twist.linear.z = 0.0
+            twist2.linear.x = control_linear_vel2; twist2.linear.y = 0.0; twist2.linear.z = 0.0
 
             control_angular_vel2 = makeSimpleProfile(control_angular_vel2, target_angular_vel2, (ANG_VEL_STEP_SIZE/2.0))
-            twist.angular.x = 0.0; twist.angular.y = 0.0; twist.angular.z = control_angular_vel2
+            twist2.angular.x = 0.0; twist2.angular.y = 0.0; twist2.angular.z = control_angular_vel2
 
-            pub2.publish(twist)
+            nowtick = rospy.get_time()
+            if nowtick - pasttick > 0.5:
+                pub1.publish(twist)
+                pub2.publish(twist2)
+                pasttick = nowtick
+                print("pub")
+            
 
     except:
         print(e)

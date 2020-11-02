@@ -38,6 +38,7 @@ end
 
 if app.start_flag == 1
 fprintf("[%d] step = %d\n",i ,step);
+try
 %%  IMPORTANT  %%
 %   GET  DATA   %
 ROBOTS{i}.sub_imu_data    = receive(ROBOTS{i}.sub_imu, 1);
@@ -64,7 +65,10 @@ app.experiment_data(i).odom_data(:,step) = [ROBOTS{i}.sub_odom_data.Twist.Twist.
 app.experiment_data(i).ahrsv1(1,step) = ROBOTS{i}.sub_ahrsv1_data.Orientation.Z;
 app.experiment_data(i).user_input(:,step) = ROBOTS{i}.cmd_vel(:);
 app.experiment_data(i).tocs(1,step) = toc;
-
+catch ME
+    disp('[4] Error Message:');
+    disp(ME.message);
+end
 %%  IMPORTANT  %%
 %   SAVE DATA   %
 % for i = 1:app.agent_num
