@@ -24,13 +24,13 @@ addpath('./..');
 addpath('./utils');
 
 addpath('./experiment_data/');
-load('ex3_exp_data.mat');
+load('day2_ex2_exp_data.mat');
 
 global app;
 global estimator;
 global experiment_data;
-r = exp1_settings();disp(r);
-r = exp1_initialization();disp(r);
+r = exp3_settings();disp(r);
+r = exp3_initialization();disp(r);
 
 
 
@@ -41,12 +41,38 @@ lidar_data_result();
 
 interval = 1:app.iteration;
 
-%% init ahrsv1 data
+%% init ahrsv1 data && determine rotations
+app.rotations = zeros(app.agent_num, 1);
+figure(1000);
+clf;
 for ag = 1:app.agent_num
-    experiment_data(ag).ahrsv1(:) = experiment_data(ag).ahrsv1(:) - experiment_data(ag).ahrsv1(1);
-    app.result.agent(ag).ahrsv1(interval) = experiment_data(ag).ahrsv1(interval);
-    app.result.agent(ag).ahrsv1(interval) = wrapToPi(deg2rad(app.result.agent(ag).ahrsv1(interval)));
-    experiment_data(ag).ahrsv1(:)         = wrapToPi(deg2rad(experiment_data(ag).ahrsv1(:)));
+    experiment_data(ag).ahrsv1 = deg2rad(experiment_data(ag).ahrsv1);
+    experiment_data(ag).ahrsv1_filtered = experiment_data(ag).ahrsv1;
+    for ct = 1:app.iteration
+        if ct == 1
+            continue
+        elseif experiment_data(ag).ahrsv1(ct) < -1.5 && experiment_data(ag).ahrsv1(ct-1) > 1.5
+           app.rotations(ag) = app.rotations(ag) + 1;
+           fprintf("ag: %d, index: %d, rotation + 1\n", ag, ct);
+        elseif experiment_data(ag).ahrsv1(ct) > 1.5 && experiment_data(ag).ahrsv1(ct-1) < -1.5
+           app.rotations(ag) = app.rotations(ag) - 1;
+           fprintf("ag: %d, index: %d, rotation - 1\n", ag, ct);
+        end
+        experiment_data(ag).ahrsv1_filtered(ct) = experiment_data(ag).ahrsv1(ct) + app.rotations(ag) * deg2rad(360);
+        
+    end
+    experiment_data(ag).ahrsv1_filtered(:) = experiment_data(ag).ahrsv1_filtered(:) - experiment_data(ag).ahrsv1_filtered(1);
+    plot(interval, experiment_data(ag).ahrsv1_filtered(interval), 'DisplayName', num2str(ag)); hold on;
+end
+legend();
+
+for ag = 1:app.agent_num
+%     experiment_data(ag).ahrsv1(:) = experiment_data(ag).ahrsv1(:) - experiment_data(ag).ahrsv1(1);
+%     app.result.agent(ag).ahrsv1(interval) = experiment_data(ag).ahrsv1(interval);
+%     app.result.agent(ag).ahrsv1(interval) = wrapToPi(deg2rad(app.result.agent(ag).ahrsv1(interval)));
+%     experiment_data(ag).ahrsv1(:)         = wrapToPi(deg2rad(experiment_data(ag).ahrsv1(:)));
+%     experiment_data(ag).ahrsv1_filtered = zeros(1, size(experiment_data,2));
+    experiment_data(ag).ahrsv1 = experiment_data(ag).ahrsv1_filtered;
 end
 
 

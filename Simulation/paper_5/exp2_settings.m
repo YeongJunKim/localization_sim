@@ -7,7 +7,7 @@ app.relative_scenario_poss_diff = 2;
 app.initial_error_scenario_error = 1;
 app.initial_error_scenario_normal = 2;
 
-app.relative_scenario = app.relative_scenario_distance_eta;
+app.relative_scenario = app.relative_scenario_poss_diff;
 
 app.initial_error_scenario = app.initial_error_scenario_normal;
 
@@ -32,7 +32,7 @@ elseif app.initial_error_scenario == app.initial_error_scenario_error
 app.iteration = 50;
 end
 
-app.dt = 1.5;
+app.dt = 1.2;
 
 app.estimator_num = 2;
 app.index_RDFIR = 1;
@@ -43,8 +43,10 @@ app.index_PF  = 3;
 % start(give position) -> end(receive position)
 st     = [1 1 1 3 3 4 4 5 5 6 6 2 2];
 ed     = [3 5 6 4 6 3 6 6 3 4 3 6 4];
-st     = [1 3 3 4 6 2 2 5 2 4 6];
-ed     = [5 5 6 6 5 4 6 3 3 3 3];
+st     = [1 3 3 4 2 2 2 4 6 1 5];
+ed     = [5 5 6 6 4 6 3 3 3 3 3];
+% st     = [1 3 3 4 2 2 4 1];
+% ed     = [5 5 6 6 4 3 3 3];
 weight = ones(size(st,2), 1);
 
 

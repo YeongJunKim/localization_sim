@@ -6,12 +6,14 @@ global estimator
 
 app.initial_state = zeros(app.nx, app.agent_num);
 
-app.initial_state(:,findnode(app.digraph, "tb3a")) = [0.6 1.8 0]';
-app.initial_state(:,findnode(app.digraph, "tb3b")) = [1.8 1.2 0]';
-app.initial_state(:,findnode(app.digraph, "tb3c")) = [1.2 1.8 0]';
-app.initial_state(:,findnode(app.digraph, "tb3d")) = [1.8 1.8 0]';
-app.initial_state(:,findnode(app.digraph, "tb3e")) = [0.6 1.35 0]';
-app.initial_state(:,findnode(app.digraph, "tb3f")) = [1.2 1.23 0]';
+app.tile_size = 0.6;
+ts = app.tile_size;
+app.initial_state(:,findnode(app.digraph, "tb3a")) = [ts*7 ts*4 deg2rad(135)]';
+app.initial_state(:,findnode(app.digraph, "tb3b")) = [ts*10 ts*5 deg2rad(135)]';
+app.initial_state(:,findnode(app.digraph, "tb3c")) = [ts*8 ts*5 deg2rad(135)]';
+app.initial_state(:,findnode(app.digraph, "tb3d")) = [ts*9 ts*6 deg2rad(135)]';
+app.initial_state(:,findnode(app.digraph, "tb3e")) = [ts*8 ts*3 deg2rad(135)]';
+app.initial_state(:,findnode(app.digraph, "tb3f")) = [ts*9 ts*4 deg2rad(135)]';
 
 
 app.anchor_position = zeros(2, app.anchor_num);

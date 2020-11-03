@@ -13,6 +13,24 @@ disp(l);
 plot(xi1(1), xi1(2), '*'); hold on;
 plot(xj1(1), xj1(2), 'd');
 % TEST CODE, TEMP CODE
+
+%% atan2 test
+x1 = [1 1];
+x2 = [2 2];
+r = atan2(x2(2)-x1(2), x2(1)-x1(1))
+
+x1 = [1 1];
+x2 = [0 0];
+r = atan2(x2(2)-x1(2), x2(1)-x1(1))
+
+x1 = [1 1];
+x2 = [0 2];
+r = atan2(x2(2)-x1(2), x2(1)-x1(1))
+
+x1 = [1 1];
+x2 = [2 0];
+r = atan2(x2(2)-x1(2), x2(1)-x1(1))
+
 %% 
 xlim([0 6]);
 ylim([0 6]);
