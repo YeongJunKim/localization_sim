@@ -1,4 +1,4 @@
-
+function lidar_data_result(fig_on_off)
 
 global app
 global LIDARS
@@ -17,10 +17,10 @@ for ag = 1:app.agent_num
         %%
     else
         angle_interval_ = 1;
-        time_interval_  = 1.5;
+        time_interval_  = app.dt;
         find_neighbors = find(app.adj_full(:,ag)==1);
         robot_num_ = size(find_neighbors, 1);
-        range_ = [0 2];
+        range_ = [0 3];
         LIDARS{ag} = lidaring(strcat("/",app.digraph.Nodes.Name{ag}), angle_interval_, time_interval_, robot_num_, range_);
         
         init = zeros(2,robot_num_,1);
@@ -29,16 +29,15 @@ for ag = 1:app.agent_num
         end
         
         LIDARS{ag}.lidaring_position_init(init,app.iteration);
-        LIDARS{ag}.option("figure", 0);
+        LIDARS{ag}.option("figure", fig_on_off);
     end
 end
 %% clustering
 for ct = 1:app.iteration
     if ct > 93
-        disp("dd");
     end
     fprintf("ct = %d\n", ct);
-    for ag = 1:app.agent_num
+    for ag = 3:3
         if(app.digraph.Nodes.Type{ag} == "known")
         else
             LIDARS{ag}.lidaring_run(experiment_data(ag).lidar(:,ct));
@@ -54,7 +53,7 @@ for ag = 1:app.agent_num
         clf;
         for ct = 1:app.iteration
             for i = 1:LIDARS{ag}.robot_num
-                offset = LIDARS{ag}.robot_num
+                offset = LIDARS{ag}.robot_num;
                 de = experiment_data(ag).ahrsv1(ct);
                 pos = [cos(de) sin(de); -sin(de) cos(de)] * LIDARS{ag}.result_data(:,i,ct);
                 experiment_data(ag).measurement(i,ct) = pos(1);

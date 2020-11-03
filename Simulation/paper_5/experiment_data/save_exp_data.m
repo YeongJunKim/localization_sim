@@ -23,3 +23,18 @@ clear all;
 load('day2_ex1.mat');
 experiment_data = app.experiment_data;
 save('day2_ex1_exp_data.mat', 'experiment_data');
+%%
+clear all;
+load('day3_ex1_stair.mat');
+experiment_data = app.experiment_data;
+save('day3_ex1_exp_stiar.mat', 'experiment_data');
+%%
+clear all;
+load('day3_ex2_kidnap_1.mat');
+experiment_data = app.experiment_data;
+save('day3_ex2_exp_kidnap_1.mat', 'experiment_data');
+%%
+clear all;
+load('day3_ex3_kidnap_2.mat');
+experiment_data = app.experiment_data;
+save('day3_ex3_exp_kidnap_1.mat', 'experiment_data');
