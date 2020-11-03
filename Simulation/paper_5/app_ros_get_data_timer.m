@@ -8,33 +8,29 @@ if isempty(first_run)
     app.stop_flag = 0;
     for i = 1:app.agent_num
         %if there is no moving
-        ROBOTS{i}.sub_data(2).data = [0 0]';
-        
         % attribute : name
         app.experiment_data(i).name = app.digraph.Nodes.Name{i};
         % input = measured input user_input = control input (keyboard)
         app.experiment_data(i).input = zeros(app.nu, []);
         app.experiment_data(i).user_input = zeros(app.nu, []);
         % lidar data
-        app.experiment_data(i).lidar = zeros(360+1, []);
+        app.experiment_data(i).lidar = zeros(360, []);
         % imu data from ahrsv1
         app.experiment_data(i).ahrsv1 = zeros(1, []);
         % tocs
         app.experiment_data(i).tocs = zeros(1, []);
         
-        if(app.digraph.Nodes.Type{i} == "known")
+        
+        if app.digraph.Nodes.Type{i} == "known"
             topic_name = strcat(app.digraph.Nodes.Name{i}, "/read");
-            turtlebot3_addSubscriver(ROBOTS{i}, topic_name, @measurement);
-            app.experiment_data(i).measurement = zeros(4+1, []);
+            turtlebot3_addSubscriver(ROBOTS{i}, topic_name, @measurement,1);
+            app.experiment_data(i).measurement = zeros(4, []);
         else
-              nn_ = size(find(app.adj_full(:,i)==1), 1);
-            app.experiment_data(i).measurement = zeros(2*nn_+1,[]);
+            nn_ = size(find(app.adj_full(:,i)==1), 1);
+            app.experiment_data(i).measurement = zeros(2*nn_,[]);
         end
-        topic_name = strcat(app.digraph.Nodes.Name{i}, "/cmd_vel");
-        turtlebot3_addSubscriver(ROBOTS{i}, topic_name, @cmd_vel);
     end
     % wait for comming topics
-    pause(3);
     tic;
     pause(1);
 end
@@ -50,40 +46,35 @@ fprintf("step = %d\n", step);
 %% IMPORTANT %%
 %   SAVE DATA   %
 
-for i = 1:app.agent_num
-%     a = toc;
-    app.experiment_data(i).input(:,step) = [ROBOTS{i}.v_l ROBOTS{i}.v_a]';
-    app.experiment_data(i).user_input(:,step) = ROBOTS{i}.sub_data(2).data(:);
-    app.experiment_data(i).ahrsv1(:,step) = ROBOTS{i}.ahrsv1(:);
-    if(app.digraph.Nodes.Type{i} == "known")
-        app.experiment_data(i).measurement(:, step) = ROBOTS{i}.sub_data(1).data(:);
-        % toc
-        app.experiment_data(i).tocs(1,step)  = ROBOTS{i}.sub_data(1).data(end);
-    else
-%         disp(i);
-%         utilize with lidar scan data
-        app.experiment_data(i).lidar(:,step) = ROBOTS{i}.lidar_data(:);
-        app.experiment_data(i).tocs(1,step)  = ROBOTS{i}.lidar_data(end);
+if app.start_flag == 1
+    for i = 1:app.agent_num
+        %     a = toc;
+        app.experiment_data(i).input(:,step) = [ROBOTS{i}.v_l ROBOTS{i}.v_a]';
+        app.experiment_data(i).user_input(:,step) = ROBOTS{i}.cmd_vel(:);
+        app.experiment_data(i).ahrsv1(:,step) = ROBOTS{i}.ahrsv1(:);
+        if(app.digraph.Nodes.Type{i} == "known")
+            app.experiment_data(i).measurement(:, step) = ROBOTS{i}.sub_data(1).data(:);
+            % toc
+            app.experiment_data(i).tocs(1,step)  = ROBOTS{i}.sub_data(1).data(end);
+        else
+            %         disp(i);
+            %         utilize with lidar scan data
+            app.experiment_data(i).lidar(:,step) = ROBOTS{i}.lidar_data(:);
+            app.experiment_data(i).tocs(1,step)  = ROBOTS{i}.lidar_data(end);
+        end
     end
+    
+    if(1 == app.stop_flag)
+        app.tocs = [app.experiment_data(1).tocs(:)'; app.experiment_data(2).tocs(:)'; app.experiment_data(3).tocs(:)'; app.experiment_data(4).tocs(:)'; app.experiment_data(5).tocs(:)'; app.experiment_data(6).tocs(:)' ];
+        rosshutdown();
+        delete_timer();
+        dbquit();
+    end
+    step = step + 1;
+end
 end
 
-if(1 == app.stop_flag)
-    app.tocs = [app.experiment_data(1).tocs(:)'; app.experiment_data(2).tocs(:)'; app.experiment_data(3).tocs(:)'; app.experiment_data(4).tocs(:)'; app.experiment_data(5).tocs(:)'; app.experiment_data(6).tocs(:)' ];
-    rosshutdown();
-    delete_timer();
-    dbquit();
- end
-step = step + 1;
-end
 
-
-function cmd_vel(src, msg, obj)
-sub_cmd_vel = msg;
-v_l = msg.Linear.X;
-v_a = msg.Angular.Z;
-temp = [v_l v_a]';
-obj.sub_data(2).data = temp;
-end
 
 function measurement(src, msg, obj)
 sub_measurement_data = msg.Data;
@@ -105,5 +96,4 @@ end
 sub_measurement_now = (0.001)*sub_measurement_now;
 %     disp(sub_measurement_now);
 obj.sub_data(1).data = sub_measurement_now;
-obj.sub_data(1).data(end + 1) = toc;
 end
