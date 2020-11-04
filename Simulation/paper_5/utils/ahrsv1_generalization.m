@@ -1,4 +1,4 @@
-function ahrsv1_generalization(fig_on_off)
+function ahrsv1_generalization(fig_on_off, offset)
 
 global experiment_data
 global app

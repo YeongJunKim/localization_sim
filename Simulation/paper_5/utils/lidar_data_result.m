@@ -37,7 +37,7 @@ for ct = 1:app.iteration
     if ct > 93
     end
     fprintf("ct = %d\n", ct);
-    for ag = 3:3
+    for ag = 1:app.agent_num
         if(app.digraph.Nodes.Type{ag} == "known")
         else
             LIDARS{ag}.lidaring_run(experiment_data(ag).lidar(:,ct));

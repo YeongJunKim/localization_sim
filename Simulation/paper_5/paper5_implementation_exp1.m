@@ -1,17 +1,11 @@
 % paper: Finite Memory Distributed Localization of Multiple Mobile Robots based on Relative Measurement in WSNs
-
 % author: Yeong Jun Kim(colson)
 % email: colson@korea.ac.kr || dud3722000@naver.com
 % date: 2020-10-18
-%
 % https://www.github.com/YeongJunKim/matlab/filters/
-%
-% Important thing to achieve the sim & ex.
-
 clc;
 clear all;
-
-% close all;
+close all;
 
 
 addpath('./../../../matlab/filters/');

@@ -27,7 +27,7 @@ app.agent_name_by_number    = ["1", "2", "3", "4", "5", "6"];
 app.agent_num               = 6;
 app.nx                      = 3;
 app.nu                      = 2;
-app.horizon_size.RDFIR      = 10;
+app.horizon_size.RDFIR      = 7;
 app.horizon_size.FIR        = 5;
 app.anchor_num              = 4;
 app.nh = cell(app.agent_num, 1);
@@ -38,6 +38,11 @@ app.index_RDFIR = 1;
 app.index_RDEKF = 2;
 app.index_PF  = 3;
 %% general settings
+
+
+
+app.plot_colors = ["r", "g", "c", "b", "m", "k"];
+app.plot_shapes = ["-*","-h","-+", "-o", "-x", "-d"];
 
 
 EdgeTable = table([st' ed'], weight, ...
