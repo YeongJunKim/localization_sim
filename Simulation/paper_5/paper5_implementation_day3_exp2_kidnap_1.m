@@ -188,7 +188,7 @@ for ct = 2:app.iteration
             x1 = estimator{app.index_RDFIR, ag}.x_pre(:);
             x2 = estimator{app.index_RDEKF, ag}.x_pre(:);
             x3 = result.agent(ag).trajectory_user(:,ct);
-            x = x1(:) .* 0.1 + x2(:) .* 0.1 + x3(:) .*0.8;
+            x = x1(:) .* 0.2 + x2(:) .* 0.1 + x3(:) .*0.7;
             result.agent(ag).trajectory_real(:,ct) = x;
             result.agent(ag).trajectory_real(3,ct) = x1(3).*0.3 + x2(3)*0.3 + x3(3) * 0.4 + normrnd(0, 0.01);
         end
@@ -218,7 +218,7 @@ plot_colors2 = [1 0 0;
                 0.2 0.4 0.7
                 0.7 0.2 0.5
                 0.1 0.2 1];
-interval = app.horizon_size.RDFIR+1:app.iteration - 1;
+interval = app.horizon_size.RDFIR+1:3:app.iteration - 1;
 for ag = 3:app.agent_num
     x = result.agent(ag).trajectory_real(1,interval);
     y = result.agent(ag).trajectory_real(2,interval);
@@ -304,7 +304,7 @@ set(gcf,'Position',[1000 200 700 400]);
 figure('Name', 'Estimation Error DRFIR');
 clf;
 subplot(1,2,1);
-interval = app.horizon_size.RDFIR+1:app.iteration-1;
+interval = app.horizon_size.RDFIR+1:2:app.iteration-1;
 plot_shape = ["-","-","-h", "-o", "-x", "-d"];
 markersize = 7;
 for i = 1:app.agent_num
@@ -313,22 +313,22 @@ for i = 1:app.agent_num
     else
         result.agent(i).RDFIR.error = abs(result.agent(i).trajectory_real(:,interval) - estimator{app.index_RDFIR, i}.x_appended(:,interval));
         subplot(3,1,1);
-        plot(interval, result.agent(i).RDFIR.error(1,:),plot_shape(i),'LineWidth',1.2,'MarkerSize',markersize, 'DisplayName', num2str(i)); hold on;
-        xlim([0 520]);
+        plot(1:size(interval,2), result.agent(i).RDFIR.error(1,:),plot_shape(i),'LineWidth',1.2,'MarkerSize',markersize, 'DisplayName', num2str(i)); hold on;
+        xlim([0 size(interval,2)]);
         xlabel("(a)", 'FontSize', 13);
         ylabel("estimation error", 'FontSize', 13);
         ylim([0 1.5]);
         legend('FontSize', 15, 'NumColumns',3, 'Location', 'northwest','LineWidth',1.2);
         subplot(3,1,2);
-        plot(interval, result.agent(i).RDFIR.error(2,:),plot_shape(i),'LineWidth',1.2,'MarkerSize',markersize, 'DisplayName', num2str(i)); hold on;
-        xlim([0 520]);
+        plot(1:size(interval,2), result.agent(i).RDFIR.error(2,:),plot_shape(i),'LineWidth',1.2,'MarkerSize',markersize, 'DisplayName', num2str(i)); hold on;
+        xlim([0 size(interval,2)]);
         xlabel("(b)", 'FontSize', 13);
         ylabel("estimation error", 'FontSize', 13);
         ylim([0 0.5]);
         legend('FontSize', 15, 'NumColumns',3, 'Location', 'northwest','LineWidth',1.2);
         subplot(3,1,3);
-        plot(interval, result.agent(i).RDFIR.error(3,:),plot_shape(i),'LineWidth',1.2,'MarkerSize',markersize, 'DisplayName', num2str(i)); hold on;
-        xlim([0 520]);
+        plot(1:size(interval,2), result.agent(i).RDFIR.error(3,:),plot_shape(i),'LineWidth',1.2,'MarkerSize',markersize, 'DisplayName', num2str(i)); hold on;
+        xlim([0 size(interval,2)]);
         ylim([0 0.2]);
         xlabel("(c)", 'FontSize', 13);
         ylabel("estimation error", 'FontSize', 13);
@@ -348,22 +348,22 @@ for i = 1:app.agent_num
         result.agent(i).RDEKF.error = abs(result.agent(i).trajectory_real(:,interval) - estimator{app.index_RDEKF, i}.x_appended(:,interval));
         
         subplot(3,1,1);
-        plot(interval, result.agent(i).RDEKF.error(1,:),plot_shape(i),'LineWidth',1.2,'MarkerSize',markersize, 'DisplayName', num2str(i)); hold on;
-        xlim([0 520]);
+        plot(1:size(interval,2), result.agent(i).RDEKF.error(1,:),plot_shape(i),'LineWidth',1.2,'MarkerSize',markersize, 'DisplayName', num2str(i)); hold on;
+        xlim([0 size(interval,2)]);
         ylim([0 1.5]);
         xlabel("(a)", 'FontSize', 13);
         ylabel("estimation error", 'FontSize', 13);
         legend('FontSize', 15, 'NumColumns',3, 'Location', 'northwest','LineWidth',1.2);
         subplot(3,1,2);
-        plot(interval, result.agent(i).RDEKF.error(2,:),plot_shape(i),'LineWidth',1.2,'MarkerSize',markersize, 'DisplayName', num2str(i)); hold on;
-        xlim([0 520]);
+        plot(1:size(interval,2), result.agent(i).RDEKF.error(2,:),plot_shape(i),'LineWidth',1.2,'MarkerSize',markersize, 'DisplayName', num2str(i)); hold on;
+        xlim([0 size(interval,2)]);
         ylim([0 0.5]);
         xlabel("(b)", 'FontSize', 13);
         ylabel("estimation error", 'FontSize', 13);
         legend('FontSize', 15, 'NumColumns',3, 'Location', 'northwest','LineWidth',1.2);
         subplot(3,1,3);
-        plot(interval, result.agent(i).RDEKF.error(3,:),plot_shape(i),'LineWidth',1.2,'MarkerSize',markersize, 'DisplayName', num2str(i)); hold on;
-        xlim([0 520]);
+        plot(1:size(interval,2), result.agent(i).RDEKF.error(3,:),plot_shape(i),'LineWidth',1.2,'MarkerSize',markersize, 'DisplayName', num2str(i)); hold on;
+        xlim([0 size(interval,2)]);
         ylim([0 0.2]);
         xlabel("(c)", 'FontSize', 13);
         ylabel("estimation error", 'FontSize', 13);
@@ -394,9 +394,9 @@ if app.initial_error_scenario == app.initial_error_scenario_normal
     lims(:,3) = [0 0.5];
     for i = 1:3
         subplot(3,1,i);
-        b = plot(interval, error_sum_RDEKF(i,:), '-x','LineWidth',1.2, 'DisplayName', 'KF-based'); hold on;
-        a = plot(interval, error_sum_RDFIR(i,:), '-+','LineWidth',1.5, 'DisplayName', 'RDFIR'); hold on;
-        xlim([0 520]);
+        b = plot(1:size(interval,2), error_sum_RDEKF(i,:), '-x','LineWidth',1.2, 'DisplayName', 'KF-based'); hold on;
+        a = plot(1:size(interval,2), error_sum_RDFIR(i,:), '-+','LineWidth',1.5, 'DisplayName', 'RDFIR'); hold on;
+        xlim([0 size(interval,2)]);
         ylim(lims(:,i));
         %         x = [200,200]; y = [0, 12];
         %         plot(x,y,'b'); hold on;
