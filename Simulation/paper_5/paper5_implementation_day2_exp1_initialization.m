@@ -4,45 +4,45 @@ persistent unknown_agent_init_flag known_agent_init_flag
 global app
 global estimator
 
-app.initial_state = zeros(app.nx, app.agent_num);
-
-app.initial_state(:,findnode(app.digraph, "tb3a")) = [0.6 1.8 0]';
-app.initial_state(:,findnode(app.digraph, "tb3b")) = [1.8 1.2 0]';
-app.initial_state(:,findnode(app.digraph, "tb3c")) = [1.2 1.8 0]';
-app.initial_state(:,findnode(app.digraph, "tb3d")) = [1.8 1.8 0]';
-app.initial_state(:,findnode(app.digraph, "tb3e")) = [0.6 1.35 0]';
-app.initial_state(:,findnode(app.digraph, "tb3f")) = [1.2 1.23 0]';
-
-
-app.anchor_position = zeros(2, app.anchor_num);
-app.anchor_position(:,1) = [0 0]';
-app.anchor_position(:,2) = [0 6]';
-app.anchor_position(:,3) = [6 6]';
-app.anchor_position(:,4) = [6 0]';
+% app.initial_state = zeros(app.nx, app.agent_num);
+% 
+% app.initial_state(:,findnode(app.digraph, "tb3a")) = [0.6 1.8 0]';
+% app.initial_state(:,findnode(app.digraph, "tb3b")) = [1.8 1.2 0]';
+% app.initial_state(:,findnode(app.digraph, "tb3c")) = [1.2 1.8 0]';
+% app.initial_state(:,findnode(app.digraph, "tb3d")) = [1.8 1.8 0]';
+% app.initial_state(:,findnode(app.digraph, "tb3e")) = [0.6 1.35 0]';
+% app.initial_state(:,findnode(app.digraph, "tb3f")) = [1.2 1.23 0]';
+% 
+% 
+% app.anchor_position = zeros(2, app.anchor_num);
+% app.anchor_position(:,1) = [0 0]';
+% app.anchor_position(:,2) = [0 6]';
+% app.anchor_position(:,3) = [6 6]';
+% app.anchor_position(:,4) = [6 0]';
 
 % result data init 
-for ct = 1:app.agent_num
-   app.result.agent(ct).input = zeros(app.nu, []);
-   app.result.agent(ct).odom_input = zeros(app.nu, []);
-   app.result.agent(ct).user_input = zeros(app.nu, []);
-   if(app.digraph.Nodes.Type{ct} == "known")
-   app.result.agent(ct).measurement = zeros(size(app.anchor_position, 2) + 1, []);
-   else
-    app.result.agent(ct).measurement = zeros(size(app.nh{ct},1), []);
-   end
-   app.result.agent(ct).ahrsv1 = zeros(1,[]);
-   app.result.agent(ct).trajectory.real = zeros(app.nx, []);
-   app.result.agent(ct).trajectory.only_input = zeros(app.nx, []);
-   app.result.agent(ct).trajectory.estimated = zeros(app.nx, []);
-   app.result.agent(ct).trajectory.se = zeros(app.nx, []);
-   app.result.agent(ct).trajectory.rmse = 0;
-   app.result.agent(ct).trajectory.real(:,1) = app.initial_state(:,ct);
-   app.result.agent(ct).trajectory.only_odom_input(:,1) = app.initial_state(:,ct);
-   app.result.agent(ct).trajectory.only_user_input(:,1) = app.initial_state(:,ct);
-   app.result.agent(ct).trajectory.only_constant_input(:,1) = app.initial_state(:,ct);
-   app.result.agent(ct).trajectory.estimated(:,1) = app.initial_state(:,ct);
-%    disp(app.result.agent(ct))
-end
+% for ct = 1:app.agent_num
+%    app.result.agent(ct).input = zeros(app.nu, []);
+%    app.result.agent(ct).odom_input = zeros(app.nu, []);
+%    app.result.agent(ct).user_input = zeros(app.nu, []);
+%    if(app.digraph.Nodes.Type{ct} == "known")
+%    app.result.agent(ct).measurement = zeros(size(app.anchor_position, 2) + 1, []);
+%    else
+%     app.result.agent(ct).measurement = zeros(size(app.nh{ct},1), []);
+%    end
+%    app.result.agent(ct).ahrsv1 = zeros(1,[]);
+%    app.result.agent(ct).trajectory.real = zeros(app.nx, []);
+%    app.result.agent(ct).trajectory.only_input = zeros(app.nx, []);
+%    app.result.agent(ct).trajectory.estimated = zeros(app.nx, []);
+%    app.result.agent(ct).trajectory.se = zeros(app.nx, []);
+%    app.result.agent(ct).trajectory.rmse = 0;
+%    app.result.agent(ct).trajectory.real(:,1) = app.initial_state(:,ct);
+%    app.result.agent(ct).trajectory.only_odom_input(:,1) = app.initial_state(:,ct);
+%    app.result.agent(ct).trajectory.only_user_input(:,1) = app.initial_state(:,ct);
+%    app.result.agent(ct).trajectory.only_constant_input(:,1) = app.initial_state(:,ct);
+%    app.result.agent(ct).trajectory.estimated(:,1) = app.initial_state(:,ct);
+% %    disp(app.result.agent(ct))
+% end
 
 
 

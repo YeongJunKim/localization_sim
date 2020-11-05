@@ -1,9 +1,8 @@
-function lidar_data_result(fig_on_off)
+function lidar_data_result(fig_on_off,weight)
 
 global app
 global LIDARS
 global experiment_data
-
 
 LIDARS = cell(1,app.agent_num);
 
@@ -30,6 +29,7 @@ for ag = 1:app.agent_num
         
         LIDARS{ag}.lidaring_position_init(init,app.iteration);
         LIDARS{ag}.option("figure", fig_on_off);
+        LIDARS{ag}.option("weight", weight);
     end
 end
 %% clustering
@@ -54,12 +54,12 @@ for ag = 1:app.agent_num
         for ct = 1:app.iteration
             for i = 1:LIDARS{ag}.robot_num
                 offset = LIDARS{ag}.robot_num;
-                de = experiment_data(ag).ahrsv1(ct);
-                pos = [cos(de) sin(de); -sin(de) cos(de)] * LIDARS{ag}.result_data(:,i,ct);
+                de = -experiment_data(ag).ahrsv1(ct);
+                pos = [cos(de) sin(de); -sin(de) cos(de)] * (LIDARS{ag}.result_data(:,i,ct));
                 experiment_data(ag).measurement(i,ct) = pos(1);
                 experiment_data(ag).measurement(offset + i,ct) = pos(2);
             end
-            experiment_data(ag).measurement(offset * 2 + 1,ct) =experiment_data(ag).ahrsv1(ct);
+            experiment_data(ag).measurement(offset * 2 + 1,ct) = experiment_data(ag).ahrsv1(ct);
         end
         for i = 1:LIDARS{ag}.robot_num
             offset = LIDARS{ag}.robot_num;
