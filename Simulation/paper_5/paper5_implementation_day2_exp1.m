@@ -293,7 +293,7 @@ yticks(-0.6:0.6:10);
 % yticks(0:0.6:5);
 
 fullscreen = get(0,'ScreenSize');
-set(gcf,'Position',[200 100 900 400]);
+set(gcf,'Position',[1000 200 700 400]);
 % set(gcf,'Position',[0 0 fullscreen(3) fullscreen(4)]);
 %%
 figure('Name', 'Estimation Error DRFIR');
@@ -390,7 +390,7 @@ if app.initial_error_scenario == app.initial_error_scenario_normal
     for i = 1:3
         subplot(3,1,i);
         b = plot(interval, error_sum_RDEKF(i,:), '-x','LineWidth',1.2, 'DisplayName', 'KF-based'); hold on;
-        a = plot(interval, error_sum_RDFIR(i,:), '-+','LineWidth',1.5, 'DisplayName', 'RDFIR'); hold on;
+        a = plot(interval, error_sum_RDFIR(i,:), '-+','LineWidth',1.5, 'DisplayName', 'DRFIR'); hold on;
         xlim([0 app.iteration]);
         ylim(lims(:,i));
         %         x = [200,200]; y = [0, 12];
@@ -404,7 +404,7 @@ if app.initial_error_scenario == app.initial_error_scenario_normal
         xlabel(disp_name(i), 'FontSize', 13);
         ylabel("sum of estimation error", 'FontSize', 13);
         %         ylim(lims(:,i)');
-        legend([a,b], 'FontSize', 13, 'Location', 'northwest');
+        legend([b,a], 'FontSize', 13, 'Location', 'northwest');
     end
 end
 set(gcf,'Position',[400 100 700 650])

@@ -392,24 +392,17 @@ if app.initial_error_scenario == app.initial_error_scenario_normal
     lims(:,1) = [0 4];
     lims(:,2) = [0 0.8];
     lims(:,3) = [0 0.5];
+%     interval = app.horizon_size.RDFIR + 1:2:app.iteration-1;
     for i = 1:3
         subplot(3,1,i);
-        b = plot(1:size(interval,2), error_sum_RDEKF(i,:), '-x','LineWidth',1.2, 'DisplayName', 'KF-based'); hold on;
-        a = plot(1:size(interval,2), error_sum_RDFIR(i,:), '-+','LineWidth',1.5, 'DisplayName', 'RDFIR'); hold on;
+        b = plot(interval(:)/2, error_sum_RDEKF(i,:), '-x','LineWidth',1.2, 'DisplayName', 'KF-based'); hold on;
+        a = plot(interval(:)/2, error_sum_RDFIR(i,:), '-+','LineWidth',1.5, 'DisplayName', 'DRFIR'); hold on;
         xlim([0 size(interval,2)]);
         ylim(lims(:,i));
-        %         x = [200,200]; y = [0, 12];
-        %         plot(x,y,'b'); hold on;
-        %         x = [300,300]; y = [0, 12];
-        %         plot(x,y,'b'); hold on;
-        %         x = [400,400]; y = [0, 12];
-        %         plot(x,y,'b'); hold on;
-        %         x = [450,450]; y = [0, 12];
-        %         plot(x,y,'b'); hold on;
         xlabel(disp_name(i), 'FontSize', 13);
         ylabel("sum of estimation error", 'FontSize', 13);
         %         ylim(lims(:,i)');
-        legend([a,b], 'FontSize', 13, 'Location', 'northwest');
+        legend([b,a], 'FontSize', 13, 'Location', 'northwest');
     end
 end
 annotation('textbox',...
@@ -426,18 +419,17 @@ annotation('textbox',...
     'FontSize',13,...
     'FitBoxToText','off');
 
-annotation('arrow',[0.518571428571429 0.434285714285714],...
-    [0.864615384615385 0.816923076923077]);
+annotation('arrow',[0.518571428571429 0.46],...
+    [0.864615384615385 0.790769230769231]);
 
 annotation('arrow',[0.528571428571429 0.678571428571429],...
     [0.867692307692308 0.786153846153846]);
 
 annotation('arrow',[0.61 0.544285714285714],...
-    [0.566153846153846 0.48]);
+    [0.566153846153846 0.526153846153846]);
 
 annotation('arrow',[0.644285714285714 0.754285714285714],...
     [0.566153846153846 0.54]);
-
 
 set(gcf,'Position',[400 100 700 650])
 
