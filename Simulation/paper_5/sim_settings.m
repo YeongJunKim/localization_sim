@@ -7,7 +7,7 @@ app.relative_scenario_poss_diff = 2;
 app.initial_error_scenario_error = 1;
 app.initial_error_scenario_normal = 2;
 
-app.relative_scenario = app.relative_scenario_distance_eta;
+app.relative_scenario = app.relative_scenario_poss_diff;
 
 app.initial_error_scenario = app.initial_error_scenario_normal;
 
@@ -48,9 +48,17 @@ app.index_PF  = 3;
 % tb3a, tb3b are known robot,
 % start(give position) -> end(receive position)
 st     = [1 1 1 1 2 2 2 2 3 3 4 4 5 6 6 6 ...
-                                            7 7 7 7  8 8  9 10 10 3 5 11 11 6  8  12 12 13 14 14 14 15 15 16 17 17 18 18 18 19 19 19 20 21 21 22 22 23 24 24 25 25 25];
+          7 7 7 7  8 8  9 10 10 3 5 11 11 6  8  ... 
+          12 12 13 14 14 14 15 15 16 17 17 18 18 ...
+          18 19 19 19 20 21 21 22 22 23 24 24 25 25 25];
+%           20 21 22 23 24 25 ...
+%           1 2 10 20 18];
 ed     = [3 5 4 6 3 5 6 4 6 4 3 6 4 3 5 10 ...
-                                            5 8 9 10 9 10 7 8  9  7 8 12 13 11 11 15 16 17 13 18 20 16 9 20 18 19 14 15 19 20 13 12 4  20 24 23 21 25 22 20 16 17 18];
+          5 8 9 10 9 10 7 8  9  7 8 12 13 11 11 ...
+          15 16 17 13 18 20 16 9  20 18 19 14 15 ...
+          19 20 13 12 4  20 24 23 21 25 22 20 16 17 18];
+%           8  8  8  8  8  8 ...
+%           23 23 23 23 23];
 weight = ones(size(st,2), 1);
 
 

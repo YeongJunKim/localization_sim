@@ -168,17 +168,24 @@ for ct = 1:app.iteration
                 for j = 1:nn
                     x1 = pj_(:,i);
                     x2 = pj_(:,find_neighbors(j));
-                    if (((ct > 200 && ct < 230) || (ct > 400 && ct < 450)) && (i == 8 || i == 15 || i == 20 || i == 5 || i == 18 ))
+                    if (((ct > 200 && ct < 300) || (ct > 400 && ct < 450)) && (i == 8 || i == 15 || i == 20 || i == 5 || i == 18 ))
                         fprintf("diff noise occurred ct  [%d],i [%d]\r\n", ct, i);
+                        if(ct > 200 && ct < 300)
                         z(j) = x2(1) - x1(1) + normrnd(0,0.1);
                         z(nn+j) = x2(2) - x1(2) + normrnd(0,0.1);
+                        z(end) = app.result.agent(i).trajectory.real(3,ct) + normrnd(0,0.1);
+                        elseif(ct > 400 && ct < 450)
+                        z(j) = x2(1) - x1(1) + normrnd(0,0.2);
+                        z(nn+j) = x2(2) - x1(2) + normrnd(0,0.5);
+                        z(end) = app.result.agent(i).trajectory.real(3,ct) + normrnd(0,0.5);
+                        end
                     else
                         z(j) = x2(1) - x1(1) + normrnd(0,0.01);
                         z(nn+j) = x2(2) - x1(2) + normrnd(0,0.01);
+                        z(nn*2+1) = app.result.agent(i).trajectory.real(3,ct) + normrnd(0,0.01);
                     end
                 end
             end
-            z(nn*2+1) = app.result.agent(i).trajectory.real(3,ct) + normrnd(0,0.01);
             
             estimator{app.index_RDFIR, i}.estimate2(i,app.result.agent(i).input(:,ct), z, app.adj_full, pj_);
             estimator{app.index_RDEKF, i}.estimate3(i,app.result.agent(i).input(:,ct), z, app.adj_full, pj_);
@@ -200,7 +207,7 @@ for i = 1:app.agent_num
            y = estimator{app.index_RDFIR, i}.x_appended(2,interval);
            index = num2str(i);
            RDFIR_display_name = strcat("RDFIR", index);
-           plot(app.ax2, x,y, '-d', 'DisplayName', RDFIR_display_name); hold on;
+%            plot(app.ax2, x,y, '-d', 'DisplayName', RDFIR_display_name); hold on;
            drawnow;
         end
 end
@@ -211,7 +218,7 @@ for i = 1:app.agent_num
            y = estimator{app.index_RDEKF, i}.x_appended(2,interval);
            index = num2str(i);
            RDFIR_display_name = strcat("RDEKF", index);
-           plot(app.ax2, x,y, '-+', 'DisplayName', RDFIR_display_name); hold on;
+%            plot(app.ax2, x,y, '-+', 'DisplayName', RDFIR_display_name); hold on;
            drawnow;
         end
 end
@@ -294,9 +301,9 @@ disp_name = ["(a)", "(b)", "(c)"];
 
 if app.initial_error_scenario == app.initial_error_scenario_normal
 lims = zeros(2,3);
-lims(:,1) = [0 12]';
-lims(:,2) = [0 10]';
-lims(:,3) = [0 1]';
+lims(:,1) = [0 1.3]';
+lims(:,2) = [0 2]';
+lims(:,3) = [0 2.8]';
 annotation('doublearrow',[0.440126050420168 0.59453781512605],...
 [0.9 0.9]);
 annotation('doublearrow',[0.750525210084034 0.827731092436972],...
@@ -315,8 +322,8 @@ annotation('textbox',...
     'FitBoxToText','off');
     for i = 1:3
         subplot(3,1,i);
-        a = plot(interval, error_sum_RDFIR(i,interval), '-.','LineWidth',1.2, 'DisplayName', 'RDFIR'); hold on;
-        b = plot(interval, error_sum_RDEKF(i,interval), '--','LineWidth',1.2, 'DisplayName', 'KF-based'); hold on;
+        b = plot(interval, error_sum_RDEKF(i,interval), '-*','LineWidth',0.7, 'DisplayName', 'KF-based', 'MarkerSize', 6); hold on;
+        a = plot(interval, error_sum_RDFIR(i,interval), '-+','LineWidth',0.8, 'DisplayName', 'DRFIR', 'MarkerSize', 6); hold on;
         x = [200,200]; y = [0, 12];
         plot(x,y,'b'); hold on;
         x = [300,300]; y = [0, 12];
@@ -326,9 +333,9 @@ annotation('textbox',...
         x = [450,450]; y = [0, 12];
         plot(x,y,'b'); hold on;
         xlabel(disp_name(i), 'FontSize', 13);
-        ylabel("sum of estimation error", 'FontSize', 13);
+        ylabel("estimation error", 'FontSize', 13);
         ylim(lims(:,i)');
-        legend([a,b], 'FontSize', 13, 'Location', 'northwest');
+        legend([b,a], 'FontSize', 13, 'Location', 'northwest');
     end
 elseif app.initial_error_scenario == app.initial_error_scenario_error
 lims(:,1) = [0 43]';
@@ -347,16 +354,17 @@ annotation('textarrow',[0.293491124260355 0.240236686390533],...
     [0.872812754409769 0.845318860244233],'String',{'k = N'},'FontSize',13);
     for i = 1:3
         subplot(3,1,i);
-        a = plot(interval, error_sum_RDFIR(i,interval), '-.','LineWidth',1.2, 'DisplayName', 'RDFIR'); hold on;
         b = plot(interval, error_sum_RDEKF(i,interval), '--','LineWidth',1.2, 'DisplayName', 'KF-based'); hold on;
+        
+        a = plot(interval, error_sum_RDFIR(i,interval), '-.','LineWidth',1.2, 'DisplayName', 'DRFIR'); hold on;
         x = [7 7]; y = [0 100];
          plot(x1(:,i)',y,'--b','LineWidth', 1); hold on;
 %          x = [13 13]; y = [0 100];
 %          plot(x2(:,i)',y,'--b','LineWidth', 1); hold on;
         xlabel(disp_name(i), 'FontSize', 13);
-        ylabel("sum of estimation error", 'FontSize', 13);
+        ylabel("estimation error", 'FontSize', 13);
          ylim(lims(:,i)');
-        legend([a,b], 'FontSize', 13);
+        legend([b,a], 'FontSize', 13);
     end
 end
 
@@ -370,6 +378,66 @@ for i = 1:3
     fprintf("RMSE_RDFIR(%d) = %f \r\n",i, error_rmse_RDFIR(i));
 end
 
+set(gcf,'Position',[100 100 700 650])
+
+%% RMSE of intervals
+
+% normal
+
+for i = 1:3
+    error_rmse_RDEKF(i) = sum(error_sum_RDEKF(i,1:200)); error_rmse_RDEKF(i) = error_rmse_RDEKF(i)/200;
+    error_rmse_RDFIR(i) = sum(error_sum_RDFIR(i,1:200)); error_rmse_RDFIR(i) = error_rmse_RDFIR(i)/200;
+    fprintf("normal RMSE_RDEKF(%d) = %f \n",i, error_rmse_RDEKF(i));
+    fprintf("normal RMSE_RDFIR(%d) = %f \n",i, error_rmse_RDFIR(i));
+end
+for i = 1:3
+    error_rmse_RDEKF(i) = sum(error_sum_RDEKF(i,200:300)); error_rmse_RDEKF(i) = error_rmse_RDEKF(i)/100;
+    error_rmse_RDFIR(i) = sum(error_sum_RDFIR(i,200:300)); error_rmse_RDFIR(i) = error_rmse_RDFIR(i)/100;
+    fprintf("interval 1 RMSE_RDEKF(%d) = %f \n",i, error_rmse_RDEKF(i));
+    fprintf("interval 1 RMSE_RDFIR(%d) = %f \n",i, error_rmse_RDFIR(i));
+end
+for i = 1:3
+    error_rmse_RDEKF(i) = sum(error_sum_RDEKF(i,400:450)); error_rmse_RDEKF(i) = error_rmse_RDEKF(i)/50;
+    error_rmse_RDFIR(i) = sum(error_sum_RDFIR(i,400:450)); error_rmse_RDFIR(i) = error_rmse_RDFIR(i)/50;
+    fprintf("interval 2 RMSE_RDEKF(%d) = %f \n",i, error_rmse_RDEKF(i));
+    fprintf("interval 2 RMSE_RDFIR(%d) = %f \n",i, error_rmse_RDFIR(i));
+end
+
+
+%% rmse result graph sorted by neighbors
+% °¢ ³ëµåÀÇ RMSE¸¦ ±¸ÇÏ°í Æò±Õ³»¸éµÊ
+max_neighbors = 10;
+rmse = zeros(app.nx, app.agent_num);
+rmse_sort = zeros(app.nx, max_neighbors);
+error_sum_RDEKF = zeros(3,app.iteration);
+error_sum_RDFIR = zeros(3,app.iteration);
+for ag = 1:app.agent_num
+    if(app.digraph.Nodes.Type{ag} == "known")
+    else
+        disp(ag)
+        for ct = 1:app.nx
+            rmse(ct,ag) = sum(abs(app.result.agent(ag).RDFIR.error(ct,200:300)));
+            rmse(ct,ag) = rmse(ct,ag)/200;
+        end
+    end
+end
+for ct = 1:max_neighbors
+    sum_rmse = zeros(3,1);
+    sum_cnt = 0;
+    for ag = 1:app.agent_num
+        find_neighbors = find(app.adj_full(:,ag)==1);
+        nn = size(find_neighbors, 1);
+        if nn == ct
+            sum_cnt = sum_cnt + 1;
+            sum_rmse = sum_rmse + rmse(:,ag);
+        end
+    end
+    sum_rmse = sum_rmse ./ sum_cnt;
+    disp(sum_rmse);
+    rmse_sort(:,ct) = sum_rmse;
+    fprintf("nn:%d, cnt: %d\n", ct, sum_cnt);
+end
+disp(rmse_sort);
 %% convergence rate
 % https://ieeexplore.ieee.org/abstract/document/7122298
 

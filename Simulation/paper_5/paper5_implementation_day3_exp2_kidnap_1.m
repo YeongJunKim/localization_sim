@@ -22,9 +22,9 @@ global result
 %% file import
 addpath('./experiment_data/');
 load('day3_ex2_exp_kidnap_1.mat');
-%% graph ì„¤ì •
+%% graph ?„¤? •
 paper5_implementation_day3_exp2_setting();
-%% init position ì„¤ì •
+%% init position ?„¤? •
 app.initial_state_offset = zeros(1, app.agent_num);
 app.initial_state_offset(1) = 0;
 app.initial_state_offset(2) = 0;
@@ -45,24 +45,24 @@ app.anchor_position(:,1) = [0 0]';
 app.anchor_position(:,2) = [0 ts*10]';
 app.anchor_position(:,3) = [ts*10 ts*10]';
 app.anchor_position(:,4) = [ts*10 0]';
-%% filter ì„¤ì •
+%% filter ?„¤? •
 paper5_implementation_day3_exp2_initialization();
-%% dt ì„¤ì •
+%% dt ?„¤? •
 app.dt = 0.2;
-%% interval ì„¤ì •
+%% interval ?„¤? •
 app.iteration = 522;
 app.interval = 1:app.iteration;
-%% ì‹¤í—˜ ë°ì´íƒ€ ì •ë ¬í•˜ê¸° ahrsv1, lidar
+%% ?‹¤?—˜ ?°?´?? ? •? ¬?•˜ê¸? ahrsv1, lidar
 fig_on_off = 1;
 ahrsv1_generalization(fig_on_off,app.initial_state_offset);
 experiment_data(3).lidar = xlsread('day3_ex2_data_3_lidar.xlsx');
 experiment_data(5).lidar = xlsread('day3_ex2_data_5_lidar.xlsx');
 experiment_data(6).lidar = xlsread('day3_ex2_data_6_lidar.xlsx');
 
-%% Lidar dataë¥¼ relative measurementë¡œ ë³€í™˜
+%% Lidar dataë¥? relative measurementë¡? ë³??™˜
 fig_on_off = 0;
 lidar_data_result(fig_on_off,1);
-%% result data ì´ˆê¸°í™”
+%% result data ì´ˆê¸°?™”
 for ag = 1:app.agent_num
    result.agent(ag).trajectory_user = zeros(app.nx,app.iteration);
    result.agent(ag).trajectory_real = zeros(app.nx,app.iteration);
@@ -389,8 +389,8 @@ disp_name = ["(a)", "(b)", "(c)"];
 
 if app.initial_error_scenario == app.initial_error_scenario_normal
     lims = zeros(2,3);
-    lims(:,1) = [0 4];
-    lims(:,2) = [0 0.8];
+    lims(:,1) = [0.0 4.0];
+    lims(:,2) = [0 1];
     lims(:,3) = [0 0.5];
 %     interval = app.horizon_size.RDFIR + 1:2:app.iteration-1;
     for i = 1:3
@@ -400,7 +400,7 @@ if app.initial_error_scenario == app.initial_error_scenario_normal
         xlim([0 size(interval,2)]);
         ylim(lims(:,i));
         xlabel(disp_name(i), 'FontSize', 13);
-        ylabel("sum of estimation error", 'FontSize', 13);
+        ylabel("estimation error", 'FontSize', 13);
         %         ylim(lims(:,i)');
         legend([b,a], 'FontSize', 13, 'Location', 'northwest');
     end

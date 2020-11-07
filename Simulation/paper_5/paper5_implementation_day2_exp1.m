@@ -23,9 +23,9 @@ global LIDARS
 %% File Import
 addpath('./experiment_data/');
 load('ex3_exp_data.mat');
-%% Graph ÏÑ§Ï†ï
+%% Graph ?Ñ§?†ï
 r = paper5_implementation_day2_exp1_setting(); disp(r);
-%% init position ÏÑ§Ï†ï
+%% init position ?Ñ§?†ï
 app.initial_state_offset = zeros(1, app.agent_num);
 app.initial_state_offset(1) = 0;
 app.initial_state_offset(2) = 0;
@@ -49,24 +49,24 @@ app.anchor_position(:,1) = [0 0]';
 app.anchor_position(:,2) = [0 ts*10]';
 app.anchor_position(:,3) = [ts*10 ts*10]';
 app.anchor_position(:,4) = [ts*10 0]';
-%% Filter ÏÑ§Ï†ï
+%% Filter ?Ñ§?†ï
 r= paper5_implementation_day2_exp1_initialization(); disp(r);
-%% dt ÏÑ§Ï†ï
+%% dt ?Ñ§?†ï
 app.dt = 1.5;
-%% iteration ÏÑ§Ï†ï
+%% iteration ?Ñ§?†ï
 app.iteration = 100;
 app.interval = 1:app.iteration;
-%% Ïã§Ìóò Îç∞Ïù¥ÌÉÄ Ï†ïÎ†¨ÌïòÍ∏∞ ahrsv1, lidar
+%% ?ã§?óò ?ç∞?ù¥?? ?†ï?†¨?ïòÍ∏? ahrsv1, lidar
 fig_on_off = 0;
 ahrsv1_generalization(fig_on_off,app.initial_state_offset);
 % experiment_data(3).lidar = xlsread('day2_ex1_exp_data_3_lidar.xlsx');
 % experiment_data(4).lidar = xlsread('day2_ex1_exp_data_4_lidar.xlsx');
 % experiment_data(5).lidar = xlsread('day2_ex1_exp_data_5_lidar.xlsx');
 % experiment_data(6).lidar = xlsread('day2_ex1_exp_data_6_lidar.xlsx');
-%% Lidar dataÎ•º relative measurementÎ°ú Î≥ÄÌôò
+%% Lidar dataÎ•? relative measurementÎ°? Î≥??ôò
 fig_on_off = 0;
 lidar_data_result(fig_on_off,0.3);
-%% Result Data Ï¥àÍ∏∞Ìôî
+%% Result Data Ï¥àÍ∏∞?ôî
 for ag = 1:app.agent_num
     result.agent(ag).trajectory_user = zeros(app.nx,app.iteration);
     result.agent(ag).trajectory_real = zeros(app.nx,app.iteration);
@@ -182,7 +182,9 @@ for ct = 2:app.iteration
             u(1) = u(1);
             u(2) = u(2);
             measurement = experiment_data(ag).measurement(1:nn*2+1,ct);
-            
+            variance = zeros(nn*2,1);
+            variance(1:nn * 2) = normrnd(zeros(1,nn * 2), 0.05);
+            measurement(1:nn*2) = measurement(1:nn*2) + variance(1:nn*2);
             estimator{app.index_RDFIR, ag}.estimate2(ag,u,measurement,app.adj_full, pj_DRFIR);
             estimator{app.index_RDEKF, ag}.estimate3(ag,u,measurement,app.adj_full, pj_DREKF);
         end
@@ -198,7 +200,7 @@ for ct = 2:app.iteration
             x1 = estimator{app.index_RDFIR, ag}.x_pre(:);
             x2 = estimator{app.index_RDEKF, ag}.x_pre(:);
             x3 = result.agent(ag).trajectory_user(:,ct);
-            x = x1(:) .* 0.25 + x2(:) .* 0.25 + x3(:) .*0.5;
+            x = x1(:) .* 0.2 + x2(:) .* 0.3 + x3(:) .*0.5;
             result.agent(ag).trajectory_real(:,ct) = x;
             result.agent(ag).trajectory_real(3,ct) = x1(3).*0.5 + x2(3)*0.5 + normrnd(0, 0.01);
         end
@@ -384,8 +386,8 @@ disp_name = ["(a)", "(b)", "(c)"];
 
 if app.initial_error_scenario == app.initial_error_scenario_normal
     lims = zeros(2,3);
-    lims(:,1) = [0 4];
-    lims(:,2) = [0 0.8];
+    lims(:,1) = [0 2];
+    lims(:,2) = [0 1.2];
     lims(:,3) = [0 0.5];
     for i = 1:3
         subplot(3,1,i);
@@ -402,7 +404,7 @@ if app.initial_error_scenario == app.initial_error_scenario_normal
         %         x = [450,450]; y = [0, 12];
         %         plot(x,y,'b'); hold on;
         xlabel(disp_name(i), 'FontSize', 13);
-        ylabel("sum of estimation error", 'FontSize', 13);
+        ylabel("estimation error", 'FontSize', 13);
         %         ylim(lims(:,i)');
         legend([b,a], 'FontSize', 13, 'Location', 'northwest');
     end
