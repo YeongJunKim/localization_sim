@@ -4,14 +4,15 @@ global ROBOTS;
 initial_state = zeros(3,6);
 
 
-exp1_settings()
+paper5_implementation_day2_exp1_setting()
 
-initial_state(:,1) = [0.6 1.8 deg2rad(90)]';
-initial_state(:,2) = [1.8 1.2 deg2rad(90)]';
-initial_state(:,3) = [1.2 1.8 deg2rad(90)]';
-initial_state(:,4) = [1.8 1.8 deg2rad(90)]';
-initial_state(:,5) = [0.6 1.2 deg2rad(90)]';
-initial_state(:,6) = [1.2 1.2 deg2rad(90)]';
+initial_angle = 0;
+initial_state(:,1) = [0.6 1.8 deg2rad(initial_angle)]';
+initial_state(:,2) = [1.8 1.2 deg2rad(initial_angle)]';
+initial_state(:,3) = [1.2 1.8 deg2rad(initial_angle)]';
+initial_state(:,4) = [1.8 1.8 deg2rad(initial_angle)]';
+initial_state(:,5) = [0.6 1.2 deg2rad(initial_angle)]';
+initial_state(:,6) = [1.2 1.2 deg2rad(initial_angle)]';
 
 
 
@@ -35,8 +36,8 @@ u = zeros(2,6,iteration);
 u(1,:,:) = 0.01;
 u(2,:,:) = 0.01;
 
-nowtick = toc;
-pasttick = nowtick;
+% nowtick = toc;
+% pasttick = nowtick;
 
 state(:,:,1) = initial_state(:,:);
 
@@ -77,19 +78,19 @@ for ct = 1:iteration
        u(:,5,ct) = [0.02 0.08]';
        u(:,9,ct) = [0.01 0.03]';
    end
-%         u(:,1,ct) = [0.03 0.008]';
-%         u(:,2,ct) = [0.03 0.008]';
-%         u(:,3,ct) = [0.03 0.008]';
-%         u(:,4,ct) = [0.03 0.008]';
-%         u(:,5,ct) = [0.03 0.008]';
-%         u(:,6,ct) = [0.03 0.008]';
+        u(:,1,ct) = [0.03 0.008]';
+        u(:,2,ct) = [0.03 0.008]';
+        u(:,3,ct) = [0.03 0.008]';
+        u(:,4,ct) = [0.03 0.008]';
+        u(:,5,ct) = [0.03 0.008]';
+        u(:,6,ct) = [0.03 0.008]';
 end
 
 steps = 1;
 for ct = 1:iteration
     
     for i = 1:6
-        state(:,i,ct+1) = dynamics_nonholonomic(state(:,i,ct), u(:,i,ct), 5);
+        state(:,i,ct+1) = dynamics_nonholonomic(state(:,i,ct), u(:,i,ct), 1);
         plots{i}.XData = state(1,i,1:ct);
         plots{i}.YData = state(2,i,1:ct);
     end
