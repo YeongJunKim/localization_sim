@@ -274,7 +274,7 @@ colorcnt = colorcnt + 1;
            if app.digraph.Nodes.Type{ag} == "unknown"
             x = estimator{app.index_RDFIR, ag}.x_appended(1,interval);
             y = estimator{app.index_RDFIR, ag}.x_appended(2,interval);
-            plot(fig_input_selection_ax, x, y, '-d','Color',plot_colors2(colorcnt,:), 'LineWidth',1.5, 'DisplayName', strcat(num2str(ag),    "- DRFIR"), 'MarkerSize', 10); hold on;
+            plot(fig_input_selection_ax, x, y, '-d','Color',plot_colors2(colorcnt,:), 'LineWidth',1.5, 'DisplayName', strcat(num2str(ag),    "- DRFME"), 'MarkerSize', 10); hold on;
            end
        % eistmate DREKF
        elseif(ct == 2)
@@ -392,7 +392,7 @@ if app.initial_error_scenario == app.initial_error_scenario_normal
     for i = 1:3
         subplot(3,1,i);
         b = plot(interval, error_sum_RDEKF(i,:), '-x','LineWidth',1.2, 'DisplayName', 'KF-based'); hold on;
-        a = plot(interval, error_sum_RDFIR(i,:), '-+','LineWidth',1.5, 'DisplayName', 'DRFIR'); hold on;
+        a = plot(interval, error_sum_RDFIR(i,:), '-+','LineWidth',1.5, 'DisplayName', 'DRFME'); hold on;
         xlim([0 app.iteration]);
         ylim(lims(:,i));
         %         x = [200,200]; y = [0, 12];

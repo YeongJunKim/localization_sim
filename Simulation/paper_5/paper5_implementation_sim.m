@@ -240,19 +240,23 @@ for i = 1:app.agent_num
         app.result.agent(i).RDFIR.error = app.result.agent(i).trajectory.real(:,2:app.iteration+1) - estimator{app.index_RDFIR, i}.x_appended(:,interval);
         subplot(3,1,1);
         plot(interval, app.result.agent(i).RDFIR.error(1,interval)); hold on;
+        ylim([-0.2 0.2]);
         xlabel("(a)", 'FontSize', 13);
         ylabel("estimation error", 'FontSize', 13);
         subplot(3,1,2);
         plot(interval, app.result.agent(i).RDFIR.error(2,interval)); hold on;
+        ylim([-0.2 0.2]);
         xlabel("(b)", 'FontSize', 13);
         ylabel("estimation error", 'FontSize', 13);
         subplot(3,1,3);
         plot(interval, app.result.agent(i).RDFIR.error(3,interval)); hold on;
+        ylim([-0.6 0.6]);
         xlabel("(c)", 'FontSize', 13);
         ylabel("estimation error", 'FontSize', 13);
         drawnow;
     end
 end
+set(gcf,'Position',[100 100 700 650])
 %% 
 figure(5);
 clf;
@@ -270,19 +274,23 @@ for i = 1:app.agent_num
         
         subplot(3,1,1);
         plot(interval, app.result.agent(i).RDEKF.error(1,interval)); hold on;
+        ylim([-0.3 0.3]);
         xlabel("(a)", 'FontSize', 13);
         ylabel("estimation error", 'FontSize', 13);
         subplot(3,1,2);
         plot(interval, app.result.agent(i).RDEKF.error(2,interval)); hold on;
+        ylim([-0.7 0.7]);
         xlabel("(b)", 'FontSize', 13);
         ylabel("estimation error", 'FontSize', 13);
         subplot(3,1,3);
         plot(interval, app.result.agent(i).RDEKF.error(3,interval)); hold on;
+        ylim([-1 1]);
         xlabel("(c)", 'FontSize', 13);
         ylabel("estimation error", 'FontSize', 13);
         drawnow;
     end
 end
+set(gcf,'Position',[100 100 700 650])
 %%
 % RMSE
 figure(6);
@@ -356,7 +364,7 @@ annotation('textarrow',[0.293491124260355 0.240236686390533],...
         subplot(3,1,i);
         b = plot(interval, error_sum_RDEKF(i,interval), '--','LineWidth',1.2, 'DisplayName', 'KF-based'); hold on;
         
-        a = plot(interval, error_sum_RDFIR(i,interval), '-.','LineWidth',1.2, 'DisplayName', 'DRFIR'); hold on;
+        a = plot(interval, error_sum_RDFIR(i,interval), '-.','LineWidth',1.2, 'DisplayName', 'DRFME'); hold on;
         x = [7 7]; y = [0 100];
          plot(x1(:,i)',y,'--b','LineWidth', 1); hold on;
 %          x = [13 13]; y = [0 100];

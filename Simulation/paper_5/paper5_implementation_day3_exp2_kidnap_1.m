@@ -260,7 +260,7 @@ for ct = 1:3
            if app.digraph.Nodes.Type{ag} == "unknown"
             x = estimator{app.index_RDFIR, ag}.x_appended(1,interval);
             y = estimator{app.index_RDFIR, ag}.x_appended(2,interval);
-            plot(fig_input_selection_ax, x, y, '-o','Color', plot_colors2(colorcnt,:), 'LineWidth',1.5, 'DisplayName', strcat(num2str(ag),    "- DRFIR")); hold on;
+            plot(fig_input_selection_ax, x, y, '-o','Color', plot_colors2(colorcnt,:), 'LineWidth',1.5, 'DisplayName', strcat(num2str(ag),    "- DRFME")); hold on;
            end
        % eistmate DREKF
        elseif(ct == 2)
@@ -396,7 +396,7 @@ if app.initial_error_scenario == app.initial_error_scenario_normal
     for i = 1:3
         subplot(3,1,i);
         b = plot(interval(:)/2, error_sum_RDEKF(i,:), '-x','LineWidth',1.2, 'DisplayName', 'KF-based'); hold on;
-        a = plot(interval(:)/2, error_sum_RDFIR(i,:), '-+','LineWidth',1.5, 'DisplayName', 'DRFIR'); hold on;
+        a = plot(interval(:)/2, error_sum_RDFIR(i,:), '-+','LineWidth',1.5, 'DisplayName', 'DRFME'); hold on;
         xlim([0 size(interval,2)]);
         ylim(lims(:,i));
         xlabel(disp_name(i), 'FontSize', 13);
