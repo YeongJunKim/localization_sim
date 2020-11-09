@@ -1,3 +1,8 @@
 # localization_sim
 
-##### dependent on YeongJunKim/matlab
+### * Requirement
+- YeongJunKim/matlab (private)
+- YeongJunKim/matlab_utils
+  
+### * Run
+- paper*_implementation.m
