@@ -245,6 +245,7 @@ end
 %     end
 % end
 colorcnt = 0;
+trajectory_plots = cell(1,3*6);
 for ct = 1:3
    for ag = 1:app.agent_num
        colorcnt = colorcnt+1;
@@ -253,21 +254,21 @@ for ct = 1:3
            if app.digraph.Nodes.Type{ag} == "unknown"
             x = result.agent(ag).trajectory_real(1,interval);
             y = result.agent(ag).trajectory_real(2,interval);
-            plot(fig_input_selection_ax, x, y,   '-','Color',plot_colors2(colorcnt,:), 'LineWidth',2, 'DisplayName', strcat(num2str(ag), "- real")); hold on;
+            trajectory_plots{colorcnt} = plot(fig_input_selection_ax, x, y,   '-','Color',plot_colors2(colorcnt,:), 'LineWidth',2, 'DisplayName', strcat(num2str(ag), "- real")); hold on;
             end
        % estimate DRFIR
        elseif(ct == 3)
            if app.digraph.Nodes.Type{ag} == "unknown"
             x = estimator{app.index_RDFIR, ag}.x_appended(1,interval);
             y = estimator{app.index_RDFIR, ag}.x_appended(2,interval);
-            plot(fig_input_selection_ax, x, y, '-o','Color', plot_colors2(colorcnt,:), 'LineWidth',1.5, 'DisplayName', strcat(num2str(ag),    "- DRFME")); hold on;
+            trajectory_plots{colorcnt} = plot(fig_input_selection_ax, x, y, '-o','Color', plot_colors2(colorcnt,:), 'LineWidth',1.5, 'DisplayName', strcat(num2str(ag),    "- DRFME")); hold on;
            end
        % eistmate DREKF
        elseif(ct == 2)
            if app.digraph.Nodes.Type{ag} == "unknown"
             x = estimator{app.index_RDEKF, ag}.x_appended(1,interval);
             y = estimator{app.index_RDEKF, ag}.x_appended(2,interval);
-            plot(fig_input_selection_ax, x, y, '-+','Color', plot_colors2(colorcnt,:), 'LineWidth',1.2, 'DisplayName', strcat(num2str(ag), "- KF-based")); hold on;
+            trajectory_plots{colorcnt} = plot(fig_input_selection_ax, x, y, '-+','Color', plot_colors2(colorcnt,:), 'LineWidth',1.2, 'DisplayName', strcat(num2str(ag), "- KF-based")); hold on;
             end
        end
    end
@@ -516,7 +517,37 @@ ylabel("RMSE",'FontSize', 15);
 legend('FontSize', 15);
 
 
+%% make video
+%fig_input_selection =  figure('Name', 'Trajectory');
+figure('Name', 'MakeVideo');
+axis = axes;
+axis.OuterPosition = [0 0 0 0];
+unknown_num = 0;
+for ct = 1:app.agent_num
+    if app.digraph.Nodes.Type == "unknown"
+        unknown_num = unknown_num + 1;
+    end
+end
+for ct = 1:app.agent_num
+    
+end
+for ct = 1:app.iteration
+    for ag = 1:app.agent_num
+        
+    end
+    F(ct) = getframe(gcf);
+end
 
+
+if app.make_video == 1
+    video_name = sprintf('day3_exp2_kidnap_%s_%s',datestr(now,'yymmdd'),datestr(now,'HHMMSS'));
+    video = VideoWriter(video_name,'MPEG-4');
+    video.Quality = 100;
+    video.FrameRate = 1/0.05;   % 영상의 FPS, 값이 클수록 영상이 빨라짐
+    open(video);
+    writeVideo(video,F);
+    close(video);
+end
 
 
 
