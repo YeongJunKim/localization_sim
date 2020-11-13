@@ -200,7 +200,7 @@ for ct = 2:app.iteration
             x1 = estimator{app.index_RDFIR, ag}.x_pre(:);
             x2 = estimator{app.index_RDEKF, ag}.x_pre(:);
             x3 = result.agent(ag).trajectory_user(:,ct);
-            x = x1(:) .* 0.2 + x2(:) .* 0.3 + x3(:) .*0.5;
+            x = x1(:) .* 0.1 + x2(:) .* 0.2 + x3(:) .*0.7;
             result.agent(ag).trajectory_real(:,ct) = x;
             result.agent(ag).trajectory_real(3,ct) = x1(3).*0.5 + x2(3)*0.5 + normrnd(0, 0.01);
         end
