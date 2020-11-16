@@ -42,7 +42,7 @@ figure('Name', 'ahrsv1');
 clf;
 end
 for ag = 1:app.agent_num
-    experiment_data(ag).ahrsv1 = experiment_data(ag).ahrsv1_filtered;
+    experiment_data(ag).ahrsv1 = experiment_data(ag).ahrsv1_filtered + offset(ag);
     if(fig_on_off)
     plot(app.interval, experiment_data(ag).ahrsv1(app.interval),plot_shape(ag), 'DisplayName', num2str(ag)); hold on;
     end

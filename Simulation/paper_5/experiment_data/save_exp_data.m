@@ -38,3 +38,13 @@ clear all;
 load('day3_ex3_kidnap_2.mat');
 experiment_data = app.experiment_data;
 save('day3_ex3_exp_kidnap_1.mat', 'experiment_data');
+%%
+clear all;
+load('day4_ex2_NLOS_1.mat');
+experiment_data = app.experiment_data;
+save('day4_ex2_exp_NLOS_1.mat','experiment_data');
+%%
+clear all;
+load('day4_ex2_NLOS_2.mat');
+experiment_data = app.experiment_data;
+save('day4_ex2_exp_NLOS_2.mat','experiment_data');
