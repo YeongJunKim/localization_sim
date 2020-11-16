@@ -25,7 +25,7 @@ data5 = [];
 data6 = [];
 
 
-exp1_settings();pause(1);
+exp2_settings();pause(1);
 
 app.agent_name = ["tb3a", "tb3b", "tb3c", "tb3d", "tb3e", "tb3f"];
 app.agent_num = 6;
@@ -49,5 +49,5 @@ for i = 1:app.agent_num
 end
 
 %%
-tm = timer('BusyMode', 'drop', 'ExecutionMode', 'fixedRate', 'Period', 0.2, 'TimerFcn', @app_ros_get_data_timer);
+tm = timer('BusyMode', 'drop', 'ExecutionMode', 'fixedRate', 'Period', 0.5, 'TimerFcn', @app_ros_get_data_timer);
 start(tm);
