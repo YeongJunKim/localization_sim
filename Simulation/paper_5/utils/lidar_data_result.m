@@ -30,6 +30,7 @@ for ag = 1:app.agent_num
         LIDARS{ag}.lidaring_position_init(init,app.iteration);
         LIDARS{ag}.option("figure", fig_on_off);
         LIDARS{ag}.option("weight", weight);
+        LIDARS{ag}.option("NLOS_random_noise", 0);
     end
 end
 %% clustering
