@@ -331,7 +331,7 @@ annotation('textbox',...
     for i = 1:3
         subplot(3,1,i);
         b = plot(interval, error_sum_RDEKF(i,interval), '-*','LineWidth',0.7, 'DisplayName', 'KF-based', 'MarkerSize', 6); hold on;
-        a = plot(interval, error_sum_RDFIR(i,interval), '-+','LineWidth',0.8, 'DisplayName', 'DRFIR', 'MarkerSize', 6); hold on;
+        a = plot(interval, error_sum_RDFIR(i,interval), '-+','LineWidth',0.8, 'DisplayName', 'DFMERM', 'MarkerSize', 6); hold on;
         x = [200,200]; y = [0, 12];
         plot(x,y,'b'); hold on;
         x = [300,300]; y = [0, 12];

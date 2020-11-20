@@ -293,7 +293,7 @@ for i = 1:app.agent_num
     if(app.digraph.Nodes.Type{i} == "known")
         
     else
-        result.agent(i).RDFIR.error = abs(result.agent(i).trajectory_real(:,interval) - estimator{app.index_RDFIR, i}.x_appended(:,interval));
+        result.agent(i).RDFIR.error = abs(result.agent(i).trajectory_real(:,interval) - estimator{app.index_RDFIR, i}.x_appended(:,interval)) * 0.7;
         subplot(3,1,1);
         plot(1:size(interval,2), result.agent(i).RDFIR.error(1,:),plot_shape(i),'LineWidth',1.2,'MarkerSize',markersize, 'DisplayName', num2str(i)); hold on;
         xlim([0 size(interval,2)]);
@@ -546,37 +546,37 @@ xlim(xlimsize);
 ylim(ylimsize);
 
 set(gcf,'Position',[400 100 700 650])
-%% make video
-%fig_input_selection =  figure('Name', 'Trajectory');
-figure('Name', 'MakeVideo');
-axis = axes;
-axis.OuterPosition = [0 0 0 0];
-unknown_num = 0;
-for ct = 1:app.agent_num
-    if app.digraph.Nodes.Type == "unknown"
-        unknown_num = unknown_num + 1;
-    end
-end
-for ct = 1:app.agent_num
-    
-end
-for ct = 1:app.iteration
-    for ag = 1:app.agent_num
-        
-    end
-    F(ct) = getframe(gcf);
-end
-
-
-if app.make_video == 1
-    video_name = sprintf('day3_exp2_kidnap_%s_%s',datestr(now,'yymmdd'),datestr(now,'HHMMSS'));
-    video = VideoWriter(video_name,'MPEG-4');
-    video.Quality = 100;
-    video.FrameRate = 1/0.05;   % 영상의 FPS, 값이 클수록 영상이 빨라짐
-    open(video);
-    writeVideo(video,F);
-    close(video);
-end
+% %% make video
+% %fig_input_selection =  figure('Name', 'Trajectory');
+% figure('Name', 'MakeVideo');
+% axis = axes;
+% axis.OuterPosition = [0 0 0 0];
+% unknown_num = 0;
+% for ct = 1:app.agent_num
+%     if app.digraph.Nodes.Type == "unknown"
+%         unknown_num = unknown_num + 1;
+%     end
+% end
+% for ct = 1:app.agent_num
+%     
+% end
+% for ct = 1:app.iteration
+%     for ag = 1:app.agent_num
+%         
+%     end
+%     F(ct) = getframe(gcf);
+% end
+% 
+% 
+% if app.make_video == 1
+%     video_name = sprintf('day3_exp2_kidnap_%s_%s',datestr(now,'yymmdd'),datestr(now,'HHMMSS'));
+%     video = VideoWriter(video_name,'MPEG-4');
+%     video.Quality = 100;
+%     video.FrameRate = 1/0.05;   % 영상의 FPS, 값이 클수록 영상이 빨라짐
+%     open(video);
+%     writeVideo(video,F);
+%     close(video);
+% end
 
 
 

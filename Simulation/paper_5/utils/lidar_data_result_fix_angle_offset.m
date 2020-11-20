@@ -34,6 +34,7 @@ for ag = 1:app.agent_num
         LIDARS{ag}.option("figure", fig_on_off);
         LIDARS{ag}.option("weight", weight);
         LIDARS{ag}.option("angle_offset", angle_offset(ag));
+        LIDARS{ag}.option("NLOS_random_noise", 2);
     end
 end
 %% clustering
