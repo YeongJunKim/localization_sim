@@ -97,10 +97,10 @@ for i = 1:app.agent_num
         elseif(app.relative_scenario == app.relative_scenario_poss_diff)
             R =  zeros(nn_, nn_);
             for j = 1:nn_*2
-                R(j,j) = 0.01;
+                R(j,j) = 0.1;
             end
-            R(nn_*2+1,nn_*2+1) = 0.01;
-            estimator{app.index_RDEKF, i} = RDEKF(diag([0.01, 0.01, 0.01]), diag([0.1, 0.01, 0.01]), R, f_, jf_, h1_, h2_, h3_, jh1_, jh2_, jh3_, app.initial_state(:,i),nn_);
+            R(nn_*2+1,nn_*2+1) = 0.1;
+            estimator{app.index_RDEKF, i} = RDEKF(diag([0.1, 0.1, 0.1]), diag([0.1, 0.1, 0.1]), R, f_, jf_, h1_, h2_, h3_, jh1_, jh2_, jh3_, app.initial_state(:,i),nn_);
         end
     end
     

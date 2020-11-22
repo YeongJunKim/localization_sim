@@ -1,4 +1,4 @@
-function lidar_data_result(fig_on_off,weight,angle_offset)
+function lidar_data_result(fig_on_off,weight)
 
 global app
 global LIDARS
@@ -25,16 +25,12 @@ for ag = 1:app.agent_num
         init = zeros(2,robot_num_,1);
         for j = 1:robot_num_
             init(:,j,1) = app.initial_state(1:2,find_neighbors(j))-app.initial_state(1:2,ag);
-            de = angle_offset(ag);
-            init(:,j,1) = [cos(de) sin(de); -sin(de) cos(de)] * init(:,j,1);
         end
         
-                
         LIDARS{ag}.lidaring_position_init(init,app.iteration);
         LIDARS{ag}.option("figure", fig_on_off);
         LIDARS{ag}.option("weight", weight);
-        LIDARS{ag}.option("angle_offset", angle_offset(ag));
-        LIDARS{ag}.option("NLOS_random_noise", 2);
+        LIDARS{ag}.option("NLOS_random_noise", 0);
     end
 end
 %% clustering
@@ -45,7 +41,41 @@ for ct = 1:app.iteration
     for ag = 1:app.agent_num
         if(app.digraph.Nodes.Type{ag} == "known")
         else
-            LIDARS{ag}.lidaring_run(experiment_data(ag).lidar(:,ct));
+            fprintf("ag : %d\n",ag);
+            if ag == 3
+                LIDARS{ag}.lidaring_run(experiment_data(ag).lidar(:,ct));
+               if ct >= 120 && ct < 173
+                   LIDARS{ag}.result_data(:,2,LIDARS{ag}.step) = normrnd([0 0]', [1 1]');
+                   LIDARS{ag}.result_data(:,1,LIDARS{ag}.step) = normrnd([0 0]', [1 1]');
+               elseif ct >= 173 && ct < 196
+                   LIDARS{ag}.result_data(:,1,LIDARS{ag}.step) = normrnd([0 0]', [1 1]');
+               end
+               if ct == 173
+                  LIDARS{ag}.result_data(:,2,LIDARS{ag}.step) = [0.6 -1.2]'; 
+               end
+               if ct == 196
+                  LIDARS{ag}.result_data(:,1,LIDARS{ag}.step) = [-0.5 -1.2]';
+               end
+            elseif ag == 4
+                 LIDARS{ag}.lidaring_run(experiment_data(ag).lidar(:,ct));
+%                 if ct >= 124 && ct < 172
+%                    LIDARS{ag}.result_data(:,2,LIDARS{ag}.step) = normrnd([0 0]', [1 1]');
+%                 end
+%                 if ct == 173
+%                    LIDARS{ag}.result_data(:,2,LIDARS{ag}.step) = [-0.6 1.2]'; 
+%                 end
+            elseif ag == 5
+                 LIDARS{ag}.lidaring_run(experiment_data(ag).lidar(:,ct));
+            elseif ag == 6
+                 LIDARS{ag}.lidaring_run(experiment_data(ag).lidar(:,ct));
+%                  if ct >= 124 && ct < 182
+%                    LIDARS{ag}.result_data(:,2,LIDARS{ag}.step) = normrnd([0 0]', [1 1]');
+%                  end
+%                  if ct == 182
+%                     LIDARS{ag}.result_data(:,2,LIDARS{ag}.step) = [0.2 1.8]'; 
+%                  end
+            end
+            
         end
     end
 end
@@ -54,7 +84,7 @@ plot_colors = ["r", "g", "c", "b", "m", "k"];
 plot_shape = ["-*","-h","-+", "-o", "-x", "-d"];
 for ag = 1:app.agent_num
     if app.digraph.Nodes.Type{ag} ~= "known"
-        figure(300 + ag);
+        figure(500 + ag);
         clf;
         for ct = 1:app.iteration
             for i = 1:LIDARS{ag}.robot_num

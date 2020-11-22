@@ -21,25 +21,25 @@ global result
 
 %% file import
 addpath('./experiment_data/');
-load('day4_ex2_exp_NLOS_2.mat');
+load('day4_ex1_exp_obstacle_2.mat');
 %% graph ?„¤? •
 paper5_implementation_day4_exp2_NLOS_2_setting();
 %% init position ?„¤? •
 app.initial_state_offset = zeros(1, app.agent_num);
-app.initial_state_offset(1) = deg2rad(90);
-app.initial_state_offset(2) = deg2rad(90);
-app.initial_state_offset(3) = deg2rad(90);
-app.initial_state_offset(4) = deg2rad(90);
-app.initial_state_offset(5) = deg2rad(90);
-app.initial_state_offset(6) = deg2rad(90);
+app.initial_state_offset(1) = deg2rad(0);
+app.initial_state_offset(2) = deg2rad(0);
+app.initial_state_offset(3) = deg2rad(0);
+app.initial_state_offset(4) = deg2rad(0);
+app.initial_state_offset(5) = deg2rad(0);
+app.initial_state_offset(6) = deg2rad(0);
 
 app.initial_state = zeros(app.nx, app.agent_num); ts = 0.6;
-app.initial_state(:,findnode(app.digraph, "tb3a")) = [ts*3.5 ts*0 deg2rad(90)]';
-app.initial_state(:,findnode(app.digraph, "tb3b")) = [ts*5.5 ts*(-3) deg2rad(90)]';
-app.initial_state(:,findnode(app.digraph, "tb3c")) = [ts*3.5 ts*(-1.5) deg2rad(90)]';
-app.initial_state(:,findnode(app.digraph, "tb3d")) = [ts*3.5 ts*(-3) deg2rad(90)]';
-app.initial_state(:,findnode(app.digraph, "tb3e")) = [ts*5.5 ts*(0) deg2rad(90)]';
-app.initial_state(:,findnode(app.digraph, "tb3f")) = [ts*5.5 ts*(-1.5) deg2rad(90)]';
+app.initial_state(:,findnode(app.digraph, "tb3a")) = [ts*1 ts*4 deg2rad(0)]';
+app.initial_state(:,findnode(app.digraph, "tb3b")) = [ts*3 ts*3 deg2rad(0)]';
+app.initial_state(:,findnode(app.digraph, "tb3c")) = [ts*2 ts*4 deg2rad(0)]';
+app.initial_state(:,findnode(app.digraph, "tb3d")) = [ts*3 2.359 deg2rad(0)]';
+app.initial_state(:,findnode(app.digraph, "tb3e")) = [ts*1 ts*3 deg2rad(0)]';
+app.initial_state(:,findnode(app.digraph, "tb3f")) = [ts*2 ts*3 deg2rad(0)]';
 app.anchor_position = zeros(2, app.anchor_num);
 app.anchor_position(:,1) = [0 0]';
 app.anchor_position(:,2) = [0 ts*10]';
@@ -50,21 +50,25 @@ paper5_implementation_day4_exp2_NLOS_2_initialization();
 %% dt ?„¤? •
 app.dt = 0.5;
 %% interval ?„¤? •
-app.iteration = 210;
+app.iteration = 260;
 app.interval = 1:app.iteration;
 %% ?‹¤?—˜ ?°?´?? ? •? ¬?•˜ê¸? ahrsv1, lidar
-fig_on_off = 1;
+fig_on_off = 0;
 ahrsv1_generalization(fig_on_off,app.initial_state_offset);
-experiment_data(3).lidar = xlsread('day4_ex2_NLOS_2_data_3_lidar.xlsx');
-experiment_data(4).lidar = xlsread('day4_ex2_NLOS_2_data_4_lidar.xlsx');
-experiment_data(5).lidar = xlsread('day4_ex2_NLOS_2_data_5_lidar.xlsx');
-experiment_data(6).lidar = xlsread('day4_ex2_NLOS_2_data_6_lidar.xlsx');
+experiment_data(3).lidar = xlsread('day4_ex1_obstacle_2_data_3_lidar.xlsx');
+experiment_data(4).lidar = xlsread('day4_ex1_obstacle_2_data_4_lidar.xlsx');
+experiment_data(5).lidar = xlsread('day4_ex1_obstacle_2_data_5_lidar.xlsx');
+experiment_data(6).lidar = xlsread('day4_ex1_obstacle_2_data_6_lidar.xlsx');
+% experiment_data(3).lidar = xlsread('day4_ex2_NLOS_2_data_3_lidar.xlsx');
+% experiment_data(4).lidar = xlsread('day4_ex2_NLOS_2_data_4_lidar.xlsx');
+% experiment_data(5).lidar = xlsread('day4_ex2_NLOS_2_data_5_lidar.xlsx');
+% experiment_data(6).lidar = xlsread('day4_ex2_NLOS_2_data_6_lidar.xlsx');
 
 
 %% Lidar dataë¥? relative measurementë¡? ë³??™˜
 fig_on_off = 0;
 % lidar_data_result(fig_on_off,1);
-lidar_data_result_fix_angle_offset(fig_on_off,1,app.initial_state_offset);
+lidar_data_result_day4_exp1_obstacle_2(fig_on_off,1);
 %% result data ì´ˆê¸°?™”
 for ag = 1:app.agent_num
    result.agent(ag).trajectory_user = zeros(app.nx,app.iteration);
@@ -75,6 +79,7 @@ end
 %% user_input data result
 fig_user_input_trajectory = figure(100);
 fig_user_input_trajectory.Name = 'User Input Trajectory';
+clf;
 % figure('Name', 'User Input Trajectory');
 for ag = 1:app.agent_num
     disp(ag);
@@ -82,34 +87,47 @@ for ag = 1:app.agent_num
         disp(ct);
        if ct == 1
        else
-%            if ag == 3
-%               if ct > 170 && ct < 190
-%                  result.agent(ag).trajectory_user(2,ct-1) = result.agent(ag).trajectory_user(2,ct-1) + 0.023;
-%                  result.agent(ag).trajectory_user(1,ct-1) = result.agent(ag).trajectory_user(1,ct-1) + 0.001;
-%                  result.agent(ag).trajectory_user(3,ct-1) = result.agent(ag).trajectory_user(3,ct-1) - 0.0003;
-%               elseif ct > 345 && ct < 360
-%                  result.agent(ag).trajectory_user(2,ct-1) = result.agent(ag).trajectory_user(2,ct-1) - 0.04;
-%               elseif ct > 355
-%                   result.agent(ag).trajectory_user(1,ct-1) = result.agent(ag).trajectory_user(1,ct-1) - 0.002;
-%               end
-%            elseif ag == 4
-%                if ct > 360 && 390
-%                   result.agent(ag).trajectory_user(1,ct-1) = result.agent(ag).trajectory_user(1,ct-1) - 0.003; 
-%                end
-%            elseif ag == 5
-%                if ct == 275 
-%                  result.agent(ag).trajectory_user(2,ct-1) = result.agent(ag).trajectory_user(2,ct-1) - 0.6;
-%                elseif ct == 440
-%                  result.agent(ag).trajectory_user(2,ct-1) = result.agent(ag).trajectory_user(2,ct-1) + 0.6;
-%                end
-%            end
            
            x1 = result.agent(ag).trajectory_user(1,ct-1);
            x2 = result.agent(ag).trajectory_user(2,ct-1);
            x3 = result.agent(ag).trajectory_user(3,ct-1);
            u1 = experiment_data(ag).user_input(1,ct-1);
            u2 = experiment_data(ag).user_input(2,ct-1);
+           if ag == 4
+              if ct > 100 && ct < 180
+                u2 = -0.01;
+                u1 = u1 * 1.05;
+              end
+           end
+           if ag == 5
+              if ct > 100 && ct < 125
+                 u2 = -0.06;
+              elseif ct > 200 && ct < 204
+                 u2 = 1.8;
+              elseif ct > 208 && ct < 254
+                 u1 = u1 * 1.15;
+                 u2 = -0.09;
+              end
+           end
+           if ag == 6
+              if ct > 100 && ct < 240
+                 u1 = u1 * 1.05;
+                 u2 = -0.01; 
+              elseif ct > 240 && ct < 244
+                  u2 = 1.8;
+              elseif ct > 244
+                  u1 = u1 * 1.1;
+              end
+           end
+               
            result.agent(ag).trajectory_user(:,ct) = app.F(x1,x2,x3,u1,u2);
+           
+           if ag == 3
+              if ct > 120 && ct < 125
+                result.agent(ag).trajectory_user(1:2,ct) = [1.5 3.438]'; 
+              end                  
+           end
+           
        end
     end
     x = result.agent(ag).trajectory_user(1,app.interval); y = result.agent(ag).trajectory_user(2,app.interval);
@@ -280,7 +298,7 @@ for ct = 1:3
    end
 end
 legend('FontSize', 13, 'Location', 'northeast','NumColumns', 1);
-xlim([1.2 5]); ylim([-2 2]); xlabel("x(m)",'FontSize', 15); ylabel("y(m)",'FontSize', 15); grid on;
+xlim([0 5]); ylim([0 4]); xlabel("x(m)",'FontSize', 15); ylabel("y(m)",'FontSize', 15); grid on;
 xticks(-0.6:0.6:10);
 yticks(-3:0.6:4);
 
@@ -377,8 +395,8 @@ disp_name = ["(a)", "(b)", "(c)"];
 
 if app.initial_error_scenario == app.initial_error_scenario_normal
     lims = zeros(2,3);
-    lims(:,1) = [0.0 4.0];
-    lims(:,2) = [0 1];
+    lims(:,1) = [0 2.3];
+    lims(:,2) = [0 2.3];
     lims(:,3) = [0 0.5];
 %     interval = app.horizon_size.RDFIR + 1:2:app.iteration-1;
     for i = 1:3

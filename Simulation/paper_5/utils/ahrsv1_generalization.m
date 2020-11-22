@@ -38,7 +38,8 @@ for ag = 1:app.agent_num
 end
 legend();
 if(fig_on_off)
-figure('Name', 'ahrsv1');
+fig_ahrsv1 = figure();
+fig_ahrsv1.Name = 'ahrsv1';
 clf;
 end
 for ag = 1:app.agent_num

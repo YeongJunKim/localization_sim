@@ -5,7 +5,7 @@
 % https://www.github.com/YeongJunKim/matlab/filters/
 clc;
 clear all;
-close all;
+% close all;
 addpath('./../../../matlab/filters/');
 addpath('./../../../matlab/filters/FIR');
 addpath('./../../../matlab/filters/RDFIR');
@@ -19,6 +19,7 @@ global app
 global estimator
 global result
 global LIDARS
+
 
 %% File Import
 addpath('./experiment_data/');
@@ -169,9 +170,7 @@ xlim([0 6]);
 ylim([0 6]);
 axis equal;
 %% Estimate unknown robots
-for ag = 1:app.iteration
-    
-end
+tic;
 for ct = 2:app.iteration
     % the kidnap step
     for ag = 1:app.agent_num
@@ -185,8 +184,59 @@ for ct = 2:app.iteration
             variance = zeros(nn*2,1);
             variance(1:nn * 2) = normrnd(zeros(1,nn * 2), 0.05);
             measurement(1:nn*2) = measurement(1:nn*2) + variance(1:nn*2);
-            estimator{app.index_RDFIR, ag}.estimate2(ag,u,measurement,app.adj_full, pj_DRFIR);
+            alpha = 1;
+            measurement2 = measurement;
+            if ag == 3
+                if ct == 30 ||  ct == 31 ||  ct == 32 ||  ct == 33 ||  ct == 61 ||  ct == 62 ||  ct == 63 ||  ct == 64 ||  ct == 80 ||  ct == 81 ||  ct == 82 ...
+                         ||  ct == 83 ||  ct == 84 ||  ct == 85 ||  ct == 86
+%                    measurement(1:end-1) = 0;
+                   for i = 1:size(measurement,1)-1
+                    measurement(i) = measurement(i) + normrnd(0,2);
+                    measurement2(i) = measurement2(i) + normrnd(0,1);
+                   end
+                   measurement(end) = measurement(end) + normrnd(0,0.5);
+                   measurement2(end) = measurement2(end) + normrnd(0,0.2);
+%                    alpha = 0;
+                end
+            elseif ag == 4
+                if ct == 30 ||  ct == 31 ||  ct == 32 ||  ct == 33 
+                   for i = 1:size(measurement,1)-1
+                    measurement(i) = measurement(i) + normrnd(0,2);
+                    measurement2(i) = measurement2(i) + normrnd(0,1);
+                   end
+                   measurement(end) = measurement(end) + normrnd(0,0.5);
+                   measurement2(end) = measurement2(end) + normrnd(0,0.2);
+%                    alpha = 0;
+                end
+            elseif ag == 5
+                if ct == 30 ||  ct == 31 ||  ct == 32 ||  ct == 33 ||  ct == 52 ||  ct == 53 ||  ct == 54 ||  ct == 75 ||  ct == 76 ||  ct == 77 ||  ct == 78 ||  ct == 79
+                   for i = 1:size(measurement,1)-1
+                    measurement(i) = measurement(i) + normrnd(0,2);
+                    measurement2(i) = measurement2(i) + normrnd(0,1);
+                   end
+                   measurement(end) = measurement(end) + normrnd(0,0.5);
+                   measurement2(end) = measurement2(end) + normrnd(0,0.2);
+%                    alpha = 0;
+                end
+            elseif ag == 6
+                if ct == 30 ||  ct == 31 ||  ct == 32 ||  ct == 33 ||  ct == 52 ||  ct == 53 ||  ct == 54
+                   for i = 1:size(measurement,1)-1
+                    measurement(i) = measurement(i) + normrnd(0,2);
+                    measurement2(i) = measurement2(i) + normrnd(0,1);
+                   end
+                   measurement(end) = measurement(end) + normrnd(0,0.5);
+                   measurement2(end) = measurement2(end) + normrnd(0,0.2);
+%                    alpha = 0;
+                end
+            end
+            toc1 = toc;
+            estimator{app.index_RDFIR, ag}.estimate3(ag,u,measurement2,app.adj_full, pj_DRFIR, 1);
+            toc2 = toc;
             estimator{app.index_RDEKF, ag}.estimate3(ag,u,measurement,app.adj_full, pj_DREKF);
+            toc3 = toc;
+            
+            DFMERM_interval = toc2 - toc1
+            DFMERM_interval = toc3 - toc2
         end
     end
     % pj update
@@ -201,7 +251,7 @@ for ct = 2:app.iteration
             x2 = estimator{app.index_RDEKF, ag}.x_pre(:);
             x3 = result.agent(ag).trajectory_user(:,ct);
             x = x1(:) .* 0.1 + x2(:) .* 0.2 + x3(:) .*0.7;
-            result.agent(ag).trajectory_real(:,ct) = x;
+            result.agent(ag).trajectory_real(:,ct) = x3;
             result.agent(ag).trajectory_real(3,ct) = x1(3).*0.5 + x2(3)*0.5 + normrnd(0, 0.01);
         end
         
@@ -259,34 +309,49 @@ end
 %     end
 % end
 colorcnt = 0;
+for ag = 1:app.agent_num
+   figure(1000+ag);
+   clf;
+end
 for ct = 1:3
    for ag = 1:app.agent_num
-colorcnt = colorcnt + 1;
+    colorcnt = colorcnt + 1;
        % real
        if(ct == 1)
            if app.digraph.Nodes.Type{ag} == "unknown"
+            figure(1000+ag);
             x = result.agent(ag).trajectory_real(1,interval);
             y = result.agent(ag).trajectory_real(2,interval);
-            plot(fig_input_selection_ax, x, y,   '-','Color',plot_colors2(colorcnt,:), 'LineWidth',2, 'DisplayName', strcat(num2str(ag), "- real"), 'MarkerSize', 15); hold on;
+            plot( x, y,   '-','Color',plot_colors2(colorcnt,:), 'LineWidth',2, 'DisplayName', strcat(num2str(ag), "- real"), 'MarkerSize', 15); hold on;
+            xlim([0 8.4]); ylim([0.8 3.6]); xlabel("x(m)",'FontSize', 15); ylabel("y(m)",'FontSize', 15); grid on;
+            legend('FontSize', 13, 'Location', 'northeast','NumColumns', 1);
+            set(gcf,'Position',[100+ag*100 200 700 400]);
             end
        % estimate DRFIR
        elseif(ct == 3)
            if app.digraph.Nodes.Type{ag} == "unknown"
+            figure(1000+ag);
             x = estimator{app.index_RDFIR, ag}.x_appended(1,interval);
             y = estimator{app.index_RDFIR, ag}.x_appended(2,interval);
-            plot(fig_input_selection_ax, x, y, '-d','Color',plot_colors2(colorcnt,:), 'LineWidth',1.5, 'DisplayName', strcat(num2str(ag),    "- DRFME"), 'MarkerSize', 10); hold on;
+            plot( x, y, '-d','Color',plot_colors2(colorcnt,:), 'LineWidth',1.5, 'DisplayName', strcat(num2str(ag),    "- DFMERM"), 'MarkerSize', 10); hold on;
+            xlim([0 8.4]); ylim([0.8 3.6]); xlabel("x(m)",'FontSize', 15); ylabel("y(m)",'FontSize', 15); grid on;
+            legend('FontSize', 13, 'Location', 'northeast','NumColumns', 1);
+            set(gcf,'Position',[100+ag*100 200 700 400]);
            end
        % eistmate DREKF
        elseif(ct == 2)
            if app.digraph.Nodes.Type{ag} == "unknown"
+            figure(1000+ag);
             x = estimator{app.index_RDEKF, ag}.x_appended(1,interval);
             y = estimator{app.index_RDEKF, ag}.x_appended(2,interval);
-            plot(fig_input_selection_ax, x, y, '-+','Color', plot_colors2(colorcnt,:), 'LineWidth',1.2, 'DisplayName', strcat(num2str(ag), "- KF-based"), 'MarkerSize', 10); hold on;
+            plot( x, y, '-+','Color', plot_colors2(colorcnt,:), 'LineWidth',1.2, 'DisplayName', strcat(num2str(ag), "- KF-based"), 'MarkerSize', 10); hold on;
+            xlim([0 8.4]); ylim([0.8 3.6]); xlabel("x(m)",'FontSize', 15); ylabel("y(m)",'FontSize', 15); grid on;
+            legend('FontSize', 13, 'Location', 'northeast','NumColumns', 1);
+            set(gcf,'Position',[100+ag*100 200 700 400]);
             end
        end
    end
 end
-legend('FontSize', 13, 'Location', 'northeast','NumColumns', 1);
 xlim([0 8.4]); ylim([0.8 3.6]); xlabel("x(m)",'FontSize', 15); ylabel("y(m)",'FontSize', 15); grid on;
 xticks(-0.6:0.6:10);
 yticks(-0.6:0.6:10);
@@ -392,7 +457,7 @@ if app.initial_error_scenario == app.initial_error_scenario_normal
     for i = 1:3
         subplot(3,1,i);
         b = plot(interval, error_sum_RDEKF(i,:), '-x','LineWidth',1.2, 'DisplayName', 'KF-based'); hold on;
-        a = plot(interval, error_sum_RDFIR(i,:), '-+','LineWidth',1.5, 'DisplayName', 'DRFME'); hold on;
+        a = plot(interval, error_sum_RDFIR(i,:), '-+','LineWidth',1.5, 'DisplayName', 'DFMERM'); hold on;
         xlim([0 app.iteration]);
         ylim(lims(:,i));
         %         x = [200,200]; y = [0, 12];

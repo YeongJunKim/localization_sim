@@ -24,8 +24,8 @@ app.iteration = 400;
 %
 % tb3a, tb3b are known robot,
 % start(give position) -> end(receive position)
-st                          = [1 1 2 2 3 3 4 5 6 6];
-ed                          = [5 3 4 6 4 6 3 6 3 5];
+st                          = [1 1 2 2 4 5 6];
+ed                          = [5 3 4 6 3 6 5];
 weight                      = ones(size(st,2), 1);
 
 app.agent_name              = ["tb3a", "tb3b", "tb3c", "tb3d", "tb3e", "tb3f"];
@@ -78,7 +78,8 @@ for i = 1:app.agent_num
 end
 
 
-figure(1);
+fig_nodes = figure(1);
+fig_nodes.Name = 'Nodes';
 clf;
 ax = axes;
 

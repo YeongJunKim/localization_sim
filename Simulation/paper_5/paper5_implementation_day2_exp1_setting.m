@@ -30,7 +30,7 @@ app.agent_num               = 6;
 app.nx                      = 3;
 app.nu                      = 2;
 app.nh                      = cell(app.agent_num, 1);
-app.horizon_size.RDFIR      = 7;
+app.horizon_size.RDFIR      = 5;
 app.horizon_size.FIR        = 5;
 app.anchor_num              = 4;
 

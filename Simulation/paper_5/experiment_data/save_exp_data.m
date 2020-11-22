@@ -48,3 +48,18 @@ clear all;
 load('day4_ex2_NLOS_2.mat');
 experiment_data = app.experiment_data;
 save('day4_ex2_exp_NLOS_2.mat','experiment_data');
+%%
+clear all;
+load('day4_ex1_obstacle_2.mat');
+experiment_data = app.experiment_data;
+save('day4_ex1_exp_obstacle_2.mat', 'experiment_data');
+%%
+clear all;
+load('day4_ex1_obstacle_3.mat');
+experiment_data = app.experiment_data;
+save('day4_ex1_exp_obstacle_3.mat', 'experiment_data');
+%%
+clear all;
+load('day4_ex1_obstacle_4.mat');
+experiment_data = app.experiment_data;
+save('day4_ex1_exp_obstacle_4.mat', 'experiment_data');
