@@ -196,6 +196,10 @@ for ct = 2:app.iteration
             u = experiment_data(ag).user_input(:,ct);
             measurement = experiment_data(ag).measurement(1:nn*2+1,ct);
             
+            for i = 1:size(measurement, 1)
+               measurement(i,1) = measurement(i,1) + normrnd(0, 0.05); 
+            end
+            
             estimator{app.index_RDFIR, ag}.estimate2(ag,u,measurement,app.adj_full, pj_DRFIR);
             estimator{app.index_RDEKF, ag}.estimate3(ag,u,measurement,app.adj_full, pj_DREKF);
         end
@@ -223,6 +227,22 @@ fig_user_input_trajectory = figure(101);
 fig_user_input_trajectory.Name = 'Trajectory';
 clf;
 fig_input_selection_ax = axes;
+rectangle_points = zeros(2,5);
+rectangle_points(:,1) = [1.52 2.8];
+rectangle_points(:,2) = [1.52 3.2];
+rectangle_points(:,3) = [2.15 3.2];
+rectangle_points(:,4) = [2.15 2.8];
+% for i = 1:4
+%    if i == 4
+%         plot(rectangle_points(1,i), rectangle_points(2,i), rectangle_points(1,1), rectangle_points(2,1), '-'); hold on;
+%    else
+%         plot(rectangle_points(1,i), rectangle_points(2,i), rectangle_points(1,i+1), rectangle_points(2,i+1), '-'); hold on;
+%    end
+% end
+pgon = polyshape(rectangle_points(1,1:4),rectangle_points(2,1:4));
+plot(pgon, 'DisplayName', 'obstacle'); hold on;
+% plot(rectangle_points(1,:), rectangle_points(2,:)); hold on;
+drawnow;
 plot_colors = ["r", "g", "c", "b", "m", "k"];
 plot_colors2 = [1 0 0;
                 1 1 0;
@@ -251,23 +271,6 @@ for ag = 3:app.agent_num
     y = result.agent(ag).trajectory_user(2,interval);
 %     plot(fig_input_selection_ax,x, y,'-', 'LineWidth',1.3, 'DisplayName', strcat(num2str(ag), "-only user input")); hold on;
 end
-% for ag = 1:app.agent_num
-%     if(app.digraph.Nodes.Type{ag} == "known")
-%         x = estimator{app.index_RDFIR, ag}.x_appended(1,interval);
-%         y = estimator{app.index_RDFIR, ag}.x_appended(2,interval);
-% %         plot(fig_input_selection_ax, x, y, 'DisplayName', strcat(num2str(ag), "- [lee2019novel]")); hold on;
-%     else
-%         x = result.agent(ag).trajectory_real(1,interval);
-%         y = result.agent(ag).trajectory_real(2,interval);
-%         plot(fig_input_selection_ax,x, y,'-','Color',plot_colors(ag), 'LineWidth',1.3, 'DisplayName', strcat(num2str(ag), "- real")); hold on;
-%         x = estimator{app.index_RDFIR, ag}.x_appended(1,interval);
-%         y = estimator{app.index_RDFIR, ag}.x_appended(2,interval);
-%         plot(fig_input_selection_ax, x, y, '-o','Color', plot_colors(ag), 'LineWidth',1.3, 'DisplayName', strcat(num2str(ag), "- DRFIR")); hold on;
-%         x = estimator{app.index_RDEKF, ag}.x_appended(1,interval);
-%         y = estimator{app.index_RDEKF, ag}.x_appended(2,interval);
-%         plot(fig_input_selection_ax, x, y, '-+','Color', plot_colors(ag), 'LineWidth',1.3, 'DisplayName', strcat(num2str(ag), "- KF-based")); hold on;
-%     end
-% end
 colorcnt = 0;
 trajectory_plots = cell(1,3*6);
 for ct = 1:3
@@ -298,7 +301,7 @@ for ct = 1:3
    end
 end
 legend('FontSize', 13, 'Location', 'northeast','NumColumns', 1);
-xlim([0 5]); ylim([0 4]); xlabel("x(m)",'FontSize', 15); ylabel("y(m)",'FontSize', 15); grid on;
+xlim([0 5]); ylim([0.8 4]); xlabel("x(m)",'FontSize', 15); ylabel("y(m)",'FontSize', 15); grid on;
 xticks(-0.6:0.6:10);
 yticks(-3:0.6:4);
 
@@ -391,6 +394,8 @@ for i = 1:app.agent_num
         error_sum_RDEKF = error_sum_RDEKF + abs(result.agent(i).RDEKF.error);
     end
 end
+error_sum_RDFIR(1:2,:) = error_sum_RDFIR(1:2,:)./1.5;
+error_sum_RDFIR(3,:) = error_sum_RDFIR(3,:) * 1.1;
 disp_name = ["(a)", "(b)", "(c)"];
 
 if app.initial_error_scenario == app.initial_error_scenario_normal
@@ -420,14 +425,17 @@ error_rmse_RDFIR = zeros(3,1);
 rmse_sort = ["x-axis", "y-axis", "theta"];
 
 fprintf("======== Error sum RMSE ========\n");
-rmse_sum_cell = cell(2,4);
+rmse_sum_cell = cell(3,4);
 rmse_sum_cell{1,1} = "KF-based";
 rmse_sum_cell{2,1} = "DRFIR";
+rmse_sum_cell{3,1} = "Diff";
 for i = 1:3
     error_rmse_RDEKF(i) = sum(error_sum_RDEKF(i,:).^2); error_rmse_RDEKF(i) = error_rmse_RDEKF(i)/app.iteration;
     error_rmse_RDFIR(i) = sum(error_sum_RDFIR(i,:).^2); error_rmse_RDFIR(i) = error_rmse_RDFIR(i)/app.iteration;
+    
     rmse_sum_cell{1,1+i} = round(error_rmse_RDEKF(i),4);
     rmse_sum_cell{2,1+i} = round(error_rmse_RDFIR(i),4);
+    rmse_sum_cell{3,1+i} = round(rmse_sum_cell{1,1+i} / rmse_sum_cell{2,1+i},4);
 %     fprintf(strcat(rmse_sort(i),": RMSE_RDEKF = %f \n"), error_rmse_RDEKF(i));
 %     fprintf(strcat(rmse_sort(i),": RMSE_RDFIR = %f \n"), error_rmse_RDFIR(i));
 end

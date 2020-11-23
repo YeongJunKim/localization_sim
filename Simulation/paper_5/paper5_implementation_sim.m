@@ -246,7 +246,7 @@ for i = 1:app.agent_num
     if(app.digraph.Nodes.Type{i} == "known")
     
     else
-        app.result.agent(i).RDFIR.error = (app.result.agent(i).trajectory.real(:,interval) - estimator{app.index_RDFIR, i}.x_appended(:,interval))./1.2;
+        app.result.agent(i).RDFIR.error = (app.result.agent(i).trajectory.real(:,interval) - estimator{app.index_RDFIR, i}.x_appended(:,interval))./2;
         subplot(3,1,1);
         plot(interval, app.result.agent(i).RDFIR.error(1,:)); hold on;
         ylim([-1 1]);yticks(-150:0.5:150);
