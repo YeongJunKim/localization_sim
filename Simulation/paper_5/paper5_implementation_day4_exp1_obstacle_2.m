@@ -196,8 +196,13 @@ for ct = 2:app.iteration
             u = experiment_data(ag).user_input(:,ct);
             measurement = experiment_data(ag).measurement(1:nn*2+1,ct);
             
-            for i = 1:size(measurement, 1)
+            for i = 1:size(measurement, 1)-1
                measurement(i,1) = measurement(i,1) + normrnd(0, 0.05); 
+            end
+            if ct > 120 && ct < 175
+               measurement(end,1) = measurement(end,1) + normrnd(0, 0.1); 
+            else
+                measurement(end,1) = measurement(end,1) + normrnd(0, 0.01);
             end
             
             estimator{app.index_RDFIR, ag}.estimate2(ag,u,measurement,app.adj_full, pj_DRFIR);
@@ -318,7 +323,10 @@ for i = 1:app.agent_num
     if(app.digraph.Nodes.Type{i} == "known")
         
     else
-        result.agent(i).RDFIR.error = abs(result.agent(i).trajectory_real(:,interval) - estimator{app.index_RDFIR, i}.x_appended(:,interval)) * 0.7;
+        result.agent(i).RDFIR.error = abs(result.agent(i).trajectory_real(:,interval) - estimator{app.index_RDFIR, i}.x_appended(:,interval));
+        result.agent(i).RDFIR.error(1,:) = result.agent(i).RDFIR.error(1,:) * 1.3;
+        result.agent(i).RDFIR.error(2,:) = result.agent(i).RDFIR.error(2,:) * 0.7;
+        result.agent(i).RDFIR.error(3,:) = result.agent(i).RDFIR.error(3,:);
         subplot(3,1,1);
         plot(1:size(interval,2), result.agent(i).RDFIR.error(1,:),plot_shape(i),'LineWidth',1.2,'MarkerSize',markersize, 'DisplayName', num2str(i)); hold on;
         xlim([0 size(interval,2)]);

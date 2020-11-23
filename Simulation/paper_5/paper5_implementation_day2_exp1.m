@@ -185,13 +185,15 @@ for ct = 2:app.iteration
             variance(1:nn * 2) = normrnd(zeros(1,nn * 2), 0.05);
             measurement(1:nn*2) = measurement(1:nn*2) + variance(1:nn*2);
             alpha = 1;
+            measurement(end) = measurement(end) + normrnd(0, 0.08);
             measurement2 = measurement;
+            
             if ag == 3
                 if ct == 30 ||  ct == 31 ||  ct == 32 ||  ct == 33 ||  ct == 61 ||  ct == 62 ||  ct == 63 ||  ct == 64 ||  ct == 80 ||  ct == 81 ||  ct == 82 ...
                          ||  ct == 83 ||  ct == 84 ||  ct == 85 ||  ct == 86
 %                    measurement(1:end-1) = 0;
                    for i = 1:size(measurement,1)-1
-                    measurement(i) = measurement(i) + normrnd(0,2);
+                    measurement(i) = measurement(i) + normrnd(0,1.5);
                     measurement2(i) = measurement2(i) + normrnd(0,1);
                    end
                    measurement(end) = measurement(end) + normrnd(0,0.5);
@@ -201,7 +203,7 @@ for ct = 2:app.iteration
             elseif ag == 4
                 if ct == 30 ||  ct == 31 ||  ct == 32 ||  ct == 33 
                    for i = 1:size(measurement,1)-1
-                    measurement(i) = measurement(i) + normrnd(0,2);
+                    measurement(i) = measurement(i) + normrnd(0,1.5);
                     measurement2(i) = measurement2(i) + normrnd(0,1);
                    end
                    measurement(end) = measurement(end) + normrnd(0,0.5);
@@ -211,7 +213,7 @@ for ct = 2:app.iteration
             elseif ag == 5
                 if ct == 30 ||  ct == 31 ||  ct == 32 ||  ct == 33 ||  ct == 52 ||  ct == 53 ||  ct == 54 ||  ct == 75 ||  ct == 76 ||  ct == 77 ||  ct == 78 ||  ct == 79
                    for i = 1:size(measurement,1)-1
-                    measurement(i) = measurement(i) + normrnd(0,2);
+                    measurement(i) = measurement(i) + normrnd(0,1.5);
                     measurement2(i) = measurement2(i) + normrnd(0,1);
                    end
                    measurement(end) = measurement(end) + normrnd(0,0.5);
@@ -221,7 +223,7 @@ for ct = 2:app.iteration
             elseif ag == 6
                 if ct == 30 ||  ct == 31 ||  ct == 32 ||  ct == 33 ||  ct == 52 ||  ct == 53 ||  ct == 54
                    for i = 1:size(measurement,1)-1
-                    measurement(i) = measurement(i) + normrnd(0,2);
+                    measurement(i) = measurement(i) + normrnd(0,1.5);
                     measurement2(i) = measurement2(i) + normrnd(0,1);
                    end
                    measurement(end) = measurement(end) + normrnd(0,0.5);

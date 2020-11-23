@@ -41,6 +41,7 @@ for ct = 1:app.iteration
     for ag = 1:app.agent_num
         if(app.digraph.Nodes.Type{ag} == "known")
         else
+            fprintf("ag : %d\n", ag);
             LIDARS{ag}.lidaring_run(experiment_data(ag).lidar(:,ct));
         end
     end
