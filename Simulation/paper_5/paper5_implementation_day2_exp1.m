@@ -189,8 +189,7 @@ for ct = 2:app.iteration
             measurement2 = measurement;
             
             if ag == 3
-                if ct == 30 ||  ct == 31 ||  ct == 32 ||  ct == 33 ||  ct == 61 ||  ct == 62 ||  ct == 63 ||  ct == 64 ||  ct == 80 ||  ct == 81 ||  ct == 82 ...
-                         ||  ct == 83 ||  ct == 84 ||  ct == 85 ||  ct == 86
+                if ct == 30 || ct == 31 || ct == 32 || ct == 33 || ct == 80 || ct == 81 || ct == 82 || ct == 83 || ct == 84 || ct == 85 || ct == 86
 %                    measurement(1:end-1) = 0;
                    for i = 1:size(measurement,1)-1
                     measurement(i) = measurement(i) + normrnd(0,1.5);
@@ -211,7 +210,7 @@ for ct = 2:app.iteration
 %                    alpha = 0;
                 end
             elseif ag == 5
-                if ct == 30 ||  ct == 31 ||  ct == 32 ||  ct == 33 ||  ct == 52 ||  ct == 53 ||  ct == 54 ||  ct == 75 ||  ct == 76 ||  ct == 77 ||  ct == 78 ||  ct == 79
+                if ct == 30 ||  ct == 31 ||  ct == 32 ||  ct == 33 || ct == 75 ||  ct == 76 ||  ct == 77 ||  ct == 78 ||  ct == 79
                    for i = 1:size(measurement,1)-1
                     measurement(i) = measurement(i) + normrnd(0,1.5);
                     measurement2(i) = measurement2(i) + normrnd(0,1);
@@ -221,7 +220,7 @@ for ct = 2:app.iteration
 %                    alpha = 0;
                 end
             elseif ag == 6
-                if ct == 30 ||  ct == 31 ||  ct == 32 ||  ct == 33 ||  ct == 52 ||  ct == 53 ||  ct == 54
+                if ct == 30 ||  ct == 31 ||  ct == 32 ||  ct == 33 || ct == 75 ||  ct == 76 ||  ct == 77 ||  ct == 78 ||  ct == 79
                    for i = 1:size(measurement,1)-1
                     measurement(i) = measurement(i) + normrnd(0,1.5);
                     measurement2(i) = measurement2(i) + normrnd(0,1);
@@ -325,7 +324,7 @@ for ct = 1:3
             x = result.agent(ag).trajectory_real(1,interval);
             y = result.agent(ag).trajectory_real(2,interval);
             plot( x, y,   '-','Color',plot_colors2(colorcnt,:), 'LineWidth',2, 'DisplayName', strcat(num2str(ag), "- real"), 'MarkerSize', 15); hold on;
-            xlim([0 8.4]); ylim([0.8 3.6]); xlabel("x(m)",'FontSize', 15); ylabel("y(m)",'FontSize', 15); grid on;
+            xlim([0 10]); ylim([0 3.6]); xlabel("x(m)",'FontSize', 15); ylabel("y(m)",'FontSize', 15); grid on;
             legend('FontSize', 13, 'Location', 'northeast','NumColumns', 1);
             set(gcf,'Position',[100+ag*100 200 700 400]);
             end
@@ -336,7 +335,7 @@ for ct = 1:3
             x = estimator{app.index_RDFIR, ag}.x_appended(1,interval);
             y = estimator{app.index_RDFIR, ag}.x_appended(2,interval);
             plot( x, y, '-d','Color',plot_colors2(colorcnt,:), 'LineWidth',1.5, 'DisplayName', strcat(num2str(ag),    "- DFMERM"), 'MarkerSize', 10); hold on;
-            xlim([0 8.4]); ylim([0.8 3.6]); xlabel("x(m)",'FontSize', 15); ylabel("y(m)",'FontSize', 15); grid on;
+            xlim([0 10]); ylim([0 3.6]); xlabel("x(m)",'FontSize', 15); ylabel("y(m)",'FontSize', 15); grid on;
             legend('FontSize', 13, 'Location', 'northeast','NumColumns', 1);
             set(gcf,'Position',[100+ag*100 200 700 400]);
            end
@@ -347,14 +346,13 @@ for ct = 1:3
             x = estimator{app.index_RDEKF, ag}.x_appended(1,interval);
             y = estimator{app.index_RDEKF, ag}.x_appended(2,interval);
             plot( x, y, '-+','Color', plot_colors2(colorcnt,:), 'LineWidth',1.2, 'DisplayName', strcat(num2str(ag), "- KF-based"), 'MarkerSize', 10); hold on;
-            xlim([0 8.4]); ylim([0.8 3.6]); xlabel("x(m)",'FontSize', 15); ylabel("y(m)",'FontSize', 15); grid on;
+            xlim([0 10]); ylim([0 3.6]); xlabel("x(m)",'FontSize', 15); ylabel("y(m)",'FontSize', 15); grid on;
             legend('FontSize', 13, 'Location', 'northeast','NumColumns', 1);
             set(gcf,'Position',[100+ag*100 200 700 400]);
             end
        end
    end
 end
-xlim([0 8.4]); ylim([0.8 3.6]); xlabel("x(m)",'FontSize', 15); ylabel("y(m)",'FontSize', 15); grid on;
 xticks(-0.6:0.6:10);
 yticks(-0.6:0.6:10);
 % axis equal;
@@ -453,15 +451,47 @@ disp_name = ["(a)", "(b)", "(c)"];
 
 if app.initial_error_scenario == app.initial_error_scenario_normal
     lims = zeros(2,3);
-    lims(:,1) = [0 2];
-    lims(:,2) = [0 1.2];
-    lims(:,3) = [0 0.5];
+    lims(:,1) = [0 6.7];
+    lims(:,2) = [0 3.5];
+    lims(:,3) = [0 1.3];
     for i = 1:3
         subplot(3,1,i);
-        b = plot(interval, error_sum_RDEKF(i,:), '-x','LineWidth',1.2, 'DisplayName', 'KF-based'); hold on;
-        a = plot(interval, error_sum_RDFIR(i,:), '-+','LineWidth',1.5, 'DisplayName', 'DFMERM'); hold on;
+        x1 = [28 33 80 86 74 79];
+        y1= [0 0 0 0 0 0];
+        y2= [100 100 100 100 100 100];
+%         for j = 1:6
+%               plot(x(j),y1(j),x(j),y2(j),'-','LineWidth',1.2,'Color',[1 0 0]); hold on;
+%         end
+
+        rectangle_points = zeros(2,5);
+        rectangle_points(:,1) = [28 10];
+        rectangle_points(:,2) = [28 -1];
+        rectangle_points(:,3) = [33 -1];
+        rectangle_points(:,4) = [33 10];
+        pgon = polyshape(rectangle_points(1,1:4),rectangle_points(2,1:4));
+        plot(pgon, 'DisplayName', 'obstacle', 'FaceColor', [0.50,0.50,0.50], 'EdgeColor', [1 1 1]); hold on;
+        rectangle_points(:,1) = [80 10];
+        rectangle_points(:,2) = [80 -1];
+        rectangle_points(:,3) = [85 -1];
+        rectangle_points(:,4) = [85 10];
+        pgon = polyshape(rectangle_points(1,1:4),rectangle_points(2,1:4));
+        plot(pgon, 'DisplayName', 'obstacle', 'FaceColor', [0.50,0.50,0.50], 'EdgeColor', [1 1 1]); hold on;
+        rectangle_points(:,1) = [74 10];
+        rectangle_points(:,2) = [74 -1];
+        rectangle_points(:,3) = [79 -1];
+        rectangle_points(:,4) = [79 10];
+        pgon = polyshape(rectangle_points(1,1:4),rectangle_points(2,1:4));
+        c = plot(pgon, 'DisplayName', 'missing', 'FaceColor', [0.50,0.50,0.50], 'EdgeColor', [1 1 1]); hold on;
+        
+        
+        b = plot(interval, error_sum_RDEKF(i,:), '-x','LineWidth',1.2, 'DisplayName', 'KF-based', 'Color', [0.00,0.45,0.74]); hold on;
+        a = plot(interval, error_sum_RDFIR(i,:), '-+','LineWidth',1.5, 'DisplayName', 'DFMERM', 'Color', [0.85,0.33,0.10]); hold on;
         xlim([0 app.iteration]);
         ylim(lims(:,i));
+%         for j = 1:6
+%            x = [x1(j) x1(j)]; y = [0 10];
+%            plot(x,y,'k'); hold on;
+%         end
         %         x = [200,200]; y = [0, 12];
         %         plot(x,y,'b'); hold on;
         %         x = [300,300]; y = [0, 12];
@@ -473,9 +503,13 @@ if app.initial_error_scenario == app.initial_error_scenario_normal
         xlabel(disp_name(i), 'FontSize', 13);
         ylabel("estimation error", 'FontSize', 13);
         %         ylim(lims(:,i)');
-        legend([b,a], 'FontSize', 13, 'Location', 'northwest');
+        legend([b,a,c], 'FontSize', 13, 'Location', 'northwest');
     end
 end
+
+%             elseif ag == 5ct == 30 || ct == 31 || ct == 32 || ct == 33 || ct == 80 || ct == 81 || ct == 82 || ct == 83 || ct == 84 || ct == 85 || ct == 86
+%                 if ct == 30 ||  ct == 31 ||  ct == 32 ||  ct == 33 || ct == 75 ||  ct == 76 ||  ct == 77 ||  ct == 78 ||  ct == 79
+
 set(gcf,'Position',[400 100 700 650])
 
 %%

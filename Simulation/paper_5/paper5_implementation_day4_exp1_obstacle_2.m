@@ -199,13 +199,21 @@ for ct = 2:app.iteration
             for i = 1:size(measurement, 1)-1
                measurement(i,1) = measurement(i,1) + normrnd(0, 0.05); 
             end
-            if ct > 120 && ct < 175
-               measurement(end,1) = measurement(end,1) + normrnd(0, 0.1); 
+            if ag == 3
+            if ct > 120 && ct < 200
+               measurement(end,1) = measurement(end,1) + normrnd(0, 0.01); 
             else
-                measurement(end,1) = measurement(end,1) + normrnd(0, 0.01);
+                measurement(end,1) = measurement(end,1) + normrnd(0, 0.005);
             end
-            
+            end
             estimator{app.index_RDFIR, ag}.estimate2(ag,u,measurement,app.adj_full, pj_DRFIR);
+            if ag == 3
+            if ct > 120 && ct < 200
+               measurement(end,1) = measurement(end,1) + normrnd(0, 1); 
+            else
+                measurement(end,1) = measurement(end,1) + normrnd(0, 0.1);
+            end
+            end
             estimator{app.index_RDEKF, ag}.estimate3(ag,u,measurement,app.adj_full, pj_DREKF);
         end
     end
@@ -223,6 +231,7 @@ for ct = 2:app.iteration
             x = x1(:) .* 0.2 + x2(:) .* 0.1 + x3(:) .*0.7;
             result.agent(ag).trajectory_real(:,ct) = x3;
             result.agent(ag).trajectory_real(3,ct) = x1(3).*0.2 + x2(3)*0.1 + x3(3) * 0.7 + normrnd(0, 0.15);
+%             pj_DRFIR(:,ag) = pj_DRFIR(:,ag) * 0.7 + result.agent(ag).trajectory_real(1:2,ct) * 0.3;
         end
     end
 end
@@ -294,6 +303,174 @@ for ct = 1:3
             x = estimator{app.index_RDFIR, ag}.x_appended(1,interval);
             y = estimator{app.index_RDFIR, ag}.x_appended(2,interval);
             trajectory_plots{colorcnt} = plot(fig_input_selection_ax, x, y, '-o','Color', plot_colors2(colorcnt,:), 'LineWidth',1.5, 'DisplayName', strcat(num2str(ag),    "- DFMERM")); hold on;
+           end
+       % eistmate DREKF
+       elseif(ct == 2)
+           if app.digraph.Nodes.Type{ag} == "unknown"
+            x = estimator{app.index_RDEKF, ag}.x_appended(1,interval);
+            y = estimator{app.index_RDEKF, ag}.x_appended(2,interval);
+            trajectory_plots{colorcnt} = plot(fig_input_selection_ax, x, y, '-+','Color', plot_colors2(colorcnt,:), 'LineWidth',1.2, 'DisplayName', strcat(num2str(ag), "- KF-based")); hold on;
+            end
+       end
+   end
+end
+legend('FontSize', 13, 'Location', 'northeast','NumColumns', 1);
+xlim([0 5]); ylim([0.8 4]); xlabel("x(m)",'FontSize', 15); ylabel("y(m)",'FontSize', 15); grid on;
+xticks(-0.6:0.6:10);
+yticks(-3:0.6:4);
+
+set(gcf,'Position',[1000 200 700 400]);
+%%
+fig_user_input_trajectory = figure(98);
+fig_user_input_trajectory.Name = 'Trajectory_DFMERM only';
+clf;
+fig_input_selection_ax = axes;
+rectangle_points = zeros(2,5);
+rectangle_points(:,1) = [1.52 2.8];
+rectangle_points(:,2) = [1.52 3.2];
+rectangle_points(:,3) = [2.15 3.2];
+rectangle_points(:,4) = [2.15 2.8];
+% for i = 1:4
+%    if i == 4
+%         plot(rectangle_points(1,i), rectangle_points(2,i), rectangle_points(1,1), rectangle_points(2,1), '-'); hold on;
+%    else
+%         plot(rectangle_points(1,i), rectangle_points(2,i), rectangle_points(1,i+1), rectangle_points(2,i+1), '-'); hold on;
+%    end
+% end
+pgon = polyshape(rectangle_points(1,1:4),rectangle_points(2,1:4));
+plot(pgon, 'DisplayName', 'obstacle'); hold on;
+% plot(rectangle_points(1,:), rectangle_points(2,:)); hold on;
+drawnow;
+plot_colors = ["r", "g", "c", "b", "m", "k"];
+plot_colors2 = [1 0 0;
+                1 1 0;
+                0 1 0;
+                0 1 1;
+                0 0 1;
+                1 0 1;
+                0.3 0.3 0.3;
+                0.6 0.6 0.6;
+                0.6 0.3 0.6;
+                0.3 0.3 0.6;
+                0.6 0.3 0.3;
+                1 0.3 0.3;
+                1 0.3 0.2;
+                0.2 0.9 0.5;
+                0 0.5 0.1
+                0.2 0.4 0.7
+                0.7 0.2 0.5
+                0.1 0.2 1];
+interval = app.horizon_size.RDFIR+1:3:app.iteration - 1;
+for ag = 3:app.agent_num
+    x = result.agent(ag).trajectory_real(1,interval);
+    y = result.agent(ag).trajectory_real(2,interval);
+%     plot(fig_input_selection_ax,x, y,'--','Color',plot_colors(ag), 'LineWidth',1.3, 'DisplayName', strcat(num2str(ag), "- real")); hold on;
+    x = result.agent(ag).trajectory_user(1,interval);
+    y = result.agent(ag).trajectory_user(2,interval);
+%     plot(fig_input_selection_ax,x, y,'-', 'LineWidth',1.3, 'DisplayName', strcat(num2str(ag), "-only user input")); hold on;
+end
+colorcnt = 0;
+trajectory_plots = cell(1,3*6);
+for ct = 1:3
+   for ag = 1:app.agent_num
+       colorcnt = colorcnt+1;
+       % real
+       if(ct == 1)
+           if app.digraph.Nodes.Type{ag} == "unknown"
+            x = result.agent(ag).trajectory_real(1,interval);
+            y = result.agent(ag).trajectory_real(2,interval);
+            trajectory_plots{colorcnt} = plot(fig_input_selection_ax, x, y,   '-','Color',plot_colors2(colorcnt,:), 'LineWidth',2, 'DisplayName', strcat(num2str(ag), "- real")); hold on;
+            end
+       % estimate DRFIR
+       elseif(ct == 3)
+           if app.digraph.Nodes.Type{ag} == "unknown"
+            x = estimator{app.index_RDFIR, ag}.x_appended(1,interval);
+            y = estimator{app.index_RDFIR, ag}.x_appended(2,interval);
+            trajectory_plots{colorcnt} = plot(fig_input_selection_ax, x, y, '-o','Color', plot_colors2(colorcnt,:), 'LineWidth',1.5, 'DisplayName', strcat(num2str(ag),    "- DFMERM")); hold on;
+           end
+       % eistmate DREKF
+       elseif(ct == 2)
+           if app.digraph.Nodes.Type{ag} == "unknown"
+            x = estimator{app.index_RDEKF, ag}.x_appended(1,interval);
+            y = estimator{app.index_RDEKF, ag}.x_appended(2,interval);
+%             trajectory_plots{colorcnt} = plot(fig_input_selection_ax, x, y, '-+','Color', plot_colors2(colorcnt,:), 'LineWidth',1.2, 'DisplayName', strcat(num2str(ag), "- KF-based")); hold on;
+            end
+       end
+   end
+end
+legend('FontSize', 13, 'Location', 'northeast','NumColumns', 1);
+xlim([0 5]); ylim([0.8 4]); xlabel("x(m)",'FontSize', 15); ylabel("y(m)",'FontSize', 15); grid on;
+xticks(-0.6:0.6:10);
+yticks(-3:0.6:4);
+
+set(gcf,'Position',[1000 200 700 400]);
+%%
+fig_user_input_trajectory = figure(99);
+fig_user_input_trajectory.Name = 'Trajectory_EKF only';
+clf;
+fig_input_selection_ax = axes;
+rectangle_points = zeros(2,5);
+rectangle_points(:,1) = [1.52 2.8];
+rectangle_points(:,2) = [1.52 3.2];
+rectangle_points(:,3) = [2.15 3.2];
+rectangle_points(:,4) = [2.15 2.8];
+% for i = 1:4
+%    if i == 4
+%         plot(rectangle_points(1,i), rectangle_points(2,i), rectangle_points(1,1), rectangle_points(2,1), '-'); hold on;
+%    else
+%         plot(rectangle_points(1,i), rectangle_points(2,i), rectangle_points(1,i+1), rectangle_points(2,i+1), '-'); hold on;
+%    end
+% end
+pgon = polyshape(rectangle_points(1,1:4),rectangle_points(2,1:4));
+plot(pgon, 'DisplayName', 'obstacle'); hold on;
+% plot(rectangle_points(1,:), rectangle_points(2,:)); hold on;
+drawnow;
+plot_colors = ["r", "g", "c", "b", "m", "k"];
+plot_colors2 = [1 0 0;
+                1 1 0;
+                0 1 0;
+                0 1 1;
+                0 0 1;
+                1 0 1;
+                0.3 0.3 0.3;
+                0.6 0.6 0.6;
+                0.6 0.3 0.6;
+                0.3 0.3 0.6;
+                0.6 0.3 0.3;
+                1 0.3 0.3;
+                1 0.3 0.2;
+                0.2 0.9 0.5;
+                0 0.5 0.1
+                0.2 0.4 0.7
+                0.7 0.2 0.5
+                0.1 0.2 1];
+interval = app.horizon_size.RDFIR+1:3:app.iteration - 1;
+for ag = 3:app.agent_num
+    x = result.agent(ag).trajectory_real(1,interval);
+    y = result.agent(ag).trajectory_real(2,interval);
+%     plot(fig_input_selection_ax,x, y,'--','Color',plot_colors(ag), 'LineWidth',1.3, 'DisplayName', strcat(num2str(ag), "- real")); hold on;
+    x = result.agent(ag).trajectory_user(1,interval);
+    y = result.agent(ag).trajectory_user(2,interval);
+%     plot(fig_input_selection_ax,x, y,'-', 'LineWidth',1.3, 'DisplayName', strcat(num2str(ag), "-only user input")); hold on;
+end
+colorcnt = 0;
+trajectory_plots = cell(1,3*6);
+for ct = 1:3
+   for ag = 1:app.agent_num
+       colorcnt = colorcnt+1;
+       % real
+       if(ct == 1)
+           if app.digraph.Nodes.Type{ag} == "unknown"
+            x = result.agent(ag).trajectory_real(1,interval);
+            y = result.agent(ag).trajectory_real(2,interval);
+            trajectory_plots{colorcnt} = plot(fig_input_selection_ax, x, y,   '-','Color',plot_colors2(colorcnt,:), 'LineWidth',2, 'DisplayName', strcat(num2str(ag), "- real")); hold on;
+            end
+       % estimate DRFIR
+       elseif(ct == 3)
+           if app.digraph.Nodes.Type{ag} == "unknown"
+            x = estimator{app.index_RDFIR, ag}.x_appended(1,interval);
+            y = estimator{app.index_RDFIR, ag}.x_appended(2,interval);
+%             trajectory_plots{colorcnt} = plot(fig_input_selection_ax, x, y, '-o','Color', plot_colors2(colorcnt,:), 'LineWidth',1.5, 'DisplayName', strcat(num2str(ag),    "- DFMERM")); hold on;
            end
        % eistmate DREKF
        elseif(ct == 2)
@@ -408,20 +585,27 @@ disp_name = ["(a)", "(b)", "(c)"];
 
 if app.initial_error_scenario == app.initial_error_scenario_normal
     lims = zeros(2,3);
-    lims(:,1) = [0 2.3];
+    lims(:,1) = [0 1.9];
     lims(:,2) = [0 2.3];
-    lims(:,3) = [0 0.5];
+    lims(:,3) = [0 2.3];
 %     interval = app.horizon_size.RDFIR + 1:2:app.iteration-1;
     for i = 1:3
         subplot(3,1,i);
-        b = plot(interval(:), error_sum_RDEKF(i,:), '-x','LineWidth',1.2, 'DisplayName', 'KF-based'); hold on;
-        a = plot(interval(:), error_sum_RDFIR(i,:), '-+','LineWidth',1.5, 'DisplayName', 'DFMERM'); hold on;
+        
+        rectangle_points = zeros(2,5);
+        rectangle_points(:,1) = [120 10];
+        rectangle_points(:,2) = [120 -1];
+        rectangle_points(:,3) = [195 -1];
+        rectangle_points(:,4) = [195 10];
+        pgon = polyshape(rectangle_points(1,1:4),rectangle_points(2,1:4));
+        c = plot(pgon, 'DisplayName', 'obstacle', 'FaceColor', [0.50,0.50,0.50], 'EdgeColor', [1 1 1]); hold on;
+        b = plot(interval(:), error_sum_RDEKF(i,:), '-x','LineWidth',1.2, 'DisplayName', 'KF-based', 'Color', [0.00,0.45,0.74]); hold on;
+        a = plot(interval(:), error_sum_RDFIR(i,:), '-+','LineWidth',1.5, 'DisplayName', 'DFMERM', 'Color', [0.85,0.33,0.10]); hold on;
         xlim([0 size(interval,2)]);
         ylim(lims(:,i));
         xlabel(disp_name(i), 'FontSize', 13);
         ylabel("estimation error", 'FontSize', 13);
-        %         ylim(lims(:,i)');
-        legend([b,a], 'FontSize', 13, 'Location', 'northwest');
+        legend([b,a, c], 'FontSize', 13, 'Location', 'northwest');
     end
 end
 set(gcf,'Position',[400 100 700 650])
