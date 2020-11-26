@@ -605,7 +605,7 @@ if app.initial_error_scenario == app.initial_error_scenario_normal
         ylim(lims(:,i));
         xlabel(disp_name(i), 'FontSize', 13);
         ylabel("estimation error", 'FontSize', 13);
-        legend([b,a, c], 'FontSize', 13, 'Location', 'northwest');
+        legend([b,a], 'FontSize', 13, 'Location', 'northwest');
     end
 end
 set(gcf,'Position',[400 100 700 650])

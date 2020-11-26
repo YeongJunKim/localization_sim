@@ -481,7 +481,7 @@ if app.initial_error_scenario == app.initial_error_scenario_normal
         rectangle_points(:,3) = [79 -1];
         rectangle_points(:,4) = [79 10];
         pgon = polyshape(rectangle_points(1,1:4),rectangle_points(2,1:4));
-        c = plot(pgon, 'DisplayName', 'missing', 'FaceColor', [0.50,0.50,0.50], 'EdgeColor', [1 1 1]); hold on;
+        plot(pgon, 'DisplayName', 'missing', 'FaceColor', [0.50,0.50,0.50], 'EdgeColor', [1 1 1]); hold on;
         
         
         b = plot(interval, error_sum_RDEKF(i,:), '-x','LineWidth',1.2, 'DisplayName', 'KF-based', 'Color', [0.00,0.45,0.74]); hold on;
@@ -503,7 +503,7 @@ if app.initial_error_scenario == app.initial_error_scenario_normal
         xlabel(disp_name(i), 'FontSize', 13);
         ylabel("estimation error", 'FontSize', 13);
         %         ylim(lims(:,i)');
-        legend([b,a,c], 'FontSize', 13, 'Location', 'northwest');
+        legend([b,a], 'FontSize', 13, 'Location', 'northwest');
     end
 end
 
