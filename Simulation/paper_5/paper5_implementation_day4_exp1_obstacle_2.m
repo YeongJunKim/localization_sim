@@ -386,7 +386,7 @@ for ct = 1:3
            if app.digraph.Nodes.Type{ag} == "unknown"
             x = estimator{app.index_RDFIR, ag}.x_appended(1,interval);
             y = estimator{app.index_RDFIR, ag}.x_appended(2,interval);
-            trajectory_plots{colorcnt} = plot(fig_input_selection_ax, x, y, '-o','Color', plot_colors2(colorcnt,:), 'LineWidth',1.5, 'DisplayName', strcat(num2str(ag),    "- DFMERM")); hold on;
+            trajectory_plots{colorcnt} = plot(fig_input_selection_ax, x, y, '-o','Color', plot_colors2(colorcnt,:), 'LineWidth',1.7, 'DisplayName', strcat(num2str(ag),    "- DFMERM")); hold on;
            end
        % eistmate DREKF
        elseif(ct == 2)
@@ -477,7 +477,7 @@ for ct = 1:3
            if app.digraph.Nodes.Type{ag} == "unknown"
             x = estimator{app.index_RDEKF, ag}.x_appended(1,interval);
             y = estimator{app.index_RDEKF, ag}.x_appended(2,interval);
-            trajectory_plots{colorcnt} = plot(fig_input_selection_ax, x, y, '-+','Color', plot_colors2(colorcnt,:), 'LineWidth',1.2, 'DisplayName', strcat(num2str(ag), "- KF-based")); hold on;
+            trajectory_plots{colorcnt} = plot(fig_input_selection_ax, x, y, '-d','Color', plot_colors2(colorcnt,:), 'LineWidth',1.7, 'DisplayName', strcat(num2str(ag), "- KF-based")); hold on;
             end
        end
    end
@@ -592,15 +592,23 @@ if app.initial_error_scenario == app.initial_error_scenario_normal
     for i = 1:3
         subplot(3,1,i);
         
-        rectangle_points = zeros(2,5);
-        rectangle_points(:,1) = [120 10];
-        rectangle_points(:,2) = [120 -1];
-        rectangle_points(:,3) = [195 -1];
-        rectangle_points(:,4) = [195 10];
-        pgon = polyshape(rectangle_points(1,1:4),rectangle_points(2,1:4));
-        c = plot(pgon, 'DisplayName', 'obstacle', 'FaceColor', [0.50,0.50,0.50], 'EdgeColor', [1 1 1]); hold on;
+%         rectangle_points = zeros(2,5);
+%         rectangle_points(:,1) = [120 10];
+%         rectangle_points(:,2) = [120 -1];
+%         rectangle_points(:,3) = [195 -1];
+%         rectangle_points(:,4) = [195 10];
+%         pgon = polyshape(rectangle_points(1,1:4),rectangle_points(2,1:4));
+%         c = plot(pgon, 'DisplayName', 'obstacle', 'FaceColor', [0.50,0.50,0.50], 'EdgeColor', [1 1 1]); hold on;
         b = plot(interval(:), error_sum_RDEKF(i,:), '-x','LineWidth',1.2, 'DisplayName', 'KF-based', 'Color', [0.00,0.45,0.74]); hold on;
         a = plot(interval(:), error_sum_RDFIR(i,:), '-+','LineWidth',1.5, 'DisplayName', 'DFMERM', 'Color', [0.85,0.33,0.10]); hold on;
+        
+        x1 = [120 195];
+        y1= [0 0];
+        y2= [100 100];
+        for j = 1:2
+           x = [x1(j) x1(j)]; y = [0 10];
+           plot(x,y,'b','LineWidth', 1); hold on;
+        end
         xlim([0 size(interval,2)]);
         ylim(lims(:,i));
         xlabel(disp_name(i), 'FontSize', 13);
@@ -608,6 +616,21 @@ if app.initial_error_scenario == app.initial_error_scenario_normal
         legend([b,a], 'FontSize', 13, 'Location', 'northwest');
     end
 end
+
+annotation('textbox',...
+    [0.575285714285714 0.869230769230769 0.0675714285714286 0.056923076923077],...
+    'String',{'(d)'},...
+    'FontSize',13,...
+    'FitBoxToText','off',...
+    'EdgeColor','none');
+
+
+annotation('doublearrow',[0.49 0.714285714285714],...
+    [0.880538461538462 0.880538461538462],'Head2Width',7,'Head2Length',7,...
+    'Head1Width',7,...
+    'Head1Length',7);
+
+
 set(gcf,'Position',[400 100 700 650])
 
 %%

@@ -456,47 +456,47 @@ if app.initial_error_scenario == app.initial_error_scenario_normal
     lims(:,3) = [0 1.3];
     for i = 1:3
         subplot(3,1,i);
-        x1 = [28 33 80 86 74 79];
+        x1 = [28 33 80 85 74 79];
         y1= [0 0 0 0 0 0];
         y2= [100 100 100 100 100 100];
 %         for j = 1:6
 %               plot(x(j),y1(j),x(j),y2(j),'-','LineWidth',1.2,'Color',[1 0 0]); hold on;
 %         end
 
-        rectangle_points = zeros(2,5);
-        rectangle_points(:,1) = [28 10];
-        rectangle_points(:,2) = [28 -1];
-        rectangle_points(:,3) = [33 -1];
-        rectangle_points(:,4) = [33 10];
-        pgon = polyshape(rectangle_points(1,1:4),rectangle_points(2,1:4));
-        plot(pgon, 'DisplayName', 'obstacle', 'FaceColor', [0.50,0.50,0.50], 'EdgeColor', [1 1 1]); hold on;
-        rectangle_points(:,1) = [80 10];
-        rectangle_points(:,2) = [80 -1];
-        rectangle_points(:,3) = [85 -1];
-        rectangle_points(:,4) = [85 10];
-        pgon = polyshape(rectangle_points(1,1:4),rectangle_points(2,1:4));
-        plot(pgon, 'DisplayName', 'obstacle', 'FaceColor', [0.50,0.50,0.50], 'EdgeColor', [1 1 1]); hold on;
-        rectangle_points(:,1) = [74 10];
-        rectangle_points(:,2) = [74 -1];
-        rectangle_points(:,3) = [79 -1];
-        rectangle_points(:,4) = [79 10];
-        pgon = polyshape(rectangle_points(1,1:4),rectangle_points(2,1:4));
-        plot(pgon, 'DisplayName', 'missing', 'FaceColor', [0.50,0.50,0.50], 'EdgeColor', [1 1 1]); hold on;
+%         rectangle_points = zeros(2,5);
+%         rectangle_points(:,1) = [28 10];
+%         rectangle_points(:,2) = [28 -1];
+%         rectangle_points(:,3) = [33 -1];
+%         rectangle_points(:,4) = [33 10];
+%         pgon = polyshape(rectangle_points(1,1:4),rectangle_points(2,1:4));
+%         plot(pgon, 'DisplayName', 'obstacle', 'FaceColor', [0.50,0.50,0.50], 'EdgeColor', [1 1 1]); hold on;
+%         rectangle_points(:,1) = [80 10];
+%         rectangle_points(:,2) = [80 -1];
+%         rectangle_points(:,3) = [85 -1];
+%         rectangle_points(:,4) = [85 10];
+%         pgon = polyshape(rectangle_points(1,1:4),rectangle_points(2,1:4));
+%         plot(pgon, 'DisplayName', 'obstacle', 'FaceColor', [0.50,0.50,0.50], 'EdgeColor', [1 1 1]); hold on;
+%         rectangle_points(:,1) = [74 10];
+%         rectangle_points(:,2) = [74 -1];
+%         rectangle_points(:,3) = [79 -1];
+%         rectangle_points(:,4) = [79 10];
+%         pgon = polyshape(rectangle_points(1,1:4),rectangle_points(2,1:4));
+%         plot(pgon, 'DisplayName', 'missing', 'FaceColor', [0.50,0.50,0.50], 'EdgeColor', [1 1 1]); hold on;
         
         
         b = plot(interval, error_sum_RDEKF(i,:), '-x','LineWidth',1.2, 'DisplayName', 'KF-based', 'Color', [0.00,0.45,0.74]); hold on;
         a = plot(interval, error_sum_RDFIR(i,:), '-+','LineWidth',1.5, 'DisplayName', 'DFMERM', 'Color', [0.85,0.33,0.10]); hold on;
         xlim([0 app.iteration]);
         ylim(lims(:,i));
-%         for j = 1:6
-%            x = [x1(j) x1(j)]; y = [0 10];
-%            plot(x,y,'k'); hold on;
-%         end
+        for j = 1:6
+           x = [x1(j) x1(j)]; y = [0 10];
+           plot(x,y,'b','LineWidth', 1); hold on;
+        end
         %         x = [200,200]; y = [0, 12];
         %         plot(x,y,'b'); hold on;
         %         x = [300,300]; y = [0, 12];
         %         plot(x,y,'b'); hold on;
-        %         x = [400,400]; y = [0, 12];
+        %         x = [400,400]; y = [0, 12];e
         %         plot(x,y,'b'); hold on;
         %         x = [450,450]; y = [0, 12];
         %         plot(x,y,'b'); hold on;
@@ -507,6 +507,40 @@ if app.initial_error_scenario == app.initial_error_scenario_normal
     end
 end
 
+annotation('doublearrow',[0.751428571428571 0.79],...
+    [0.888230769230769 0.888230769230769],'Head2Width',5,'Head2Length',5,...
+    'Head1Width',5,...
+    'Head1Length',5);
+
+
+annotation('doublearrow',[0.702857142857143 0.741428571428572],...
+    [0.888230769230769 0.888230769230769],'Head2Width',5,'Head2Length',5,...
+    'Head1Width',5,...
+    'Head1Length',5);
+
+
+annotation('doublearrow',[0.347142857142857 0.385714285714286],...
+    [0.888230769230769 0.888230769230769],'Head2Width',5,'Head2Length',5,...
+    'Head1Width',5,...
+    'Head1Length',5);
+
+annotation('textbox',...
+    [0.381428571428571 0.900538461538462 0.001 0.001],'String',{'(d)'},...
+    'FontSize',13,...
+    'FitBoxToText','off');
+
+
+annotation('textbox',[0.66 0.900538461538462 0.001 0.001],...
+    'String','(e)',...
+    'FontSize',13,...
+    'FitBoxToText','off');
+
+
+annotation('textbox',...
+    [0.787428571428571 0.900538461538462 0.00099999999999989 0.001],...
+    'String','(f)',...
+    'FontSize',13,...
+    'FitBoxToText','off');
 %             elseif ag == 5ct == 30 || ct == 31 || ct == 32 || ct == 33 || ct == 80 || ct == 81 || ct == 82 || ct == 83 || ct == 84 || ct == 85 || ct == 86
 %                 if ct == 30 ||  ct == 31 ||  ct == 32 ||  ct == 33 || ct == 75 ||  ct == 76 ||  ct == 77 ||  ct == 78 ||  ct == 79
 
