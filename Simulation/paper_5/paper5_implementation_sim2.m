@@ -36,57 +36,57 @@ for ct = 1:app.iteration
     
     if ct < 55
         app.result.agent(1).input(:,ct) = normrnd([0.2 -0.2]', 0.01);
-        app.result.agent(2).input(:,ct) = normrnd([0.15 0.15]', 0.01);
-        app.result.agent(3).input(:,ct) = normrnd([0.3 0.2]', 0.01);
+        app.result.agent(2).input(:,ct) = normrnd([0.15 0.15]', 0.05);
+        app.result.agent(3).input(:,ct) = normrnd([0.3 0.2]', 0.05);
         app.result.agent(4).input(:,ct) = normrnd([0.2 0.16]', 0.01);
-        app.result.agent(5).input(:,ct) = normrnd([0.2 -0.21]', 0.01);
-        app.result.agent(6).input(:,ct) = normrnd([0.18 -0.21]', 0.01);
-        app.result.agent(7).input(:,ct) = normrnd([0.31 -0.21]', 0.01);
+        app.result.agent(5).input(:,ct) = normrnd([0.2 -0.21]', 0.03);
+        app.result.agent(6).input(:,ct) = normrnd([0.18 -0.21]', 0.03);
+        app.result.agent(7).input(:,ct) = normrnd([0 -0.21]', 0.05);
         app.result.agent(8).input(:,ct) = normrnd([0.2 -0.21]', 0.01);
-        app.result.agent(9).input(:,ct) = normrnd([0.16 -0.21]', 0.01);
-        app.result.agent(10).input(:,ct) = normrnd([0.6 -0.21]', 0.01);
+        app.result.agent(9).input(:,ct) = normrnd([0.16 -0.21]', 0.03);
+        app.result.agent(10).input(:,ct) = normrnd([0.6 -0.21]', 0.04);
         for i = 11:app.agent_num
-           app.result.agent(i).input(:,ct) = normrnd([0.35 0.15]', 0.01); 
+           app.result.agent(i).input(:,ct) = normrnd([0.35 0.15]', 0.014); 
         end
     elseif ct < 80
-        app.result.agent(1).input(:,ct) = normrnd([0.1 0.1]', 0.01);
-        app.result.agent(2).input(:,ct) = normrnd([0.15 -0.3]', 0.01);
-        app.result.agent(3).input(:,ct) = normrnd([0.2 -0.3]', 0.01);
-        app.result.agent(4).input(:,ct) = normrnd([0.4 -0.36]', 0.01);
-        app.result.agent(5).input(:,ct) = normrnd([0.3 0.13]', 0.01);
-        app.result.agent(6).input(:,ct) = normrnd([0.3 0.13]', 0.01);
-        app.result.agent(7).input(:,ct) = normrnd([0.1 -0.21]', 0.01);
-        app.result.agent(8).input(:,ct) = normrnd([0.1 -0.21]', 0.01);
-        app.result.agent(9).input(:,ct) = normrnd([0.1 -0.21]', 0.01);
-        app.result.agent(10).input(:,ct) = normrnd([0.1 -0.21]', 0.01);
+        app.result.agent(1).input(:,ct) = normrnd([0.1 0.1]', 0.031);
+        app.result.agent(2).input(:,ct) = normrnd([0.15 0]', 0.041);
+        app.result.agent(3).input(:,ct) = normrnd([0.2 -0.3]', 0.031);
+        app.result.agent(4).input(:,ct) = normrnd([0.4 -0.36]', 0.011);
+        app.result.agent(5).input(:,ct) = normrnd([0.3 0.13]', 0.061);
+        app.result.agent(6).input(:,ct) = normrnd([0.3 0.13]', 0.071);
+        app.result.agent(7).input(:,ct) = normrnd([0.1 -0.21]', 0.041);
+        app.result.agent(8).input(:,ct) = normrnd([0.1 -0.21]', 0.031);
+        app.result.agent(9).input(:,ct) = normrnd([0.1 0]', 0.011);
+        app.result.agent(10).input(:,ct) = normrnd([0.1 -0.21]', 0.041);
         for i = 11:app.agent_num
            app.result.agent(i).input(:,ct) = normrnd([0.25 -0.1]', 0.01); 
         end
     elseif ct < 140
-        app.result.agent(1).input(:,ct) = normrnd([0.1 0.1]', 0.001);
-        app.result.agent(2).input(:,ct) = normrnd([0.25 0.3]', 0.001);
-        app.result.agent(3).input(:,ct) = normrnd([0.2 -0.35]', 0.001);
-        app.result.agent(4).input(:,ct) = normrnd([0.1 -0.3]', 0.001);
-        app.result.agent(5).input(:,ct) = normrnd([0.15 0.4]', 0.001);
-        app.result.agent(6).input(:,ct) = normrnd([0.15 0.4]', 0.001);
-        app.result.agent(7).input(:,ct) = normrnd([0.1 -0.21]', 0.001);
-        app.result.agent(8).input(:,ct) = normrnd([0.1 -0.21]', 0.001);
-        app.result.agent(9).input(:,ct) = normrnd([0.1 -0.21]', 0.001);
-        app.result.agent(10).input(:,ct) = normrnd([0.1 -0.21]', 0.001);
+        app.result.agent(1).input(:,ct) = normrnd([0.1 0.1]', 0.03041);
+        app.result.agent(2).input(:,ct) = normrnd([0.25 0.3]', 0.04051);
+        app.result.agent(3).input(:,ct) = normrnd([0.2 -0.35]', 0.01011);
+        app.result.agent(4).input(:,ct) = normrnd([0.1 -0.3]', 0.06051);
+        app.result.agent(5).input(:,ct) = normrnd([0.15 0.4]', 0.01011231);
+        app.result.agent(6).input(:,ct) = normrnd([0.15 0.4]', 0.03041);
+        app.result.agent(7).input(:,ct) = normrnd([0.1 -0.21]', 0.04021);
+        app.result.agent(8).input(:,ct) = normrnd([0.1 0]', 0.05051);
+        app.result.agent(9).input(:,ct) = normrnd([0.1 -0.21]', 0.03011);
+        app.result.agent(10).input(:,ct) = normrnd([0.1 -0.21]', 0.02061);
         for i = 11:app.agent_num
            app.result.agent(i).input(:,ct) = normrnd([0.4 0.25]', 0.01); 
         end
     elseif ct < 250
-        app.result.agent(1).input(:,ct) = normrnd([0.18 -0.1]', 0.001);
-        app.result.agent(2).input(:,ct) = normrnd([0.25 -0.3]', 0.001);
-        app.result.agent(3).input(:,ct) = normrnd([0.21 0.35]', 0.001);
-        app.result.agent(4).input(:,ct) = normrnd([0.3 0.3]', 0.001);
-        app.result.agent(5).input(:,ct) = normrnd([0.25 -0.4]', 0.001);
-        app.result.agent(6).input(:,ct) = normrnd([0.35 -0.4]', 0.001);
-        app.result.agent(7).input(:,ct) = normrnd([0.15 0.21]', 0.001);
-        app.result.agent(8).input(:,ct) = normrnd([0.4 0.21]', 0.001);
-        app.result.agent(9).input(:,ct) = normrnd([0.3 0.21]', 0.001);
-        app.result.agent(10).input(:,ct) = normrnd([0.254 0.21]', 0.001);
+        app.result.agent(1).input(:,ct) = normrnd([0.18 -0.1]', 0.0101);
+        app.result.agent(2).input(:,ct) = normrnd([0.25 -0.3]', 0.0201);
+        app.result.agent(3).input(:,ct) = normrnd([0.21 0]', 0.0301);
+        app.result.agent(4).input(:,ct) = normrnd([0.3 0.3]', 0.0401);
+        app.result.agent(5).input(:,ct) = normrnd([0.25 -0.4]', 0.05601);
+        app.result.agent(6).input(:,ct) = normrnd([0.35 -0.4]', 0.0701);
+        app.result.agent(7).input(:,ct) = normrnd([0.15 0.21]', 0.0801);
+        app.result.agent(8).input(:,ct) = normrnd([0 0.21]', 0.0101);
+        app.result.agent(9).input(:,ct) = normrnd([0.3 0.21]', 0.0301);
+        app.result.agent(10).input(:,ct) = normrnd([0.254 0.21]', 0.0101);
         for i = 11:app.agent_num
            app.result.agent(i).input(:,ct) = normrnd([0.3 -0.25]', 0.01); 
         end
@@ -96,7 +96,7 @@ for ct = 1:app.iteration
         app.result.agent(3).input(:,ct) = normrnd([0.3 -0.15]', 0.001);
         app.result.agent(4).input(:,ct) = normrnd([0.15 0.1]', 0.001);
         app.result.agent(5).input(:,ct) = normrnd([0.4 0.2]', 0.001);
-        app.result.agent(6).input(:,ct) = normrnd([0.4 0.14]', 0.001);
+        app.result.agent(6).input(:,ct) = normrnd([0 0.14]', 0.001);
         app.result.agent(7).input(:,ct) = normrnd([0.3 -0.151]', 0.001);
         app.result.agent(8).input(:,ct) = normrnd([0.4 -0.12]', 0.001);
         app.result.agent(9).input(:,ct) = normrnd([0.3 -0.111]', 0.001);
@@ -133,9 +133,26 @@ tic;
 for ct = 1:app.iteration
     %     disp(ct);
     pj_ = zeros(2,app.agent_num);
+    pj_DFMERM = zeros(2,app.agent_num);
+    pj_KF_based = zeros(2,app.agent_num);
     for i = 1:app.agent_num
         pj_(:,i) = app.result.agent(i).trajectory.real(1:2,ct);
     end
+    for i = 1:app.agent_num
+       if app.digraph.Nodes.Type{i} == "known"
+%            fprintf("known \n");
+           pj_DFMERM(:,i) = app.result.agent(i).trajectory.real(1:2,ct);
+           pj_KF_based(:,i) = app.result.agent(i).trajectory.real(1:2,ct);
+       else
+%            fprintf("unknown \n");
+            pj_DFMERM(:,i) = estimator{app.index_RDFIR, i}.x_pre(1:2);
+            pj_KF_based(:,i) = estimator{app.index_RDEKF, i}.x_pre(1:2);
+       end
+    end
+     
+    pj_DFMERM = pj_ .* 0.3 + pj_DFMERM .* 0.7;
+    pj_KF_based = pj_ .* 0.3 + pj_KF_based .* 0.7;
+    
     
     for i = 1:app.agent_num
         if(app.digraph.Nodes.Type{i} == "known")
@@ -145,57 +162,45 @@ for ct = 1:app.iteration
             find_neighbors = find(app.adj_full(:,i)==1);
             nn = size(find_neighbors, 1);
             z = zeros(nn * 2 + 1, 1);
-            if(app.relative_scenario == app.relative_scenario_distance_eta)
-                for j = 1:nn
-                    x1 = pj_(:,i);
-                    x2 = pj_(:,find_neighbors(j));
-                    if(app.initial_error_scenario == app.initial_error_scenario_normal)
-                        if ((ct > 250 && ct < 250) && (i == 8 || i == 15 || i == 20 || i == 5 || i == 18 ))
-                            fprintf("eta noise occurred ct  [%d],i [%d]\r\n", ct, i);
-                            z(j) = norm(x1 - x2) + normrnd(0,1);
-                            z(nn+j) = (atan2(x2(2)-x1(2), x2(1)-x1(1))) + normrnd(0,0.05);
-                        elseif ((ct > 400 && ct < 450) && (i == 8 || i == 15 || i == 20 || i == 5 || i == 18 ))
-                            fprintf("eta noise occurred ct  [%d],i [%d]\r\n", ct, i);
-                            z(j) = norm(x1 - x2) + normrnd(0,2);
-                            z(nn+j) = (atan2(x2(2)-x1(2), x2(1)-x1(1))) + normrnd(0,0.1);
-                        else
-                            z(j) = norm(x1 - x2) + normrnd(0,0.01);
-                            z(nn+j) = (atan2(x2(2)-x1(2), x2(1)-x1(1))) + normrnd(0,0.01);
-                        end
-                    elseif(app.initial_error_scenario == app.initial_error_scenario_error)
-                        z(j) = norm(x1 - x2) + normrnd(0,0.01);
-                        z(nn+j) = (atan2(x2(2)-x1(2), x2(1)-x1(1))) + normrnd(0,0.001);
-                    end
-                end
-            elseif(app.relative_scenario == app.relative_scenario_poss_diff)
-                for j = 1:nn
-                    x1 = pj_(:,i) + normrnd([0 0]', [0.01 0.01]');
-                    x2 = pj_(:,find_neighbors(j)) + normrnd([0 0]', [0.01 0.01]');
-                    z(j) = x2(1) - x1(1) + normrnd(0,0.01);
-                    z(nn+j) = x2(2) - x1(2) + normrnd(0,0.01);
-                    z(nn*2+1) = app.result.agent(i).trajectory.real(3,ct) + normrnd(0,0.01);
-                    if (i == 8 || i == 15 || i == 20 || i == 5 || i == 18 )
-                    x1 = pj_(:,i) + normrnd([0 0]', [1 1]');
-                    x2 = pj_(:,find_neighbors(j)) + normrnd([0 0]', [1 1]');
-                    z(j) = x2(1) - x1(1) + normrnd(0,0.01);
-                    z(nn+j) = x2(2) - x1(2) + normrnd(0,0.01);
-                    z(nn*2+1) = app.result.agent(i).trajectory.real(3,ct) + normrnd(0,0.5);
-                    end
-
+            for j = 1:nn
+                x1 = pj_DFMERM(:,i) + normrnd([0 0]', [0.01 0.01]');
+                x2 = pj_DFMERM(:,find_neighbors(j)) + normrnd([0 0]', [0.01 0.01]');
+                z(j) = x2(1) - x1(1) + normrnd(0,0.01);
+                z(nn+j) = x2(2) - x1(2) + normrnd(0,0.01);
+                z(nn*2+1) = app.result.agent(i).trajectory.real(3,ct) + normrnd(0,0.01);
+                if (i == 8 || i == 15 || i == 20 || i == 5 || i == 18 )
+                x1 = pj_DFMERM(:,i) + normrnd([0 0]', [1 1]');
+                x2 = pj_DFMERM(:,find_neighbors(j)) + normrnd([0 0]', [1 1]');
+                z(j) = x2(1) - x1(1) + normrnd(0,0.01);
+                z(nn+j) = x2(2) - x1(2) + normrnd(0,0.01);
+                z(nn*2+1) = app.result.agent(i).trajectory.real(3,ct) + normrnd(0,0.5);
                 end
             end
             toc1 = toc;
-            estimator{app.index_RDFIR, i}.estimate2(i,app.result.agent(i).input(:,ct), z, app.adj_full, pj_);
+            estimator{app.index_RDFIR, i}.estimate2(i,app.result.agent(i).input(:,ct), z, app.adj_full, pj_DFMERM);
             toc2 = toc;
-            estimator{app.index_RDEKF, i}.estimate3(i,app.result.agent(i).input(:,ct), z, app.adj_full, pj_);
+            for j = 1:nn
+                x1 = pj_KF_based(:,i) + normrnd([0 0]', [0.05 0.05]');
+                x2 = pj_KF_based(:,find_neighbors(j)) + normrnd([0 0]', [0.01 0.1]');
+                z(j) = x2(1) - x1(1) + normrnd(0,0.01);
+                z(nn+j) = x2(2) - x1(2) + normrnd(0,0.01);
+                z(nn*2+1) = app.result.agent(i).trajectory.real(3,ct) + normrnd(0,0.21);
+                if (i == 8 || i == 15 || i == 20 || i == 5 || i == 18 )
+                x1 = pj_KF_based(:,i) + normrnd([0 0]', [1 1]');
+                x2 = pj_KF_based(:,find_neighbors(j)) + normrnd([0 0]', [0.011 0.011]');
+                z(j) = x2(1) - x1(1) + normrnd(0,0.01);
+                z(nn+j) = x2(2) - x1(2) + normrnd(0,0.01);
+                z(nn*2+1) = app.result.agent(i).trajectory.real(3,ct) + normrnd(0,0.5);
+                end
+            end
             toc3 = toc;
+            estimator{app.index_RDEKF, i}.estimate3(i,app.result.agent(i).input(:,ct), z, app.adj_full, pj_KF_based);
+            toc4 = toc;
             
             int_FIR = int_FIR +  toc2 - toc1;
-            int_KF = int_KF +  toc3 - toc2;
+            int_KF = int_KF +  toc4 - toc3;
         end
     end
-    
-    
 end
 interval = 1:2:app.iteration;
 %%
@@ -206,7 +211,7 @@ for i = 1:app.agent_num
            y = estimator{app.index_RDFIR, i}.x_appended(2,interval);
            index = num2str(i);
            RDFIR_display_name = strcat("RDFIR", index);
-%            plot(app.ax2, x,y, '-d', 'DisplayName', RDFIR_display_name); hold on;
+           plot(app.ax2, x,y, '-d', 'DisplayName', RDFIR_display_name); hold on;
            drawnow;
         end
 end
@@ -217,7 +222,7 @@ for i = 1:app.agent_num
            y = estimator{app.index_RDEKF, i}.x_appended(2,interval);
            index = num2str(i);
            RDFIR_display_name = strcat("RDEKF", index);
-%            plot(app.ax2, x,y, '-+', 'DisplayName', RDFIR_display_name); hold on;
+           plot(app.ax2, x,y, '-+', 'DisplayName', RDFIR_display_name); hold on;
            drawnow;
         end
 end

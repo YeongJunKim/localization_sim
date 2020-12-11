@@ -18,7 +18,7 @@ app.initial_state(:,findnode(app.digraph, "tb3i")) = [7 -2 3]';
 app.initial_state(:,findnode(app.digraph, "tb3j")) = [1 3 3]';
 
 for i = 1:app.agent_num
-   app.initial_state(1:2,i) = normrnd([5 5]', [5 5]');
+   app.initial_state(1:3,i) = normrnd([3 3 0]', [3 5 3]');
 %    app.initial_state(1:2,i) = app.initial_state(1:2,i);
 end
 
@@ -150,6 +150,7 @@ app.ax2_plot_shape = ['*', '*', 'd', 'd', 'd', 'd', 'd','d','d','d'];
 app.ax2_plot_shape2 = ["-*", "-*", "-d", "-+", "-*", "-x", "-s","-d","-p","-h"];
 for ct = 1:app.agent_num
     agent_plot_name = app.digraph.Nodes.Name{ct};
+    agent_plot_name = strcat("agent",num2str(ct));
     if app.digraph.Nodes.Type{ct} == "known"
     else
         app.ax2_plots{ct} = plot(app.ax2, app.initial_state(1,ct),app.initial_state(2,ct), '*', 'DisplayName', agent_plot_name); hold on;
