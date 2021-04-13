@@ -321,7 +321,7 @@ lims(:,3) = [0 3]';
 
     for i = 1:3
         subplot(3,1,i);
-        b = plot(interval, error_sum_RDEKF(i,:), '-*','LineWidth',0.7, 'DisplayName', 'KF-based', 'MarkerSize', 6); hold on;
+        b = plot(interval, error_sum_RDEKF(i,:), '-*','LineWidth',0.7, 'DisplayName', 'Distributed IIR filter', 'MarkerSize', 6); hold on;
         a = plot(interval, error_sum_RDFIR(i,:), '-+','LineWidth',0.8, 'DisplayName', 'DFMERM', 'MarkerSize', 6); hold on;
 %         x = [150,150]; y = [0, 12];
 %         plot(x,y,'b'); hold on;
@@ -353,7 +353,7 @@ annotation('textarrow',[0.293491124260355 0.240236686390533],...
     [0.872812754409769 0.845318860244233],'String',{'k = N'},'FontSize',13);
     for i = 1:3
         subplot(3,1,i);
-        b = plot(interval, error_sum_RDEKF(i,interval), '--','LineWidth',1.2, 'DisplayName', 'KF-based'); hold on;
+        b = plot(interval, error_sum_RDEKF(i,interval), '--','LineWidth',1.2, 'DisplayName', 'Distributed IIR filter'); hold on;
         
         a = plot(interval, error_sum_RDFIR(i,interval), '-.','LineWidth',1.2, 'DisplayName', 'DRFME'); hold on;
         x = [7 7]; y = [0 100];
