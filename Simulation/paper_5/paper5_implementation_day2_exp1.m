@@ -324,7 +324,7 @@ for ct = 1:3
             x = result.agent(ag).trajectory_real(1,interval);
             y = result.agent(ag).trajectory_real(2,interval);
             plot( x, y,   '-','Color',plot_colors2(colorcnt,:), 'LineWidth',2, 'DisplayName', strcat(num2str(ag), "- real"), 'MarkerSize', 15); hold on;
-            xlim([0 10]); ylim([0 3.6]); xlabel("x(m)",'FontSize', 15); ylabel("y(m)",'FontSize', 15); grid on;
+            xlim([0 10]); ylim([0 3.6]); xlabel("X-position(m)",'FontSize', 15); ylabel("Y-position(m)",'FontSize', 15); grid on;
             legend('FontSize', 13, 'Location', 'northeast','NumColumns', 1);
             set(gcf,'Position',[100+ag*100 200 700 400]);
             end
@@ -334,8 +334,8 @@ for ct = 1:3
             figure(1000+ag);
             x = estimator{app.index_RDFIR, ag}.x_appended(1,interval);
             y = estimator{app.index_RDFIR, ag}.x_appended(2,interval);
-            plot( x, y, '-d','Color',plot_colors2(colorcnt,:), 'LineWidth',1.5, 'DisplayName', strcat(num2str(ag),    "- DFMERM"), 'MarkerSize', 10); hold on;
-            xlim([0 10]); ylim([0 3.6]); xlabel("x(m)",'FontSize', 15); ylabel("y(m)",'FontSize', 15); grid on;
+            plot( x, y, '-d','Color',plot_colors2(colorcnt,:), 'LineWidth',1.5, 'DisplayName', strcat(num2str(ag),    "- DFMERM (proposed)"), 'MarkerSize', 10); hold on;
+            xlim([0 10]); ylim([0 3.6]); xlabel("X-position(m)",'FontSize', 15); ylabel("Y-position(m)",'FontSize', 15); grid on;
             legend('FontSize', 13, 'Location', 'northeast','NumColumns', 1);
             set(gcf,'Position',[100+ag*100 200 700 400]);
            end
@@ -346,7 +346,7 @@ for ct = 1:3
             x = estimator{app.index_RDEKF, ag}.x_appended(1,interval);
             y = estimator{app.index_RDEKF, ag}.x_appended(2,interval);
             plot( x, y, '-+','Color', plot_colors2(colorcnt,:), 'LineWidth',1.2, 'DisplayName', strcat(num2str(ag), "- Distributed IIR filter"), 'MarkerSize', 10); hold on;
-            xlim([0 10]); ylim([0 3.6]); xlabel("x(m)",'FontSize', 15); ylabel("y(m)",'FontSize', 15); grid on;
+            xlim([0 10]); ylim([0 3.6]); xlabel("X-position(m)",'FontSize', 15); ylabel("Y-position(m)",'FontSize', 15); grid on;
             legend('FontSize', 13, 'Location', 'northeast','NumColumns', 1);
             set(gcf,'Position',[100+ag*100 200 700 400]);
             end

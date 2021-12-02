@@ -315,7 +315,7 @@ for ct = 1:3
    end
 end
 legend('FontSize', 13, 'Location', 'northeast','NumColumns', 1);
-xlim([0 5]); ylim([0.8 4]); xlabel("x(m)",'FontSize', 15); ylabel("y(m)",'FontSize', 15); grid on;
+xlim([0 5]); ylim([0.8 4]); xlabel("X-position(m)",'FontSize', 15); ylabel("Y-position(m)",'FontSize', 15); grid on;
 xticks(-0.6:0.6:10);
 yticks(-3:0.6:4);
 
@@ -386,7 +386,7 @@ for ct = 1:3
            if app.digraph.Nodes.Type{ag} == "unknown"
             x = estimator{app.index_RDFIR, ag}.x_appended(1,interval);
             y = estimator{app.index_RDFIR, ag}.x_appended(2,interval);
-            trajectory_plots{colorcnt} = plot(fig_input_selection_ax, x, y, '-o','Color', plot_colors2(colorcnt,:), 'LineWidth',1.7, 'DisplayName', strcat(num2str(ag),    "- DFMERM")); hold on;
+            trajectory_plots{colorcnt} = plot(fig_input_selection_ax, x, y, '-o','Color', plot_colors2(colorcnt,:), 'LineWidth',1.7, 'DisplayName', strcat(num2str(ag),    "- DFMERM (proposed)")); hold on;
            end
        % eistmate DREKF
        elseif(ct == 2)
@@ -399,11 +399,11 @@ for ct = 1:3
    end
 end
 legend('FontSize', 13, 'Location', 'northeast','NumColumns', 1);
-xlim([0 5]); ylim([0.8 4]); xlabel("x(m)",'FontSize', 15); ylabel("y(m)",'FontSize', 15); grid on;
+xlim([0 5]); ylim([0.8 4]); xlabel("X-position(m)",'FontSize', 15); ylabel("Y-position(m)",'FontSize', 15); grid on;
 xticks(-0.6:0.6:10);
 yticks(-3:0.6:4);
 
-set(gcf,'Position',[1000 200 700 400]);
+set(gcf,'Position',[1000 200 800 450]);
 %%
 fig_user_input_trajectory = figure(99);
 fig_user_input_trajectory.Name = 'Trajectory_EKF only';
@@ -483,11 +483,12 @@ for ct = 1:3
    end
 end
 legend('FontSize', 13, 'Location', 'northeast','NumColumns', 1);
-xlim([0 5]); ylim([0.8 4]); xlabel("x(m)",'FontSize', 15); ylabel("y(m)",'FontSize', 15); grid on;
+xlim([0 5]); ylim([0.8 4]); xlabel("X-position(m)",'FontSize', 15); ylabel("Y-position(m)",'FontSize', 15); grid on;
 xticks(-0.6:0.6:10);
 yticks(-3:0.6:4);
 
-set(gcf,'Position',[1000 200 700 400]);
+
+set(gcf,'Position',[1000 300 800 450]);
 %%
 fig_user_input_trajectory = figure(102);
 fig_user_input_trajectory.Name = 'Estimation Error DRFIR';

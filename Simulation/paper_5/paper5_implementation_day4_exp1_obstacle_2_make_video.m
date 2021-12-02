@@ -69,6 +69,40 @@ errorSum_Colors(2, :) = [0.85,0.33,0.10];
 % annotation('line',[0.704282857142857 0.704282857142857],[0.923615384615385 0.126153846153846],'Color',[0 0 0],'LineWidth',1);
 % annotation('line',[0.385711428571429 0.385711428571429],[0.922076923076923 0.124615384615384],'Color',[0 0 0],'LineWidth',1);
 
+for ag = 1:app.agent_num
+   figure(40000+ag);
+   clf;
+end
+trajectory = cell(3, app.agent_num);
+trajectory_xlim = zeros(app.agent_num, 2);
+trajectory_xlim(3,:) = [0 4];
+trajectory_xlim(4,:) = [0 4];
+trajectory_xlim(5,:) = [0 4];
+trajectory_xlim(6,:) = [0 4];
+trajectory_ylim = zeros(app.agent_num, 2);
+trajectory_ylim(3,:) = [1 5];
+trajectory_ylim(4,:) = [1 5];
+trajectory_ylim(5,:) = [1 5];
+trajectory_ylim(6,:) = [1 5];
+plot_colors = ["r", "g", "c", "b", "m", "k"];
+plot_colors2 = [1 0 0;
+                1 1 0;
+                0 1 0;
+                0 1 1;
+                0 0 1;
+                1 0 1;
+                0.3 0.3 0.3;
+                0.6 0.6 0.6;
+                0.6 0.3 0.6;
+                0.3 0.3 0.6;
+                0.6 0.3 0.3;
+                1 0.3 0.3;
+                1 0.3 0.2;
+                0.2 0.9 0.5;
+                0 0.5 0.1
+                0.2 0.4 0.7
+                0.7 0.2 0.5
+                0.1 0.2 1];
 
 %%
 disp_name = ["(a)", "(b)", "(c)"];
@@ -119,6 +153,24 @@ for nx = 1:app.nx
     ylim(errorSum_ylim(nx,:));
     
 end
+colorcnt = 1;
+for ag = 1:app.agent_num
+   if(app.digraph.Nodes.Type{ag} == "known")
+      continue; 
+   end
+    figure(40000 + ag);
+    trajectory{1,ag} = plot( 0, 0, '-' ,'Color', plot_colors2(colorcnt,:), 'LineWidth',2,   'DisplayName', strcat(num2str(ag), "- real"), 'MarkerSize', 15); hold on;
+    colorcnt = colorcnt + 1;
+    trajectory{2,ag} = plot( 0, 0, '-d','Color', plot_colors2(colorcnt,:), 'LineWidth',1.5, 'DisplayName', strcat(num2str(ag), "- DFMERM"), 'MarkerSize', 10); hold on;
+    colorcnt = colorcnt + 1;
+    trajectory{3,ag} = plot( 0, 0, '-+','Color', plot_colors2(colorcnt,:), 'LineWidth',1.2, 'DisplayName', strcat(num2str(ag), "- Distributed IIR filter"), 'MarkerSize', 10); hold on;
+    colorcnt = colorcnt + 1;
+    xlim(trajectory_xlim(ag,:)); ylim(trajectory_ylim(ag,:));
+    xlabel("x(m)",'FontSize', 15); 
+    ylabel("y(m)",'FontSize', 15); grid on;
+    legend('FontSize', 13, 'Location', 'northeast','NumColumns', 1);
+    set(gcf,'Position',[100+ag*100 200 700 400]);
+end
 
 
 %%
@@ -167,10 +219,26 @@ for ct = 1:size(interval,2)
        
     end
     
+    for ag = 1:app.agent_num
+        trajectory{1,ag}.XData = result.agent(ag).trajectory_real(1, 1:ct);
+        trajectory{1,ag}.YData = result.agent(ag).trajectory_real(2, 1:ct);
+        
+        trajectory{2,ag}.XData = estimator{app.index_RDFIR, ag}.x_appended(1,1:ct);
+        trajectory{2,ag}.YData = estimator{app.index_RDFIR, ag}.x_appended(2,1:ct);
+        
+        trajectory{3,ag}.XData = estimator{app.index_RDEKF, ag}.x_appended(1,1:ct);
+        trajectory{3,ag}.YData = estimator{app.index_RDEKF, ag}.x_appended(2,1:ct);
+    end
+    
     F1(ct) = getframe(10000);
     F2(ct) = getframe(20000);
     F3(ct) = getframe(30000);
     
+    
+    F4(ct) = getframe(40003);
+    F5(ct) = getframe(40004);
+    F6(ct) = getframe(40005);
+    F7(ct) = getframe(40006);
 end
 %% save video
 if videoSave == 1
@@ -196,6 +264,38 @@ if videoSave == 1
     video.FrameRate = 1/0.09;
     open(video);
     writeVideo(video,F3);
+    close(video);
+    
+    video_name = sprintf('obstacle_trajeoctry_3');
+    video = VideoWriter(video_name, 'MPEG-4');
+    video.Quality = 100;
+    video.FrameRate = 1/0.09;
+    open(video);
+    writeVideo(video,F4);
+    close(video);
+    
+    video_name = sprintf('obstacle_trajeoctry_4');
+    video = VideoWriter(video_name, 'MPEG-4');
+    video.Quality = 100;
+    video.FrameRate = 1/0.09;
+    open(video);
+    writeVideo(video,F5);
+    close(video);
+    
+    video_name = sprintf('obstacle_trajeoctry_5');
+    video = VideoWriter(video_name, 'MPEG-4');
+    video.Quality = 100;
+    video.FrameRate = 1/0.09;
+    open(video);
+    writeVideo(video,F6);
+    close(video);
+    
+    video_name = sprintf('obstacle_trajeoctry_6');
+    video = VideoWriter(video_name, 'MPEG-4');
+    video.Quality = 100;
+    video.FrameRate = 1/0.09;
+    open(video);
+    writeVideo(video,F7);
     close(video);
 end
 
